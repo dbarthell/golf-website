@@ -1,0 +1,21 @@
+{
+  "woods": [
+    { "club": "Driver", "stockCarry": 258, "stockTotal": 280, "fullCarry": null, "fullTotal": null },
+    { "club": "3 Wood", "stockCarry": 232, "stockTotal": 258, "fullCarry": null, "fullTotal": null }
+  ],
+  "irons": [
+    { "club": "3 Iron", "stockCarry": 196, "stockTotal": 216, "fullCarry": null, "fullTotal": null },
+    { "club": "4 Iron", "stockCarry": 193, "stockTotal": 208, "fullCarry": null, "fullTotal": null },
+    { "club": "5 Iron", "stockCarry": 176, "stockTotal": 191, "fullCarry": 186, "fullTotal": 201 },
+    { "club": "6 Iron", "stockCarry": 167, "stockTotal": 180, "fullCarry": 173, "fullTotal": 183 },
+    { "club": "7 Iron", "stockCarry": 159, "stockTotal": 169, "fullCarry": 165, "fullTotal": 173 },
+    { "club": "8 Iron", "stockCarry": 145, "stockTotal": 152, "fullCarry": 152, "fullTotal": 159 },
+    { "club": "9 Iron", "stockCarry": 134, "stockTotal": 140, "fullCarry": 141, "fullTotal": 146 }
+  ],
+  "wedges": [
+    { "club": "PW", "stockCarry": 119, "stockTotal": 125, "fullCarry": 129, "fullTotal": 132 },
+    { "club": "GW", "stockCarry": 113, "stockTotal": 117, "fullCarry": 120, "fullTotal": 123 },
+    { "club": "SW", "stockCarry": 98, "stockTotal": 102, "fullCarry": 106, "fullTotal": 109 },
+    { "club": "LW", "stockCarry": 85, "stockTotal": 87, "fullCarry": 89, "fullTotal": 91 }
+  ]
+}
