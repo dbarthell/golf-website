@@ -1,0 +1,35 @@
+{
+  "brysonTable": {
+    "title": "Calibrated Bryson Table",
+    "description": "Stimp 10 \u2014 Rounded to nearest 0.5 inch. Gravity Factor = 1.0",
+    "columns": ["Steps", "Feet", "1%", "2%", "3%", "4%", "5%", "6%"],
+    "rows": [
+      { "steps": 1, "feet": "2.5", "pct1": "1", "pct2": "1.5", "pct3": "2.5", "pct4": "3", "pct5": "4 +1.5/\u22121.5", "pct6": "5 +1.5/\u22121.5" },
+      { "steps": 2, "feet": "5", "pct1": "2", "pct2": "4", "pct3": "6 +1.5/\u22121.5", "pct4": "8 +1.5/\u22121.5", "pct5": "10 +1.5/\u22123", "pct6": "13 +3/\u22124.5" },
+      { "steps": 3, "feet": "7.5", "pct1": "3.5", "pct2": "6.5", "pct3": "10 +1.5/\u22121.5", "pct4": "13.5 +3/\u22123", "pct5": "17 +3/\u22124.5", "pct6": "20 +4.5/\u22126" },
+      { "steps": 4, "feet": "10", "pct1": "4.5", "pct2": "9 \u22121.5", "pct3": "13.5 +1.5/\u22123", "pct4": "18 +3/\u22124.5", "pct5": "22.5 +4.5/\u22126", "pct6": "27 +7.5/\u22129" },
+      { "steps": 6, "feet": "15", "pct1": "7", "pct2": "15 \u22121.5", "pct3": "22.5 +3/\u22124.5", "pct4": "30 +6/\u22126", "pct5": "37.5 +7.5/\u221210.5", "pct6": "45 +10.5/\u221215" },
+      { "steps": 8, "feet": "20", "pct1": "11", "pct2": "22 \u22123", "pct3": "33 +4.5/\u22126", "pct4": "44 +7.5/\u22129", "pct5": "55 +10.5/\u221213.5", "pct6": "66 +15/\u221222.5" },
+      { "steps": 10, "feet": "25", "pct1": "14.5", "pct2": "29 \u22124.5", "pct3": "43.5 +6/\u22127.5", "pct4": "58 +10.5/\u221210.5", "pct5": "72.5 +13.5/\u221218", "pct6": "87 +19.5/\u221228.5" }
+    ]
+  },
+  "zblChart": {
+    "title": "9-Inch ZBL Conversion Chart",
+    "description": "Stimp 10 \u2014 Lateral aim based on clock position relative to zero break line",
+    "columns": ["Clock Position", "Angle from ZBL", "Sine Multiplier", "Lateral Aim"],
+    "rows": [
+      { "clock": "3:00 / 9:00", "angle": "90\u00b0 (Side-hill)", "sine": "1.00", "aim": "9.00\"" },
+      { "clock": "3:30 / 8:30", "angle": "75\u00b0", "sine": "0.96", "aim": "8.64\"" },
+      { "clock": "4:00 / 8:00", "angle": "60\u00b0", "sine": "0.86", "aim": "7.74\"" },
+      { "clock": "4:30 / 7:30", "angle": "45\u00b0", "sine": "0.70", "aim": "6.30\"" },
+      { "clock": "5:00 / 7:00", "angle": "30\u00b0", "sine": "0.50", "aim": "4.50\" (Half)" },
+      { "clock": "5:30 / 6:30", "angle": "15\u00b0", "sine": "0.25", "aim": "2.25\"" },
+      { "clock": "6:00 / 12:00", "angle": "0\u00b0 (Straight)", "sine": "0.00", "aim": "0.00\" (Center)" }
+    ]
+  },
+  "gravityVector": {
+    "title": "Gravity Vector Table",
+    "description": "Medium Green \u2014 reference card for on-course break reads",
+    "note": "Captured from reference card photo \u2014 verify values against your laminated card"
+  }
+}

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Golf Numbers</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="hero">
+    <div class="hero-content">
+      <div class="hero-icon">&#9971;</div>
+      <h1>My Golf Numbers</h1>
+      <p class="hero-subtitle">Quick reference for the course</p>
+    </div>
+  </header>
+
+  <!-- Sticky Nav -->
+  <nav class="sticky-nav" id="sticky-nav">
+    <div class="nav-inner">
+      <a href="#yardages" class="nav-link active" data-section="yardages">Yardages</a>
+      <a href="#putting" class="nav-link" data-section="putting">Putting</a>
+      <a href="#notes" class="nav-link" data-section="notes">Notes</a>
+    </div>
+  </nav>
+
+  <main class="container">
+
+    <!-- Club Yardages Section -->
+    <section id="yardages" class="section">
+      <h2 class="section-title">Club Yardages</h2>
+
+      <!-- Category Tabs -->
+      <div class="tabs" id="club-tabs">
+        <button class="tab active" data-category="woods">Woods</button>
+        <button class="tab" data-category="irons">Irons</button>
+        <button class="tab" data-category="wedges">Wedges</button>
+      </div>
+
+      <!-- Club Cards Container -->
+      <div class="club-cards" id="club-cards">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- Vector Putting Section -->
+    <section id="putting" class="section">
+      <h2 class="section-title">Vector Putting</h2>
+      <div class="putting-grid" id="putting-grid">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- Notes / Other Info Section -->
+    <section id="notes" class="section">
+      <h2 class="section-title">Course Notes</h2>
+
+      <div class="accordion" id="accordion">
+        <div class="accordion-item">
+          <button class="accordion-header" aria-expanded="false">
+            <span>Pre-Shot Routine</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">
+            <ol>
+              <li>Stand behind the ball, pick a target line</li>
+              <li>Take one practice swing feeling the shot shape</li>
+              <li>Address the ball, align clubface to intermediate target</li>
+              <li>One look at the target, then go</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header" aria-expanded="false">
+            <span>Swing Thoughts</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">
+            <ul>
+              <li>Smooth tempo &mdash; 3:1 backswing to downswing ratio</li>
+              <li>Complete the shoulder turn</li>
+              <li>Trust the swing, commit to the shot</li>
+              <li>Weight forward at impact</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header" aria-expanded="false">
+            <span>Course Strategy</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">
+            <ul>
+              <li>Miss to the fat side of the green</li>
+              <li>Par is always a good score</li>
+              <li>Avoid short-sided chips &mdash; leave room to work with</li>
+              <li>When in doubt, take one more club</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header" aria-expanded="false">
+            <span>Quick Rules Reference</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">
+            <ul>
+              <li><strong>Lateral hazard (red stakes):</strong> Drop within 2 club-lengths, no nearer the hole &mdash; 1 stroke penalty</li>
+              <li><strong>Water hazard (yellow stakes):</strong> Drop behind, keeping point of entry between you and the hole &mdash; 1 stroke penalty</li>
+              <li><strong>OB (white stakes):</strong> Stroke and distance, or local rule drop &mdash; 2 stroke penalty</li>
+              <li><strong>Unplayable lie:</strong> 3 options, all 1 stroke penalty</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2025 My Golf Numbers</p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
