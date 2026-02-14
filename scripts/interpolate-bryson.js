@@ -13,7 +13,7 @@ const putting = JSON.parse(
   fs.readFileSync(path.join(__dirname, '..', 'data', 'putting.json'), 'utf8')
 );
 
-const originalRows = putting.brysonTable.rows;
+const originalRows = putting.brysonTable.rows.filter(r => r.original);
 
 // ── Parse cell values ──────────────────────────────────────────────
 // Formats:
@@ -156,7 +156,7 @@ const rows = targetFeet.map(feet => {
   }
 
   // Interpolated
-  const steps = Math.round((feet / 2.5) * 10) / 10; // 1 decimal place
+  const steps = Math.round((feet / 3) * 10) / 10; // 1 decimal place
 
   const row = {
     steps: steps,
