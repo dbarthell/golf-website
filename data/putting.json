@@ -1,35 +1,374 @@
 {
   "brysonTable": {
     "title": "Calibrated Bryson Table",
-    "description": "Stimp 10 \u2014 Rounded to nearest 0.5 inch. Gravity Factor = 1.0",
-    "columns": ["Steps", "Feet", "1%", "2%", "3%", "4%", "5%", "6%"],
+    "description": "Stimp 10 — Rounded to nearest 0.5 inch. Gravity Factor = 1.0",
+    "columns": [
+      "Steps",
+      "Feet",
+      "1%",
+      "2%",
+      "3%",
+      "4%",
+      "5%",
+      "6%"
+    ],
     "rows": [
-      { "steps": 1, "feet": "2.5", "pct1": "1", "pct2": "1.5", "pct3": "2.5", "pct4": "3", "pct5": "4 +1.5/\u22121.5", "pct6": "5 +1.5/\u22121.5" },
-      { "steps": 2, "feet": "5", "pct1": "2", "pct2": "4", "pct3": "6 +1.5/\u22121.5", "pct4": "8 +1.5/\u22121.5", "pct5": "10 +1.5/\u22123", "pct6": "13 +3/\u22124.5" },
-      { "steps": 3, "feet": "7.5", "pct1": "3.5", "pct2": "6.5", "pct3": "10 +1.5/\u22121.5", "pct4": "13.5 +3/\u22123", "pct5": "17 +3/\u22124.5", "pct6": "20 +4.5/\u22126" },
-      { "steps": 4, "feet": "10", "pct1": "4.5", "pct2": "9 \u22121.5", "pct3": "13.5 +1.5/\u22123", "pct4": "18 +3/\u22124.5", "pct5": "22.5 +4.5/\u22126", "pct6": "27 +7.5/\u22129" },
-      { "steps": 6, "feet": "15", "pct1": "7", "pct2": "15 \u22121.5", "pct3": "22.5 +3/\u22124.5", "pct4": "30 +6/\u22126", "pct5": "37.5 +7.5/\u221210.5", "pct6": "45 +10.5/\u221215" },
-      { "steps": 8, "feet": "20", "pct1": "11", "pct2": "22 \u22123", "pct3": "33 +4.5/\u22126", "pct4": "44 +7.5/\u22129", "pct5": "55 +10.5/\u221213.5", "pct6": "66 +15/\u221222.5" },
-      { "steps": 10, "feet": "25", "pct1": "14.5", "pct2": "29 \u22124.5", "pct3": "43.5 +6/\u22127.5", "pct4": "58 +10.5/\u221210.5", "pct5": "72.5 +13.5/\u221218", "pct6": "87 +19.5/\u221228.5" }
+      {
+        "steps": 0.4,
+        "feet": "1",
+        "original": false,
+        "pct1": "0.5",
+        "pct2": "0",
+        "pct3": "0.5",
+        "pct4": "0",
+        "pct5": "0.5 +1.5/−0.5",
+        "pct6": "0 +0.5"
+      },
+      {
+        "steps": 0.8,
+        "feet": "2",
+        "original": false,
+        "pct1": "1",
+        "pct2": "1",
+        "pct3": "2",
+        "pct4": "2",
+        "pct5": "3 +1.5/−1",
+        "pct6": "3.5 +1/−1"
+      },
+      {
+        "steps": 1,
+        "feet": "2.5",
+        "pct1": "1",
+        "pct2": "1.5",
+        "pct3": "2.5",
+        "pct4": "3",
+        "pct5": "4 +1.5/−1.5",
+        "pct6": "5 +1.5/−1.5",
+        "original": true
+      },
+      {
+        "steps": 1.2,
+        "feet": "3",
+        "original": false,
+        "pct1": "1",
+        "pct2": "2",
+        "pct3": "3 +0.5/−0.5",
+        "pct4": "4 +0.5/−0.5",
+        "pct5": "5 +1.5/−2",
+        "pct6": "6.5 +2/−2"
+      },
+      {
+        "steps": 1.6,
+        "feet": "4",
+        "original": false,
+        "pct1": "1.5",
+        "pct2": "3",
+        "pct3": "4.5 +1/−1",
+        "pct4": "6 +1/−1",
+        "pct5": "7.5 +1.5/−2.5",
+        "pct6": "10 +2.5/−3.5"
+      },
+      {
+        "steps": 2,
+        "feet": "5",
+        "pct1": "2",
+        "pct2": "4",
+        "pct3": "6 +1.5/−1.5",
+        "pct4": "8 +1.5/−1.5",
+        "pct5": "10 +1.5/−3",
+        "pct6": "13 +3/−4.5",
+        "original": true
+      },
+      {
+        "steps": 2.4,
+        "feet": "6",
+        "original": false,
+        "pct1": "2.5",
+        "pct2": "5",
+        "pct3": "7.5 +1.5/−1.5",
+        "pct4": "10 +2/−2",
+        "pct5": "13 +2/−3.5",
+        "pct6": "16 +3.5/−5"
+      },
+      {
+        "steps": 2.8,
+        "feet": "7",
+        "original": false,
+        "pct1": "3",
+        "pct2": "6",
+        "pct3": "9 +1.5/−1.5",
+        "pct4": "12.5 +2.5/−2.5",
+        "pct5": "15.5 +2.5/−4",
+        "pct6": "18.5 +4/−5.5"
+      },
+      {
+        "steps": 3,
+        "feet": "7.5",
+        "pct1": "3.5",
+        "pct2": "6.5",
+        "pct3": "10 +1.5/−1.5",
+        "pct4": "13.5 +3/−3",
+        "pct5": "17 +3/−4.5",
+        "pct6": "20 +4.5/−6",
+        "original": true
+      },
+      {
+        "steps": 3.2,
+        "feet": "8",
+        "original": false,
+        "pct1": "3.5",
+        "pct2": "7 −0.5",
+        "pct3": "10.5 +1.5/−2",
+        "pct4": "14.5 +3/−3.5",
+        "pct5": "18 +3.5/−5",
+        "pct6": "21.5 +5/−6.5"
+      },
+      {
+        "steps": 3.6,
+        "feet": "9",
+        "original": false,
+        "pct1": "4",
+        "pct2": "8 −1",
+        "pct3": "12 +1.5/−2.5",
+        "pct4": "16 +3/−4",
+        "pct5": "20.5 +4/−5.5",
+        "pct6": "24 +6.5/−8"
+      },
+      {
+        "steps": 4,
+        "feet": "10",
+        "pct1": "4.5",
+        "pct2": "9 −1.5",
+        "pct3": "13.5 +1.5/−3",
+        "pct4": "18 +3/−4.5",
+        "pct5": "22.5 +4.5/−6",
+        "pct6": "27 +7.5/−9",
+        "original": true
+      },
+      {
+        "steps": 4.4,
+        "feet": "11",
+        "original": false,
+        "pct1": "5",
+        "pct2": "10 −1.5",
+        "pct3": "15.5 +2/−3.5",
+        "pct4": "20.5 +3.5/−5",
+        "pct5": "25.5 +5/−7",
+        "pct6": "30.5 +8/−10"
+      },
+      {
+        "steps": 4.8,
+        "feet": "12",
+        "original": false,
+        "pct1": "5.5",
+        "pct2": "11.5 −1.5",
+        "pct3": "17 +2/−3.5",
+        "pct4": "23 +4/−5",
+        "pct5": "28.5 +5.5/−8",
+        "pct6": "34 +8.5/−11.5"
+      },
+      {
+        "steps": 5.2,
+        "feet": "13",
+        "original": false,
+        "pct1": "6",
+        "pct2": "12.5 −1.5",
+        "pct3": "19 +2.5/−4",
+        "pct4": "25 +5/−5.5",
+        "pct5": "31.5 +6.5/−8.5",
+        "pct6": "38 +9.5/−12.5"
+      },
+      {
+        "steps": 5.6,
+        "feet": "14",
+        "original": false,
+        "pct1": "6.5",
+        "pct2": "14 −1.5",
+        "pct3": "20.5 +2.5/−4",
+        "pct4": "27.5 +5.5/−5.5",
+        "pct5": "34.5 +7/−9.5",
+        "pct6": "41.5 +10/−14"
+      },
+      {
+        "steps": 6,
+        "feet": "15",
+        "pct1": "7",
+        "pct2": "15 −1.5",
+        "pct3": "22.5 +3/−4.5",
+        "pct4": "30 +6/−6",
+        "pct5": "37.5 +7.5/−10.5",
+        "pct6": "45 +10.5/−15",
+        "original": true
+      },
+      {
+        "steps": 6.4,
+        "feet": "16",
+        "original": false,
+        "pct1": "8",
+        "pct2": "16.5 −2",
+        "pct3": "24.5 +3.5/−5",
+        "pct4": "33 +6.5/−6.5",
+        "pct5": "41 +8/−11",
+        "pct6": "49 +11.5/−16.5"
+      },
+      {
+        "steps": 6.8,
+        "feet": "17",
+        "original": false,
+        "pct1": "8.5",
+        "pct2": "18 −2",
+        "pct3": "26.5 +3.5/−5",
+        "pct4": "35.5 +6.5/−7",
+        "pct5": "44.5 +8.5/−11.5",
+        "pct6": "53.5 +12.5/−18"
+      },
+      {
+        "steps": 7.2,
+        "feet": "18",
+        "original": false,
+        "pct1": "9.5",
+        "pct2": "19 −2.5",
+        "pct3": "29 +4/−5.5",
+        "pct4": "38.5 +7/−8",
+        "pct5": "48 +9.5/−12.5",
+        "pct6": "57.5 +13/−19.5"
+      },
+      {
+        "steps": 7.6,
+        "feet": "19",
+        "original": false,
+        "pct1": "10",
+        "pct2": "20.5 −2.5",
+        "pct3": "31 +4/−5.5",
+        "pct4": "41 +7/−8.5",
+        "pct5": "51.5 +10/−13",
+        "pct6": "62 +14/−21"
+      },
+      {
+        "steps": 8,
+        "feet": "20",
+        "pct1": "11",
+        "pct2": "22 −3",
+        "pct3": "33 +4.5/−6",
+        "pct4": "44 +7.5/−9",
+        "pct5": "55 +10.5/−13.5",
+        "pct6": "66 +15/−22.5",
+        "original": true
+      },
+      {
+        "steps": 8.4,
+        "feet": "21",
+        "original": false,
+        "pct1": "11.5",
+        "pct2": "23.5 −3.5",
+        "pct3": "35 +5/−6.5",
+        "pct4": "47 +8/−9.5",
+        "pct5": "58.5 +11/−14.5",
+        "pct6": "70 +16/−23.5"
+      },
+      {
+        "steps": 8.8,
+        "feet": "22",
+        "original": false,
+        "pct1": "12.5",
+        "pct2": "25 −3.5",
+        "pct3": "37 +5/−6.5",
+        "pct4": "49.5 +8.5/−9.5",
+        "pct5": "62 +11.5/−15.5",
+        "pct6": "74.5 +17/−25"
+      },
+      {
+        "steps": 9.2,
+        "feet": "23",
+        "original": false,
+        "pct1": "13",
+        "pct2": "26 −4",
+        "pct3": "39.5 +5.5/−7",
+        "pct4": "52.5 +9.5/−10",
+        "pct5": "65.5 +12.5/−16",
+        "pct6": "78.5 +17.5/−26"
+      },
+      {
+        "steps": 9.6,
+        "feet": "24",
+        "original": false,
+        "pct1": "14",
+        "pct2": "27.5 −4",
+        "pct3": "41.5 +5.5/−7",
+        "pct4": "55 +10/−10",
+        "pct5": "69 +13/−17",
+        "pct6": "83 +18.5/−27.5"
+      },
+      {
+        "steps": 10,
+        "feet": "25",
+        "pct1": "14.5",
+        "pct2": "29 −4.5",
+        "pct3": "43.5 +6/−7.5",
+        "pct4": "58 +10.5/−10.5",
+        "pct5": "72.5 +13.5/−18",
+        "pct6": "87 +19.5/−28.5",
+        "original": true
+      }
     ]
   },
   "zblChart": {
     "title": "9-Inch ZBL Conversion Chart",
-    "description": "Stimp 10 \u2014 Lateral aim based on clock position relative to zero break line",
-    "columns": ["Clock Position", "Angle from ZBL", "Sine Multiplier", "Lateral Aim"],
+    "description": "Stimp 10 — Lateral aim based on clock position relative to zero break line",
+    "columns": [
+      "Clock Position",
+      "Angle from ZBL",
+      "Sine Multiplier",
+      "Lateral Aim"
+    ],
     "rows": [
-      { "clock": "3:00 / 9:00", "angle": "90\u00b0 (Side-hill)", "sine": "1.00", "aim": "9.00\"" },
-      { "clock": "3:30 / 8:30", "angle": "75\u00b0", "sine": "0.96", "aim": "8.64\"" },
-      { "clock": "4:00 / 8:00", "angle": "60\u00b0", "sine": "0.86", "aim": "7.74\"" },
-      { "clock": "4:30 / 7:30", "angle": "45\u00b0", "sine": "0.70", "aim": "6.30\"" },
-      { "clock": "5:00 / 7:00", "angle": "30\u00b0", "sine": "0.50", "aim": "4.50\" (Half)" },
-      { "clock": "5:30 / 6:30", "angle": "15\u00b0", "sine": "0.25", "aim": "2.25\"" },
-      { "clock": "6:00 / 12:00", "angle": "0\u00b0 (Straight)", "sine": "0.00", "aim": "0.00\" (Center)" }
+      {
+        "clock": "3:00 / 9:00",
+        "angle": "90° (Side-hill)",
+        "sine": "1.00",
+        "aim": "9.00\""
+      },
+      {
+        "clock": "3:30 / 8:30",
+        "angle": "75°",
+        "sine": "0.96",
+        "aim": "8.64\""
+      },
+      {
+        "clock": "4:00 / 8:00",
+        "angle": "60°",
+        "sine": "0.86",
+        "aim": "7.74\""
+      },
+      {
+        "clock": "4:30 / 7:30",
+        "angle": "45°",
+        "sine": "0.70",
+        "aim": "6.30\""
+      },
+      {
+        "clock": "5:00 / 7:00",
+        "angle": "30°",
+        "sine": "0.50",
+        "aim": "4.50\" (Half)"
+      },
+      {
+        "clock": "5:30 / 6:30",
+        "angle": "15°",
+        "sine": "0.25",
+        "aim": "2.25\""
+      },
+      {
+        "clock": "6:00 / 12:00",
+        "angle": "0° (Straight)",
+        "sine": "0.00",
+        "aim": "0.00\" (Center)"
+      }
     ]
   },
   "gravityVector": {
     "title": "Gravity Vector Table",
-    "description": "Medium Green \u2014 reference card for on-course break reads",
-    "note": "Captured from reference card photo \u2014 verify values against your laminated card"
+    "description": "Medium Green — reference card for on-course break reads",
+    "note": "Captured from reference card photo — verify values against your laminated card"
   }
 }
