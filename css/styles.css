@@ -389,6 +389,27 @@ body {
   color: var(--green-dark);
 }
 
+/* Original Bryson data rows — highlighted */
+.bryson-table tr.row-original td {
+  background: var(--green-pale);
+  font-weight: 700;
+}
+
+.bryson-table tr.row-original td.cell-steps {
+  font-weight: 800;
+  color: var(--green-dark);
+}
+
+/* Interpolated rows — subdued */
+.bryson-table tr.row-interpolated td {
+  color: var(--text-secondary);
+}
+
+.bryson-table tr.row-interpolated td.cell-steps {
+  font-weight: 600;
+  color: var(--gray-400);
+}
+
 /* ZBL table */
 .zbl-table .cell-aim {
   font-weight: 700;

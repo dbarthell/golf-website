@@ -104,7 +104,7 @@ function initClubTabs() {
 
 function renderBrysonTable(data) {
   const rows = data.rows.map(r => `
-    <tr>
+    <tr class="${r.original ? 'row-original' : 'row-interpolated'}">
       <td class="cell-steps">${r.steps}</td>
       <td>${r.feet}</td>
       <td>${r.pct1}</td>
