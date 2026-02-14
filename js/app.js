@@ -152,14 +152,16 @@ function renderZBLChart(data) {
         <h3>${data.title}</h3>
         <p>${data.description}</p>
       </div>
-      <table class="putting-table zbl-table">
-        <thead>
-          <tr>
-            ${data.columns.map(c => `<th>${c}</th>`).join('')}
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="putting-table zbl-table">
+          <thead>
+            <tr>
+              ${data.columns.map(c => `<th>${c}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
     </div>
   `;
 }
