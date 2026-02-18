@@ -102,6 +102,35 @@ function initClubTabs() {
 // Putting Section
 // ========================================
 
+function renderLagPuttingTable(data) {
+  const rows = data.rows.map(r => `
+    <tr class="${r.original ? 'row-original' : ''}">
+      <td class="cell-backswing">${r.inches}</td>
+      <td>${r.landmark}</td>
+      <td class="cell-distance">${r.feet}</td>
+    </tr>
+  `).join('');
+
+  return `
+    <div class="putting-card">
+      <div class="putting-card-header">
+        <h3>${data.title}</h3>
+        <p>${data.description}</p>
+      </div>
+      <div class="table-scroll">
+        <table class="putting-table lag-table">
+          <thead>
+            <tr>
+              ${data.columns.map(c => `<th>${c}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
 function renderBrysonTable(data) {
   const rows = data.rows.map(r => `
     <tr class="${r.original ? 'row-original' : 'row-interpolated'}">
@@ -184,9 +213,10 @@ function renderPutting(puttingData) {
   const container = document.getElementById('putting-grid');
   let html = '';
 
-  if (puttingData.brysonTable) html += renderBrysonTable(puttingData.brysonTable);
-  if (puttingData.zblChart) html += renderZBLChart(puttingData.zblChart);
-  if (puttingData.gravityVector) html += renderGravityNote(puttingData.gravityVector);
+  if (puttingData.lagPuttingTable) html += renderLagPuttingTable(puttingData.lagPuttingTable);
+  if (puttingData.brysonTable)     html += renderBrysonTable(puttingData.brysonTable);
+  if (puttingData.zblChart)        html += renderZBLChart(puttingData.zblChart);
+  if (puttingData.gravityVector)   html += renderGravityNote(puttingData.gravityVector);
 
   container.innerHTML = html;
 }
