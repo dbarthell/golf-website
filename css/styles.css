@@ -74,7 +74,9 @@ body {
 }
 
 .hero-icon {
-  font-size: 3rem;
+  width: 100px;
+  height: auto;
+  border-radius: var(--radius-md);
   margin-bottom: var(--space-sm);
 }
 
