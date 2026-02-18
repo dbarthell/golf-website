@@ -1,4 +1,18 @@
 {
+  "lagPuttingTable": {
+    "title": "Lag Putting — Backswing Length",
+    "description": "Stimp 9 (Hibiscus) — Square-law calibration. 15\" outside trail foot = 20 ft baseline.",
+    "columns": ["Backswing", "Landmark", "Roll Distance"],
+    "rows": [
+      { "inches": "4.5\"", "landmark": "One Putter Head",    "feet": "~2 ft",   "original": false },
+      { "inches": "8.0\"", "landmark": "Inside Heel",        "feet": "~5.5 ft", "original": false },
+      { "inches": "9.0\"", "landmark": "Inside Trail Foot",  "feet": "~7 ft",   "original": false },
+      { "inches": "12.0\"","landmark": "Middle Trail Foot",  "feet": "~13 ft",  "original": false },
+      { "inches": "15.0\"","landmark": "Outside Trail Foot", "feet": "20 ft",   "original": true  },
+      { "inches": "18.0\"","landmark": "3\" Past Outside",   "feet": "~29 ft",  "original": false },
+      { "inches": "21.0\"","landmark": "6\" Past Outside",   "feet": "~39 ft",  "original": false }
+    ]
+  },
   "brysonTable": {
     "title": "Calibrated Bryson Table",
     "description": "Stimp 10 — Rounded to nearest 0.5 inch. Gravity Factor = 1.0",

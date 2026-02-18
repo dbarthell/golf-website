@@ -412,6 +412,29 @@ body {
   color: var(--gray-400);
 }
 
+/* Lag Putting Table */
+.lag-table .cell-backswing {
+  font-weight: 700;
+  color: var(--green-dark);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.lag-table .cell-distance {
+  font-weight: 700;
+  color: var(--green-dark);
+  text-align: right;
+}
+
+.lag-table tr.row-original td {
+  background: var(--green-pale);
+  font-weight: 700;
+}
+
+.lag-table tr.row-original .cell-backswing {
+  font-weight: 800;
+}
+
 /* ZBL table */
 .zbl-table .cell-aim {
   font-weight: 700;
