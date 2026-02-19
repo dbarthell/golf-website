@@ -1,7 +1,7 @@
 {
   "lagPuttingTable": {
     "title": "Lag Putting — Backswing Length",
-    "description": "Stimp 9 (Hibiscus) — Square-law calibration. 15\" outside trail foot = 20 ft baseline.",
+    "description": "Stimp 9 — Square-law calibration. 15\" outside trail foot = 20 ft baseline.",
     "columns": ["Backswing", "Landmark", "Roll Distance"],
     "rows": [
       { "inches": "4.5\"", "landmark": "One Putter Head",    "feet": "~2 ft",   "original": false },
