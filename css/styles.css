@@ -437,10 +437,9 @@ body {
 
 /* Table footnote */
 .putting-table-note {
-  padding: var(--space-sm) var(--space-lg);
+  margin-top: var(--space-sm);
   font-size: 0.78rem;
-  color: var(--text-secondary);
-  border-bottom: 1px solid var(--gray-200);
+  color: rgba(255, 255, 255, 0.7);
   line-height: 1.5;
 }
 

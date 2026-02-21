@@ -118,8 +118,8 @@ function renderLagPuttingTable(data) {
       <div class="putting-card-header">
         <h3>${data.title}</h3>
         <p>${data.description}</p>
+        ${data.slopeNote ? `<p class="putting-table-note">${data.slopeNote}</p>` : ''}
       </div>
-      ${data.slopeNote ? `<p class="putting-table-note">${data.slopeNote}</p>` : ''}
       <div class="table-scroll">
         <table class="putting-table lag-table">
           <thead>
