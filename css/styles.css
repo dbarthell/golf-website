@@ -440,7 +440,7 @@ body {
   padding: var(--space-sm) var(--space-lg);
   font-size: 0.78rem;
   color: var(--text-secondary);
-  border-top: 1px solid var(--gray-200);
+  border-bottom: 1px solid var(--gray-200);
   line-height: 1.5;
 }
 
