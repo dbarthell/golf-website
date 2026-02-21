@@ -94,6 +94,20 @@ function interpolateAt(feet, key) {
     };
   }
 
+  // Beyond last anchor → extrapolate from last two anchors
+  if (feet > anchors[anchors.length - 1].feet) {
+    const lo = anchors[anchors.length - 2];
+    const hi = anchors[anchors.length - 1];
+    const t = (feet - lo.feet) / (hi.feet - lo.feet); // > 1 for extrapolation
+    const loV = lo.values[key];
+    const hiV = hi.values[key];
+    return {
+      base: Math.max(0, loV.base + t * (hiV.base - loV.base)),
+      high: Math.max(0, loV.high + t * (hiV.high - loV.high)),
+      low:  Math.max(0, loV.low  + t * (hiV.low  - loV.low)),
+    };
+  }
+
   // Find bracketing anchors
   let loIdx = 0;
   let hiIdx = anchors.length - 1;
@@ -130,6 +144,8 @@ for (let f = 1; f <= 25; f++) {
 }
 // Add the original half-foot values
 targetFeet.push(2.5, 7.5);
+// Add extended range in 5-foot increments
+targetFeet.push(30, 35, 40, 45, 50);
 // Sort and deduplicate
 targetFeet.sort((a, b) => a - b);
 

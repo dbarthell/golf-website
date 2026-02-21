@@ -10,7 +10,11 @@
       { "inches": "12.0\"","landmark": "Middle Trail Foot",  "feet": "~13 ft",  "original": false },
       { "inches": "15.0\"","landmark": "Outside Trail Foot", "feet": "20 ft",   "original": true  },
       { "inches": "18.0\"","landmark": "3\" Past Outside",   "feet": "~29 ft",  "original": false },
-      { "inches": "21.0\"","landmark": "6\" Past Outside",   "feet": "~39 ft",  "original": false }
+      { "inches": "21.0\"","landmark": "6\" Past Outside",   "feet": "~39 ft",  "original": false },
+      { "inches": "24.0\"","landmark": "9\" Past Outside",   "feet": "~51 ft",  "original": false },
+      { "inches": "27.0\"","landmark": "12\" Past Outside",  "feet": "~65 ft",  "original": false },
+      { "inches": "30.0\"","landmark": "15\" Past Outside",  "feet": "~80 ft",  "original": false },
+      { "inches": "32.0\"","landmark": "17\" Past Outside",  "feet": "~91 ft",  "original": false }
     ]
   },
   "brysonTable": {
@@ -323,6 +327,61 @@
         "pct5": "72.5 +13.5/−18",
         "pct6": "87 +19.5/−28.5",
         "original": true
+      },
+      {
+        "steps": 10,
+        "feet": "30",
+        "original": false,
+        "pct1": "18",
+        "pct2": "36 −6",
+        "pct3": "54 +7.5/−9",
+        "pct4": "72 +13.5/−12",
+        "pct5": "90 +16.5/−22.5",
+        "pct6": "108 +24/−34.5"
+      },
+      {
+        "steps": 11.7,
+        "feet": "35",
+        "original": false,
+        "pct1": "21.5",
+        "pct2": "43 −7.5",
+        "pct3": "64.5 +9/−10.5",
+        "pct4": "86 +16.5/−13.5",
+        "pct5": "107.5 +19.5/−27",
+        "pct6": "129 +28.5/−40.5"
+      },
+      {
+        "steps": 13.3,
+        "feet": "40",
+        "original": false,
+        "pct1": "25",
+        "pct2": "50 −9",
+        "pct3": "75 +10.5/−12",
+        "pct4": "100 +19.5/−15",
+        "pct5": "125 +22.5/−31.5",
+        "pct6": "150 +33/−46.5"
+      },
+      {
+        "steps": 15,
+        "feet": "45",
+        "original": false,
+        "pct1": "28.5",
+        "pct2": "57 −10.5",
+        "pct3": "85.5 +12/−13.5",
+        "pct4": "114 +22.5/−16.5",
+        "pct5": "142.5 +25.5/−36",
+        "pct6": "171 +37.5/−52.5"
+      },
+      {
+        "steps": 16.7,
+        "feet": "50",
+        "original": false,
+        "pct1": "32",
+        "pct2": "64 −12",
+        "pct3": "96 +13.5/−15",
+        "pct4": "128 +25.5/−18",
+        "pct5": "160 +28.5/−40.5",
+        "pct6": "192 +42/−58.5"
       }
     ]
   },
