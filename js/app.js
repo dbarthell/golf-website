@@ -107,7 +107,9 @@ function renderLagPuttingTable(data) {
     <tr class="${r.original ? 'row-original' : ''}">
       <td class="cell-backswing">${r.inches}</td>
       <td>${r.landmark}</td>
-      <td class="cell-distance">${r.feet}</td>
+      <td class="cell-distance">${r.stimp9}</td>
+      <td class="cell-distance">${r.stimp10}</td>
+      <td class="cell-distance">${r.stimp11}</td>
     </tr>
   `).join('');
 
