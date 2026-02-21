@@ -435,6 +435,15 @@ body {
   font-weight: 800;
 }
 
+/* Table footnote */
+.putting-table-note {
+  padding: var(--space-sm) var(--space-lg);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--gray-200);
+  line-height: 1.5;
+}
+
 /* ZBL table */
 .zbl-table .cell-aim {
   font-weight: 700;

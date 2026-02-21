@@ -129,6 +129,7 @@ function renderLagPuttingTable(data) {
           <tbody>${rows}</tbody>
         </table>
       </div>
+      ${data.slopeNote ? `<p class="putting-table-note">${data.slopeNote}</p>` : ''}
     </div>
   `;
 }

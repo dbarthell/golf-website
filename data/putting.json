@@ -2,6 +2,7 @@
   "lagPuttingTable": {
     "title": "Lag Putting — Backswing Length",
     "description": "Square-law calibration. 15\" outside trail foot = 20 ft baseline @ Stimp 9.",
+    "slopeNote": "Slope adj. (Stimp 10) — Uphill: −1 ft per 10 ft per 1% grade · Downhill: +1.5 ft per 10 ft per 1% grade. E.g. 20 ft at 2% uphill → aim 16 ft; 2% downhill → aim 26 ft.",
     "columns": ["Backswing", "Landmark", "Stimp 9", "Stimp 10", "Stimp 11"],
     "rows": [
       { "inches": "4.5\"", "landmark": "One Putter Head",    "stimp9": "~2 ft",   "stimp10": "~2 ft",    "stimp11": "~2 ft",    "original": false },
