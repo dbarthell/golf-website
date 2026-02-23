@@ -5,17 +5,17 @@
     "slopeNote": "Slope adj. (Stimp 10) — Uphill: +1 ft per 10 ft per 1% grade · Downhill: −1.5 ft per 10 ft per 1% grade. E.g. 20 ft at 2% uphill → aim 24 ft; 2% downhill → aim 14 ft.",
     "columns": ["Backswing", "Landmark", "Stimp 9", "Stimp 10", "Stimp 11"],
     "rows": [
-      { "inches": "4.5\"", "landmark": "One Putter Head",    "stimp9": "~2 ft",   "stimp10": "~2 ft",    "stimp11": "~2 ft",    "original": false },
-      { "inches": "8.0\"", "landmark": "Inside Heel",        "stimp9": "~5.5 ft", "stimp10": "~6.5 ft",  "stimp11": "~7 ft",    "original": false },
-      { "inches": "9.0\"", "landmark": "Inside Trail Foot",  "stimp9": "~7 ft",   "stimp10": "~8 ft",    "stimp11": "~9 ft",    "original": false },
-      { "inches": "12.0\"","landmark": "Middle Trail Foot",  "stimp9": "~13 ft",  "stimp10": "~14 ft",   "stimp11": "~15.5 ft", "original": false },
-      { "inches": "15.0\"","landmark": "Outside Trail Foot", "stimp9": "20 ft",   "stimp10": "~22 ft",   "stimp11": "~24.5 ft", "original": true  },
-      { "inches": "18.0\"","landmark": "3\" Past Outside",   "stimp9": "~29 ft",  "stimp10": "~32 ft",   "stimp11": "~35 ft",   "original": false },
-      { "inches": "21.0\"","landmark": "6\" Past Outside",   "stimp9": "~39 ft",  "stimp10": "~43.5 ft", "stimp11": "~48 ft",   "original": false },
-      { "inches": "24.0\"","landmark": "9\" Past Outside",   "stimp9": "~51 ft",  "stimp10": "~57 ft",   "stimp11": "~62.5 ft", "original": false },
-      { "inches": "27.0\"","landmark": "12\" Past Outside",  "stimp9": "~65 ft",  "stimp10": "~72 ft",   "stimp11": "~79 ft",   "original": false },
-      { "inches": "30.0\"","landmark": "15\" Past Outside",  "stimp9": "~80 ft",  "stimp10": "~89 ft",   "stimp11": "~98 ft",   "original": false },
-      { "inches": "32.0\"","landmark": "17\" Past Outside",  "stimp9": "~91 ft",  "stimp10": "~101 ft",  "stimp11": "~111 ft",  "original": false }
+      { "inches": "4.5\"", "landmark": "One Putter Head",    "stimp9": "2 ft",   "stimp10": "2 ft",    "stimp11": "2 ft",    "original": false },
+      { "inches": "8.0\"", "landmark": "Inside Heel",        "stimp9": "5.5 ft", "stimp10": "6.5 ft",  "stimp11": "7 ft",    "original": false },
+      { "inches": "9.0\"", "landmark": "Inside Trail Foot",  "stimp9": "7 ft",   "stimp10": "8 ft",    "stimp11": "9 ft",    "original": false },
+      { "inches": "12.0\"","landmark": "Middle Trail Foot",  "stimp9": "13 ft",  "stimp10": "14 ft",   "stimp11": "15.5 ft", "original": false },
+      { "inches": "15.0\"","landmark": "Outside Trail Foot", "stimp9": "20 ft",  "stimp10": "22 ft",   "stimp11": "24.5 ft", "original": true  },
+      { "inches": "18.0\"","landmark": "3\" Past Outside",   "stimp9": "29 ft",  "stimp10": "32 ft",   "stimp11": "35 ft",   "original": false },
+      { "inches": "21.0\"","landmark": "6\" Past Outside",   "stimp9": "39 ft",  "stimp10": "43.5 ft", "stimp11": "48 ft",   "original": false },
+      { "inches": "24.0\"","landmark": "9\" Past Outside",   "stimp9": "51 ft",  "stimp10": "57 ft",   "stimp11": "62.5 ft", "original": false },
+      { "inches": "27.0\"","landmark": "12\" Past Outside",  "stimp9": "65 ft",  "stimp10": "72 ft",   "stimp11": "79 ft",   "original": false },
+      { "inches": "30.0\"","landmark": "15\" Past Outside",  "stimp9": "80 ft",  "stimp10": "89 ft",   "stimp11": "98 ft",   "original": false },
+      { "inches": "32.0\"","landmark": "17\" Past Outside",  "stimp9": "91 ft",  "stimp10": "101 ft",  "stimp11": "111 ft",  "original": false }
     ]
   },
   "brysonTable": {
