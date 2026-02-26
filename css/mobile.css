@@ -107,6 +107,42 @@ body {
   margin-bottom: var(--space-xl);
 }
 
+.stimp-toggle {
+  display: flex;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.stimp-btn {
+  flex: 1;
+  padding: var(--space-md) var(--space-xs);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.65);
+  border: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: all 0.15s;
+  line-height: 1.2;
+}
+
+.stimp-btn:last-child {
+  border-right: none;
+}
+
+.stimp-btn.stimp-btn-active {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--green-dark);
+  font-weight: 800;
+}
+
+.stimp-btn:active {
+  background: rgba(255, 255, 255, 0.3);
+}
+
 .lookup-label {
   display: block;
   font-size: 0.9rem;

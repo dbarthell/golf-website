@@ -3,6 +3,7 @@
 // ========================================
 
 let puttingData = null;
+let currentStimp = 10;
 
 async function loadJSON(path) {
   const response = await fetch(path);
@@ -129,49 +130,54 @@ function findPuttingData(distanceFeet) {
 // Backswing Calculation
 // ========================================
 
-function findBackswingData(distanceFeet) {
+function getDistanceForStimp(row, stimp) {
+  const d9  = parseFloat(row.stimp9.replace(' ft', ''));
+  const d10 = parseFloat(row.stimp10.replace(' ft', ''));
+  const d11 = parseFloat(row.stimp11.replace(' ft', ''));
+  if (stimp <= 9)  return d9;
+  if (stimp <= 10) return lerp(d9, d10, stimp - 9);
+  if (stimp <= 11) return lerp(d10, d11, stimp - 10);
+  // Extrapolate beyond stimp 11 using the 10→11 rate
+  return d11 + (d11 - d10) * (stimp - 11);
+}
+
+function findBackswingData(distanceFeet, stimp) {
   const rows = puttingData.lagPuttingTable.rows;
-  
-  // Find exact match for Stimp 10
-  const exactMatch = rows.find(r => parseFloat(r.stimp10.replace(' ft', '')) === distanceFeet);
-  if (exactMatch) return exactMatch;
-  
-  // Find surrounding rows for interpolation
+
   let lower = null;
   let upper = null;
-  
+
   for (let i = 0; i < rows.length; i++) {
-    const feet = parseFloat(rows[i].stimp10.replace(' ft', ''));
+    const feet = getDistanceForStimp(rows[i], stimp);
     if (feet < distanceFeet) {
       lower = rows[i];
     } else if (feet > distanceFeet) {
       upper = rows[i];
       break;
+    } else {
+      return rows[i]; // exact match
     }
   }
-  
-  // If out of range, return closest
+
   if (!lower) return upper;
   if (!upper) return lower;
-  
-  // Interpolate backswing inches
-  const lowerFeet = parseFloat(lower.stimp10.replace(' ft', ''));
-  const upperFeet = parseFloat(upper.stimp10.replace(' ft', ''));
+
+  const lowerFeet = getDistanceForStimp(lower, stimp);
+  const upperFeet = getDistanceForStimp(upper, stimp);
   const t = (distanceFeet - lowerFeet) / (upperFeet - lowerFeet);
-  
+
   const lowerInches = parseFloat(lower.inches.replace('"', ''));
   const upperInches = parseFloat(upper.inches.replace('"', ''));
   const interpolatedInches = lerp(lowerInches, upperInches, t);
-  
+
   return {
     inches: interpolatedInches.toFixed(1) + '"',
     landmark: '(interpolated)',
-    stimp10: distanceFeet + ' ft',
     original: false
   };
 }
 
-function calculateZBLVector(distanceFeet, slopePct) {
+function calculateZBLVector(distanceFeet, slopePct, stimp) {
   const slope = parseFloat(slopePct) || 0;
 
   // Flat green — aim straight at hole
@@ -211,10 +217,11 @@ function calculateZBLVector(distanceFeet, slopePct) {
     };
   }
 
-  // ZBL vector: aim distance along the zero break line (in inches)
-  const aimInches = parsed.base.toFixed(1);
-  const plusInches = parsed.plusVariance > 0 ? parsed.plusVariance.toFixed(1) : null;
-  const minusInches = parsed.minusVariance > 0 ? parsed.minusVariance.toFixed(1) : null;
+  // ZBL vector: scale aim by stimp relative to the stimp-10 baseline
+  const stimpScale = (stimp || 10) / 10;
+  const aimInches = (parsed.base * stimpScale).toFixed(1);
+  const plusInches = parsed.plusVariance > 0 ? (parsed.plusVariance * stimpScale).toFixed(1) : null;
+  const minusInches = parsed.minusVariance > 0 ? (parsed.minusVariance * stimpScale).toFixed(1) : null;
 
   return { aimInches, plusInches, minusInches };
 }
@@ -223,12 +230,15 @@ function calculateZBLVector(distanceFeet, slopePct) {
 // Quick Lookup
 // ========================================
 
-function buildSlopeNote(distance, slope) {
+function buildSlopeNote(distance, slope, stimp) {
+  const stimpScale = (stimp || 10) / 10;
   if (!slope || slope <= 0) {
-    return 'Uphill: +1 ft/10 ft/1%<br>Downhill: −1.5 ft/10 ft/1%';
+    const uphillRate = Math.round(1 * stimpScale * 10) / 10;
+    const downhillRate = Math.round(1.5 * stimpScale * 10) / 10;
+    return `Uphill: +${uphillRate} ft/10 ft/1%<br>Downhill: −${downhillRate} ft/10 ft/1%`;
   }
-  const uphill = Math.round(distance * slope / 10 * 10) / 10;
-  const downhill = Math.round(distance * slope * 1.5 / 10 * 10) / 10;
+  const uphill = Math.round(distance * slope / 10 * stimpScale * 10) / 10;
+  const downhill = Math.round(distance * slope * 1.5 / 10 * stimpScale * 10) / 10;
   const uphillTotal = Math.round((distance + uphill) * 10) / 10;
   const downhillTotal = Math.round((distance - downhill) * 10) / 10;
   return `Uphill: +${uphill} ft → play as ${uphillTotal} ft<br>Downhill: −${downhill} ft → play as ${downhillTotal} ft`;
@@ -246,8 +256,8 @@ function updateLookupResult() {
     return;
   }
 
-  const backswingData = findBackswingData(distance);
-  const zblData = calculateZBLVector(distance, slope);
+  const backswingData = findBackswingData(distance, currentStimp);
+  const zblData = calculateZBLVector(distance, slope, currentStimp);
 
   if (!backswingData || !zblData) {
     result.innerHTML = '<div class="result-empty">Distance out of range</div>';
@@ -264,7 +274,7 @@ function updateLookupResult() {
         <div class="result-item">
           <div class="result-value">${backswingData.inches}</div>
           <div class="result-label">Backswing</div>
-          <div class="slope-note">${buildSlopeNote(distance, slope)}</div>
+          <div class="slope-note">${buildSlopeNote(distance, slope, currentStimp)}</div>
         </div>
         <div class="result-divider"></div>
         <div class="result-item">
@@ -296,9 +306,29 @@ function initQuickLookup() {
   // Restore saved values
   const savedDistance = localStorage.getItem('putt-distance');
   const savedSlope = localStorage.getItem('putt-slope');
+  const savedStimp = localStorage.getItem('putt-stimp');
   if (savedDistance) input.value = savedDistance;
   if (savedSlope) slopeInput.value = savedSlope;
+  if (savedStimp) {
+    currentStimp = parseFloat(savedStimp);
+    document.querySelectorAll('.stimp-btn').forEach(btn => {
+      btn.classList.toggle('stimp-btn-active', parseFloat(btn.dataset.stimp) === currentStimp);
+    });
+  }
   if (savedDistance) updateLookupResult();
+
+  // Stimp toggle
+  document.getElementById('stimp-toggle').addEventListener('click', e => {
+    const btn = e.target.closest('.stimp-btn');
+    if (!btn) return;
+    currentStimp = parseFloat(btn.dataset.stimp);
+    localStorage.setItem('putt-stimp', currentStimp);
+    document.querySelectorAll('.stimp-btn').forEach(b => {
+      b.classList.toggle('stimp-btn-active', b === btn);
+    });
+    updateLookupResult();
+    renderCommonDistances();
+  });
 
   input.addEventListener('input', () => {
     localStorage.setItem('putt-distance', input.value);
@@ -354,8 +384,8 @@ function renderCommonDistances() {
   const commonDistances = [3, 5, 6, 10, 15, 20, 25, 30, 40, 50, 65, 80];
   
   const cards = commonDistances.map(feet => {
-    const backswingData = findBackswingData(feet);
-    const zblData = calculateZBLVector(feet, 2);
+    const backswingData = findBackswingData(feet, currentStimp);
+    const zblData = calculateZBLVector(feet, 2, currentStimp);
     if (!backswingData || !zblData) return '';
     
     return `
