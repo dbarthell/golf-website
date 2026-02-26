@@ -223,6 +223,17 @@ function calculateZBLVector(distanceFeet, slopePct) {
 // Quick Lookup
 // ========================================
 
+function buildSlopeNote(distance, slope) {
+  if (!slope || slope <= 0) {
+    return 'Uphill: +1 ft/10 ft/1%<br>Downhill: −1.5 ft/10 ft/1%';
+  }
+  const uphill = Math.round(distance * slope / 10 * 10) / 10;
+  const downhill = Math.round(distance * slope * 1.5 / 10 * 10) / 10;
+  const uphillTotal = Math.round((distance + uphill) * 10) / 10;
+  const downhillTotal = Math.round((distance - downhill) * 10) / 10;
+  return `Uphill: +${uphill} ft → play as ${uphillTotal} ft<br>Downhill: −${downhill} ft → play as ${downhillTotal} ft`;
+}
+
 function updateLookupResult() {
   const input = document.getElementById('distance-input');
   const slopeInput = document.getElementById('slope-input');
@@ -253,7 +264,7 @@ function updateLookupResult() {
         <div class="result-item">
           <div class="result-value">${backswingData.inches}</div>
           <div class="result-label">Backswing</div>
-          <div class="slope-note">Uphill: +1 ft/10 ft/1%<br>Downhill: −1.5 ft/10 ft/1%</div>
+          <div class="slope-note">${buildSlopeNote(distance, slope)}</div>
         </div>
         <div class="result-divider"></div>
         <div class="result-item">
