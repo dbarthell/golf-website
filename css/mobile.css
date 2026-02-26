@@ -121,14 +121,39 @@ body {
   position: relative;
   display: flex;
   align-items: center;
+  gap: var(--space-sm);
+}
+
+.input-btn {
+  flex-shrink: 0;
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  font-size: 2rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-btn:active {
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(0.95);
 }
 
 .distance-input {
-  width: 100%;
+  flex: 1;
   font-size: 2.5rem;
   font-weight: 700;
   padding: var(--space-lg);
-  padding-right: 5rem;
+  padding-right: 3.5rem;
   border: 3px solid rgba(255, 255, 255, 0.3);
   border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.15);
@@ -152,7 +177,7 @@ body {
 
 .input-unit {
   position: absolute;
-  right: 3.5rem;
+  right: var(--space-lg);
   font-size: 1.25rem;
   font-weight: 600;
   opacity: 0.7;

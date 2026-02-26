@@ -244,7 +244,24 @@ function updateLookupResult() {
 
 function initQuickLookup() {
   const input = document.getElementById('distance-input');
+  const plusBtn = document.getElementById('plus-btn');
+  const minusBtn = document.getElementById('minus-btn');
+  
   input.addEventListener('input', updateLookupResult);
+  
+  plusBtn.addEventListener('click', () => {
+    const current = parseFloat(input.value) || 0;
+    input.value = current + 1;
+    updateLookupResult();
+  });
+  
+  minusBtn.addEventListener('click', () => {
+    const current = parseFloat(input.value) || 0;
+    if (current > 1) {
+      input.value = current - 1;
+      updateLookupResult();
+    }
+  });
 }
 
 // ========================================
