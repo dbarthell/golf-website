@@ -293,11 +293,22 @@ function initQuickLookup() {
   const slopePlusBtn = document.getElementById('slope-plus-btn');
   const slopeMinusBtn = document.getElementById('slope-minus-btn');
 
-  input.addEventListener('input', updateLookupResult);
+  // Restore saved values
+  const savedDistance = localStorage.getItem('putt-distance');
+  const savedSlope = localStorage.getItem('putt-slope');
+  if (savedDistance) input.value = savedDistance;
+  if (savedSlope) slopeInput.value = savedSlope;
+  if (savedDistance) updateLookupResult();
+
+  input.addEventListener('input', () => {
+    localStorage.setItem('putt-distance', input.value);
+    updateLookupResult();
+  });
 
   plusBtn.addEventListener('click', () => {
     const current = parseFloat(input.value) || 0;
     input.value = current + 1;
+    localStorage.setItem('putt-distance', input.value);
     updateLookupResult();
   });
 
@@ -305,16 +316,21 @@ function initQuickLookup() {
     const current = parseFloat(input.value) || 0;
     if (current > 1) {
       input.value = current - 1;
+      localStorage.setItem('putt-distance', input.value);
       updateLookupResult();
     }
   });
 
-  slopeInput.addEventListener('input', updateLookupResult);
+  slopeInput.addEventListener('input', () => {
+    localStorage.setItem('putt-slope', slopeInput.value);
+    updateLookupResult();
+  });
 
   slopePlusBtn.addEventListener('click', () => {
     const current = parseFloat(slopeInput.value) || 0;
     if (current < 6) {
       slopeInput.value = Math.min(6, current + 1);
+      localStorage.setItem('putt-slope', slopeInput.value);
       updateLookupResult();
     }
   });
@@ -323,6 +339,7 @@ function initQuickLookup() {
     const current = parseFloat(slopeInput.value) || 0;
     if (current > 0) {
       slopeInput.value = Math.max(0, current - 1);
+      localStorage.setItem('putt-slope', slopeInput.value);
       updateLookupResult();
     }
   });
