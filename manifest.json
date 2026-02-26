@@ -1,6 +1,6 @@
 {
-  "name": "Putt Calculator",
-  "short_name": "Putt Calc",
+  "name": "Vector Putt",
+  "short_name": "Vector Putt",
   "start_url": "/golf-website/",
   "scope": "/golf-website/",
   "display": "standalone",
