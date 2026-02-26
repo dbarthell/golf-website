@@ -128,7 +128,7 @@ body {
   font-size: 2.5rem;
   font-weight: 700;
   padding: var(--space-lg);
-  padding-right: 4rem;
+  padding-right: 5rem;
   border: 3px solid rgba(255, 255, 255, 0.3);
   border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.15);
@@ -137,17 +137,6 @@ body {
   font-family: var(--font-sans);
   backdrop-filter: blur(10px);
   transition: all 0.2s;
-}
-
-/* Hide number input spinners */
-.distance-input::-webkit-outer-spin-button,
-.distance-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.distance-input[type=number] {
-  -moz-appearance: textfield;
 }
 
 .distance-input::placeholder {
@@ -163,7 +152,7 @@ body {
 
 .input-unit {
   position: absolute;
-  right: var(--space-lg);
+  right: 3.5rem;
   font-size: 1.25rem;
   font-weight: 600;
   opacity: 0.7;
