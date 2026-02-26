@@ -91,6 +91,27 @@ body {
   font-size: 1rem;
   opacity: 0.85;
   font-weight: 400;
+  margin-bottom: var(--space-md);
+}
+
+.mobile-link {
+  display: inline-block;
+  margin-top: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+}
+
+.mobile-link:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 /* ========================================

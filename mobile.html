@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Putting Quick Reference</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+
+  <!-- Quick Lookup -->
+  <div class="quick-lookup">
+    <div class="lookup-header">
+      <h1>Putt Calculator</h1>
+      <a href="index.html" class="full-view-link">Full View</a>
+    </div>
+    
+    <div class="lookup-input-section">
+      <label for="distance-input" class="lookup-label">Distance to Hole</label>
+      <div class="input-wrapper">
+        <input 
+          type="number" 
+          id="distance-input" 
+          class="distance-input" 
+          placeholder="Enter feet"
+          min="1"
+          max="100"
+          inputmode="decimal"
+        >
+        <span class="input-unit">ft</span>
+      </div>
+    </div>
+
+    <div class="lookup-result" id="lookup-result">
+      <div class="result-empty">Enter a distance above</div>
+    </div>
+  </div>
+
+  <!-- Common Distances -->
+  <div class="common-distances">
+    <h2 class="section-title">Common Distances</h2>
+    <div class="distance-grid" id="distance-grid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- Quick Reference Tables -->
+  <div class="quick-table-section">
+    <h2 class="section-title">Backswing Reference (Stimp 10)</h2>
+    <div class="table-wrapper">
+      <table class="quick-table" id="backswing-table">
+        <!-- Populated by JS -->
+      </table>
+    </div>
+  </div>
+
+  <div class="quick-table-section">
+    <h2 class="section-title">ZBL Vector (2% Slope)</h2>
+    <div class="table-wrapper">
+      <table class="quick-table" id="zbl-table">
+        <!-- Populated by JS -->
+      </table>
+    </div>
+  </div>
+
+  <script src="js/mobile.js"></script>
+</body>
+</html>
