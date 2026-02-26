@@ -36,6 +36,25 @@
       </div>
     </div>
 
+    <div class="lookup-input-section">
+      <label for="slope-input" class="lookup-label">Slope %</label>
+      <div class="input-wrapper">
+        <button class="input-btn input-minus" id="slope-minus-btn">−</button>
+        <input 
+          type="number" 
+          id="slope-input" 
+          class="slope-input" 
+          placeholder="0"
+          min="0"
+          max="6"
+          value="2"
+          inputmode="decimal"
+        >
+        <span class="input-unit">%</span>
+        <button class="input-btn input-plus" id="slope-plus-btn">+</button>
+      </div>
+    </div>
+
     <div class="lookup-result" id="lookup-result">
       <div class="result-empty">Enter a distance above</div>
     </div>

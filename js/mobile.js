@@ -171,24 +171,52 @@ function findBackswingData(distanceFeet) {
   };
 }
 
-function calculateZBLVector(distanceFeet) {
-  // Get Bryson data for 2% slope
+function calculateZBLVector(distanceFeet, slopePct) {
+  const slope = parseFloat(slopePct) || 0;
+
+  // Flat green — aim straight at hole
+  if (slope <= 0) {
+    return { aimInches: '0.0', plusInches: null, minusInches: null };
+  }
+
   const brysonData = findPuttingData(distanceFeet);
   if (!brysonData) return null;
-  
-  const parsed = parseCell(brysonData.pct2);
-  
-  // ZBL vector: the aim distance along the zero break line at 2% slope (already in inches)
-  // This is the distance you aim uphill/downhill from the hole
+
+  // Clamp to data range (1–6%)
+  const clampedSlope = Math.min(6, slope);
+  const lowerSlope = Math.max(1, Math.floor(clampedSlope));
+  const upperSlope = Math.min(6, Math.ceil(clampedSlope));
+  const t = clampedSlope - Math.floor(clampedSlope);
+
+  let parsed;
+  if (lowerSlope === upperSlope || t === 0) {
+    // Exact whole-number slope
+    parsed = parseCell(brysonData[`pct${lowerSlope}`]);
+  } else if (Math.floor(clampedSlope) === 0) {
+    // Interpolate between flat (0) and 1%
+    const upper = parseCell(brysonData['pct1']);
+    parsed = {
+      base: lerp(0, upper.base, t),
+      plusVariance: lerp(0, upper.plusVariance, t),
+      minusVariance: lerp(0, upper.minusVariance, t)
+    };
+  } else {
+    // Interpolate between two whole-number slopes
+    const lower = parseCell(brysonData[`pct${lowerSlope}`]);
+    const upper = parseCell(brysonData[`pct${upperSlope}`]);
+    parsed = {
+      base: lerp(lower.base, upper.base, t),
+      plusVariance: lerp(lower.plusVariance, upper.plusVariance, t),
+      minusVariance: lerp(lower.minusVariance, upper.minusVariance, t)
+    };
+  }
+
+  // ZBL vector: aim distance along the zero break line (in inches)
   const aimInches = parsed.base.toFixed(1);
   const plusInches = parsed.plusVariance > 0 ? parsed.plusVariance.toFixed(1) : null;
   const minusInches = parsed.minusVariance > 0 ? parsed.minusVariance.toFixed(1) : null;
-  
-  return {
-    aimInches,
-    plusInches,
-    minusInches
-  };
+
+  return { aimInches, plusInches, minusInches };
 }
 
 // ========================================
@@ -197,25 +225,28 @@ function calculateZBLVector(distanceFeet) {
 
 function updateLookupResult() {
   const input = document.getElementById('distance-input');
+  const slopeInput = document.getElementById('slope-input');
   const result = document.getElementById('lookup-result');
   const distance = parseFloat(input.value);
-  
+  const slope = parseFloat(slopeInput.value) || 0;
+
   if (!distance || distance <= 0) {
     result.innerHTML = '<div class="result-empty">Enter a distance above</div>';
     return;
   }
-  
+
   const backswingData = findBackswingData(distance);
-  const zblData = calculateZBLVector(distance);
-  
+  const zblData = calculateZBLVector(distance, slope);
+
   if (!backswingData || !zblData) {
     result.innerHTML = '<div class="result-empty">Distance out of range</div>';
     return;
   }
-  
+
   const zblDisplay = zblData.aimInches + '"';
   const hasVariance = zblData.plusInches || zblData.minusInches;
-  
+  const slopeLabel = slope > 0 ? `ZBL Aim (${slope}%)` : 'ZBL Aim (flat)';
+
   result.innerHTML = `
     <div class="result-content">
       <div class="result-row">
@@ -235,7 +266,7 @@ function updateLookupResult() {
               </div>
             ` : ''}
           </div>
-          <div class="result-label">ZBL Aim (2%)</div>
+          <div class="result-label">${slopeLabel}</div>
         </div>
       </div>
     </div>
@@ -246,19 +277,41 @@ function initQuickLookup() {
   const input = document.getElementById('distance-input');
   const plusBtn = document.getElementById('plus-btn');
   const minusBtn = document.getElementById('minus-btn');
-  
+
+  const slopeInput = document.getElementById('slope-input');
+  const slopePlusBtn = document.getElementById('slope-plus-btn');
+  const slopeMinusBtn = document.getElementById('slope-minus-btn');
+
   input.addEventListener('input', updateLookupResult);
-  
+
   plusBtn.addEventListener('click', () => {
     const current = parseFloat(input.value) || 0;
     input.value = current + 1;
     updateLookupResult();
   });
-  
+
   minusBtn.addEventListener('click', () => {
     const current = parseFloat(input.value) || 0;
     if (current > 1) {
       input.value = current - 1;
+      updateLookupResult();
+    }
+  });
+
+  slopeInput.addEventListener('input', updateLookupResult);
+
+  slopePlusBtn.addEventListener('click', () => {
+    const current = parseFloat(slopeInput.value) || 0;
+    if (current < 6) {
+      slopeInput.value = Math.min(6, current + 1);
+      updateLookupResult();
+    }
+  });
+
+  slopeMinusBtn.addEventListener('click', () => {
+    const current = parseFloat(slopeInput.value) || 0;
+    if (current > 0) {
+      slopeInput.value = Math.max(0, current - 1);
       updateLookupResult();
     }
   });
@@ -274,7 +327,7 @@ function renderCommonDistances() {
   
   const cards = commonDistances.map(feet => {
     const backswingData = findBackswingData(feet);
-    const zblData = calculateZBLVector(feet);
+    const zblData = calculateZBLVector(feet, 2);
     if (!backswingData || !zblData) return '';
     
     return `
