@@ -98,20 +98,21 @@ body {
   display: inline-block;
   margin-top: var(--space-sm);
   padding: var(--space-sm) var(--space-lg);
-  background: rgba(255, 255, 255, 0.2);
-  color: var(--white);
+  background: var(--white);
+  color: var(--green-dark);
   text-decoration: none;
   border-radius: var(--radius-sm);
   font-size: 0.9rem;
-  font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-weight: 700;
+  border: 2px solid var(--white);
   transition: all 0.2s;
-  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .mobile-link:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: var(--green-pale);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 /* ========================================

@@ -60,6 +60,8 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   padding-bottom: var(--space-2xl);
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 /* ========================================
