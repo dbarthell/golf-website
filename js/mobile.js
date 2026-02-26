@@ -222,6 +222,7 @@ function updateLookupResult() {
         <div class="result-item">
           <div class="result-value">${backswingData.inches}</div>
           <div class="result-label">Backswing</div>
+          <div class="slope-note">Uphill: +1 ft/10 ft/1%<br>Downhill: −1.5 ft/10 ft/1%</div>
         </div>
         <div class="result-divider"></div>
         <div class="result-item">
