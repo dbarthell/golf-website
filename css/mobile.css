@@ -173,7 +173,7 @@ body {
 .lookup-result {
   background: var(--white);
   border-radius: var(--radius-lg);
-  padding: var(--space-xl);
+  padding: var(--space-md);
   box-shadow: var(--shadow-lg);
   min-height: 140px;
   display: flex;
@@ -191,6 +191,7 @@ body {
 
 .result-content {
   width: 100%;
+  max-width: 100%;
 }
 
 .result-row {
@@ -198,11 +199,14 @@ body {
   align-items: center;
   justify-content: space-around;
   margin-bottom: var(--space-lg);
+  gap: var(--space-sm);
 }
 
 .result-item {
   flex: 1;
   text-align: center;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .result-value-container {
@@ -213,17 +217,20 @@ body {
 }
 
 .result-value {
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   font-weight: 800;
   color: var(--green-dark);
   line-height: 1;
+  word-break: break-all;
 }
 
 .variance-display {
   display: flex;
-  gap: var(--space-sm);
-  font-size: 0.9rem;
+  gap: var(--space-xs);
+  font-size: 0.75rem;
   font-weight: 600;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .variance-plus {
