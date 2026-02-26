@@ -1,13 +1,11 @@
-const CACHE_NAME = 'putt-calc-v1';
+const CACHE_NAME = 'putt-calc-v2';
 const FILES_TO_CACHE = [
   '/golf-website/',
   '/golf-website/index.html',
   '/golf-website/css/mobile.css',
   '/golf-website/js/mobile.js',
   '/golf-website/data/putting.json',
-  '/golf-website/images/apple-touch-icon.png',
-  '/golf-website/images/favicon-32x32.png',
-  '/golf-website/images/favicon-16x16.png',
+  '/golf-website/images/logo.png',
 ];
 
 self.addEventListener('install', event => {
