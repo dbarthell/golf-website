@@ -2,154 +2,70 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Golf Numbers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Putting Quick Reference</title>
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/mobile.css">
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="hero">
-    <div class="hero-content">
-      <img src="images/mvcc-logo.jpg" alt="Minnesota Valley Country Club" class="hero-icon">
-      <h1>My Golf Numbers</h1>
-      <p class="hero-subtitle">Quick reference for the course</p>
-      <a href="mobile.html" class="mobile-link">📱 Mobile View</a>
+  <!-- Quick Lookup -->
+  <div class="quick-lookup">
+    <div class="lookup-header">
+      <h1>Putt Calculator</h1>
+      <a href="full.html" class="full-view-link">Full View</a>
     </div>
-  </header>
-
-  <!-- Sticky Nav -->
-  <nav class="sticky-nav" id="sticky-nav">
-    <div class="nav-inner">
-      <a href="#yardages" class="nav-link active" data-section="yardages">Yardages</a>
-      <a href="#putting" class="nav-link" data-section="putting">Putting</a>
-      <a href="#notes" class="nav-link" data-section="notes">Notes</a>
+    
+    <div class="lookup-input-section">
+      <label for="distance-input" class="lookup-label">Distance to Hole</label>
+      <div class="input-wrapper">
+        <input 
+          type="number" 
+          id="distance-input" 
+          class="distance-input" 
+          placeholder="Enter feet"
+          min="1"
+          max="100"
+          inputmode="decimal"
+        >
+        <span class="input-unit">ft</span>
+      </div>
     </div>
-  </nav>
 
-  <main class="container">
+    <div class="lookup-result" id="lookup-result">
+      <div class="result-empty">Enter a distance above</div>
+    </div>
+  </div>
 
-    <!-- Club Yardages Section -->
-    <section id="yardages" class="section">
-      <h2 class="section-title">Club Yardages</h2>
+  <!-- Common Distances -->
+  <div class="common-distances">
+    <h2 class="section-title">Common Distances</h2>
+    <div class="distance-grid" id="distance-grid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
 
-      <!-- Category Tabs -->
-      <div class="tabs" id="club-tabs">
-        <button class="tab active" data-category="woods">Woods</button>
-        <button class="tab" data-category="irons">Irons</button>
-        <button class="tab" data-category="wedges">Wedges</button>
-      </div>
-
-      <!-- Club Cards Container -->
-      <div class="club-cards" id="club-cards">
+  <!-- Quick Reference Tables -->
+  <div class="quick-table-section">
+    <h2 class="section-title">Backswing Reference (Stimp 10)</h2>
+    <div class="table-wrapper">
+      <table class="quick-table" id="backswing-table">
         <!-- Populated by JS -->
-      </div>
-    </section>
+      </table>
+    </div>
+  </div>
 
-    <!-- Vector Putting Section -->
-    <section id="putting" class="section">
-      <h2 class="section-title">Vector Putting</h2>
-      <div class="putting-grid" id="putting-grid">
+  <div class="quick-table-section">
+    <h2 class="section-title">ZBL Vector (2% Slope)</h2>
+    <div class="table-wrapper">
+      <table class="quick-table" id="zbl-table">
         <!-- Populated by JS -->
-      </div>
-    </section>
+      </table>
+    </div>
+  </div>
 
-    <!-- Notes / Other Info Section -->
-    <section id="notes" class="section">
-      <h2 class="section-title">Course Notes</h2>
-
-      <div class="accordion" id="accordion">
-        <div class="accordion-item">
-          <button class="accordion-header" aria-expanded="false">
-            <span>Pre-Shot Routine</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-body">
-            <ol>
-              <li>Stand behind the ball, pick a target line</li>
-              <li>Take one practice swing feeling the shot shape</li>
-              <li>Address the ball, align clubface to intermediate target</li>
-              <li>One look at the target, then go</li>
-            </ol>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-header" aria-expanded="false">
-            <span>Swing Thoughts</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-body">
-            <ul>
-              <li>Rotate like Bryson</li>
-              <li>Stretch w/ arms + hands</li>
-              <li>Right heel + hip initiate</li>
-              <li>Head still</li>
-              <li>Turn head to right at top of swing</li>
-              <li>Shaft straight up at address</li>
-              <li><strong>Head down at top to prevent heel contact</strong></li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-header" aria-expanded="false">
-            <span>Short Game</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-body">
-            <ul>
-              <li>Pivot of body</li>
-              <li>Throw w/ right arm to gauge distance</li>
-              <li>Read putt from side; front first feel</li>
-              <li>Speed in bunkers; use full swing</li>
-              <li>Aimpoint from center of cup</li>
-              <li>Accelerate putter like Bernhard</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-header" aria-expanded="false">
-            <span>Course Strategy</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-body">
-            <ul>
-              <li>Miss to the fat side of the green</li>
-              <li>Par is always a good score</li>
-              <li>Avoid short-sided chips &mdash; leave room to work with</li>
-              <li>When in doubt, take one more club</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button class="accordion-header" aria-expanded="false">
-            <span>Quick Rules Reference</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-body">
-            <ul>
-              <li><strong>Lateral hazard (red stakes):</strong> Drop within 2 club-lengths, no nearer the hole &mdash; 1 stroke penalty</li>
-              <li><strong>Water hazard (yellow stakes):</strong> Drop behind, keeping point of entry between you and the hole &mdash; 1 stroke penalty</li>
-              <li><strong>OB (white stakes):</strong> Stroke and distance, or local rule drop &mdash; 2 stroke penalty</li>
-              <li><strong>Unplayable lie:</strong> 3 options, all 1 stroke penalty</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="footer">
-    <p>&copy; 2025 My Golf Numbers</p>
-  </footer>
-
-  <script src="js/app.js"></script>
+  <script src="js/mobile.js"></script>
 </body>
 </html>
