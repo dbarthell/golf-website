@@ -320,6 +320,52 @@ body {
   font-weight: 500;
 }
 
+.slope-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: var(--space-md) var(--space-sm) var(--space-sm);
+  border-top: 1px solid var(--gray-200);
+}
+
+.slope-adj-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.slope-dir {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.slope-up   { color: var(--green-accent); }
+.slope-down { color: var(--gray-600); }
+
+.slope-dist {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--green-dark);
+  line-height: 1;
+}
+
+.slope-bs {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.slope-adj-divider {
+  width: 1px;
+  height: 44px;
+  background: var(--gray-200);
+  margin: 0 var(--space-sm);
+}
+
 .result-divider {
   width: 2px;
   height: 60px;

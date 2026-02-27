@@ -268,13 +268,39 @@ function updateLookupResult() {
   const hasVariance = zblData.plusInches || zblData.minusInches;
   const slopeLabel = slope > 0 ? `ZBL Aim (${slope}%)` : 'ZBL Aim (flat)';
 
+  let slopeRowHTML = '';
+  if (slope > 0) {
+    const stimpScale = currentStimp / 10;
+    const uphillAdj  = Math.round(distance * slope / 10 * stimpScale * 10) / 10;
+    const downhillAdj = Math.round(distance * slope * 1.5 / 10 * stimpScale * 10) / 10;
+    const uphillTotal   = Math.round((distance + uphillAdj) * 10) / 10;
+    const downhillTotal = Math.max(1, Math.round((distance - downhillAdj) * 10) / 10);
+    const uphillBS   = findBackswingData(uphillTotal, currentStimp);
+    const downhillBS = findBackswingData(downhillTotal, currentStimp);
+    slopeRowHTML = `
+      <div class="slope-row">
+        <div class="slope-adj-item">
+          <span class="slope-dir slope-up">↑ Uphill</span>
+          <span class="slope-dist">${uphillTotal} ft</span>
+          <span class="slope-bs">${uphillBS ? uphillBS.inches : '—'}</span>
+        </div>
+        <div class="slope-adj-divider"></div>
+        <div class="slope-adj-item">
+          <span class="slope-dir slope-down">↓ Downhill</span>
+          <span class="slope-dist">${downhillTotal} ft</span>
+          <span class="slope-bs">${downhillBS ? downhillBS.inches : '—'}</span>
+        </div>
+      </div>
+    `;
+  }
+
   result.innerHTML = `
     <div class="result-content">
       <div class="result-row">
         <div class="result-item">
           <div class="result-value">${backswingData.inches}</div>
           <div class="result-label">Backswing</div>
-          <div class="slope-note">${buildSlopeNote(distance, slope, currentStimp)}</div>
+          ${slope === 0 ? `<div class="slope-note">${buildSlopeNote(distance, 0, currentStimp)}</div>` : ''}
         </div>
         <div class="result-divider"></div>
         <div class="result-item">
@@ -290,6 +316,7 @@ function updateLookupResult() {
           <div class="result-label">${slopeLabel}</div>
         </div>
       </div>
+      ${slopeRowHTML}
     </div>
   `;
 }
