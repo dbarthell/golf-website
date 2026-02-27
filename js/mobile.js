@@ -240,7 +240,7 @@ function buildSlopeNote(distance, slope, stimp) {
   const uphill = Math.round(distance * slope / 10 * stimpScale * 10) / 10;
   const downhill = Math.round(distance * slope * 1.5 / 10 * stimpScale * 10) / 10;
   const uphillTotal = Math.round((distance + uphill) * 10) / 10;
-  const downhillTotal = Math.round((distance - downhill) * 10) / 10;
+  const downhillTotal = Math.max(1, Math.round((distance - downhill) * 10) / 10);
   return `Uphill: +${uphill} ft → play as ${uphillTotal} ft<br>Downhill: −${downhill} ft → play as ${downhillTotal} ft`;
 }
 
