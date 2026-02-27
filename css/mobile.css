@@ -49,6 +49,10 @@
   padding: 0;
 }
 
+button, a {
+  touch-action: manipulation;
+}
+
 html {
   scroll-behavior: smooth;
   overscroll-behavior-x: none;
@@ -179,7 +183,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  touch-action: manipulation;
 }
 
 .input-btn:active {
