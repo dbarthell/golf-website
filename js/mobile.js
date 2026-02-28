@@ -349,7 +349,11 @@ function updateLookupResult() {
           <div class="slope-adj-item">
             <span class="slope-dir ${isUphill ? 'slope-up' : 'slope-down'}">${isUphill ? '↑ Uphill' : '↓ Downhill'}</span>
             <span class="slope-dist">${adjDist} ft</span>
+          </div>
+          <div class="slope-adj-divider"></div>
+          <div class="slope-adj-item">
             <span class="slope-bs">${adjBSDisplay}</span>
+            <span class="slope-bs-label">backswing</span>
           </div>
         </div>
       `;

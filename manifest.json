@@ -4,8 +4,8 @@
   "start_url": "/golf-website/",
   "scope": "/golf-website/",
   "display": "standalone",
-  "background_color": "#0d2137",
-  "theme_color": "#0d2137",
+  "background_color": "#0e1b3d",
+  "theme_color": "#0e1b3d",
   "icons": [
     {
       "src": "images/logo.png",
