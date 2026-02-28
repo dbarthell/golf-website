@@ -7,17 +7,15 @@ let currentStimp = 10;
 let currentClock = null;
 
 // Calibration (loaded from localStorage, set via log.html)
-let puttCal = { distanceFactor: 1.0, breakFactor: 1.0 };
+// Only distanceFactor is personalised — ZBL aim is mathematically fixed.
+let puttCal = { distanceFactor: 1.0 };
 
 function loadCalibration() {
   try {
     const saved = localStorage.getItem('putt-cal');
     if (saved) {
       const parsed = JSON.parse(saved);
-      puttCal = {
-        distanceFactor: parsed.distanceFactor ?? 1.0,
-        breakFactor:    parsed.breakFactor    ?? 1.0,
-      };
+      puttCal = { distanceFactor: parsed.distanceFactor ?? 1.0 };
     }
   } catch (e) {}
 }
@@ -26,10 +24,6 @@ function applyCalBS(rawInches) {
   if (!rawInches) return '—';
   const num = parseFloat(rawInches.replace('"', ''));
   return (num * puttCal.distanceFactor).toFixed(1) + '"';
-}
-
-function applyCalAim(rawAimStr) {
-  return (parseFloat(rawAimStr) * puttCal.breakFactor).toFixed(1);
 }
 
 function updateLogLink() {
@@ -341,8 +335,7 @@ function updateLookupResult() {
     const adjBS = findBackswingData(adjDist, currentStimp);
     const zblResult = calculateZBLVector(distance, slope, currentStimp);
     const zblAimBase = zblResult ? parseFloat(zblResult.aimInches) : 0;
-    const lateralAimRaw = (zblAimBase * breakAbs).toFixed(1);
-    const lateralAim = applyCalAim(lateralAimRaw);
+    const lateralAim = (zblAimBase * breakAbs).toFixed(1);
     const adjBSDisplay = adjBS ? applyCalBS(adjBS.inches) : '—';
     const breakDir = breakAbs < 0.05
       ? 'Straight'
@@ -391,8 +384,7 @@ function updateLookupResult() {
   }
 
   const calBsInches = applyCalBS(backswingData.inches);
-  const calAimInches = applyCalAim(zblData.aimInches);
-  const zblDisplay = calAimInches + '"';
+  const zblDisplay = zblData.aimInches + '"';
   const hasVariance = zblData.plusInches || zblData.minusInches;
   const slopeLabel = slope > 0 ? `ZBL Aim (${slope}%)` : 'ZBL Aim (flat)';
   updateLogLink();

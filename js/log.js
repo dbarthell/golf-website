@@ -1,46 +1,16 @@
 // ========================================
-// Clock Data (mirrors mobile.js)
-// ========================================
-const CLOCK_DATA = {
-  '12': { theta: 0 },
-  '1':  { theta: Math.PI / 6 },
-  '2':  { theta: Math.PI / 3 },
-  '3':  { theta: Math.PI / 2 },
-  '4':  { theta: 2 * Math.PI / 3 },
-  '5':  { theta: 5 * Math.PI / 6 },
-  '6':  { theta: Math.PI },
-  '7':  { theta: 7 * Math.PI / 6 },
-  '8':  { theta: 4 * Math.PI / 3 },
-  '9':  { theta: 3 * Math.PI / 2 },
-  '10': { theta: 5 * Math.PI / 3 },
-  '11': { theta: 11 * Math.PI / 6 },
-};
-
-function getClockFactors(clockKey) {
-  const data = CLOCK_DATA[clockKey];
-  if (!data) return null;
-  return {
-    uphillFactor: -Math.cos(data.theta),
-    breakFactor:   Math.sin(data.theta),
-  };
-}
-
-// ========================================
 // Storage
 // ========================================
 const CAL_KEY = 'putt-cal';
 const LOG_KEY = 'putt-log';
-const DEFAULT_CAL = { distanceFactor: 1.0, breakFactor: 1.0 };
+const DEFAULT_CAL = { distanceFactor: 1.0 };
 
 function getCalibration() {
   try {
     const saved = localStorage.getItem(CAL_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
-      return {
-        distanceFactor: parsed.distanceFactor ?? 1.0,
-        breakFactor:    parsed.breakFactor    ?? 1.0,
-      };
+      return { distanceFactor: parsed.distanceFactor ?? 1.0 };
     }
   } catch (e) {}
   return { ...DEFAULT_CAL };
@@ -65,51 +35,28 @@ function saveLog(log) {
 // ========================================
 // Calibration Update
 // ========================================
-const DIST_RATE  = 0.03;
-const BREAK_RATE = 0.03;
+// Only Made/Short/Long inform the backswing calibration.
+// Left/Right are logged for reference but don't change any numbers —
+// the ZBL aim values are mathematically fixed.
+const DIST_RATE = 0.03;
 
 function updateCalibration(cal, entry) {
-  let { distanceFactor, breakFactor } = cal;
-  const { result, clock } = entry;
+  let { distanceFactor } = cal;
+  const { result } = entry;
 
-  // --- Distance factor ---
   if (result === 'short') {
     distanceFactor += DIST_RATE;
   } else if (result === 'long') {
     distanceFactor -= DIST_RATE;
   } else if (result === 'made') {
+    // Gentle pull toward 1.0 — confirms the current calibration is close
     distanceFactor += (1.0 - distanceFactor) * 0.02;
   }
+
   distanceFactor = Math.max(0.6, Math.min(1.5, distanceFactor));
   distanceFactor = Math.round(distanceFactor * 1000) / 1000;
 
-  // --- Break factor ---
-  // Only update on directional misses or makes when a clock position is set
-  if (clock && (result === 'left' || result === 'right' || result === 'made')) {
-    const factors = getClockFactors(clock);
-    if (factors) {
-      const breakSign = factors.breakFactor; // sin(θ): >0 = R→L, <0 = L→R
-      const breakMag  = Math.abs(breakSign);
-
-      if (result === 'made') {
-        breakFactor += (1.0 - breakFactor) * 0.02;
-      } else if (breakMag > 0.25) {
-        // High side miss → over-read → decrease breakFactor
-        // Low side miss  → under-read → increase breakFactor
-        const isHighSide = (breakSign > 0 && result === 'left')  ||
-                           (breakSign < 0 && result === 'right');
-        const isLowSide  = (breakSign > 0 && result === 'right') ||
-                           (breakSign < 0 && result === 'left');
-        const delta = BREAK_RATE * breakMag;
-        if (isHighSide) breakFactor -= delta;
-        if (isLowSide)  breakFactor += delta;
-      }
-    }
-  }
-  breakFactor = Math.max(0.5, Math.min(2.0, breakFactor));
-  breakFactor = Math.round(breakFactor * 1000) / 1000;
-
-  return { distanceFactor, breakFactor };
+  return { distanceFactor };
 }
 
 // ========================================
@@ -124,11 +71,10 @@ function factorToPct(val, min, center, max) {
 
 function renderCalibration() {
   const cal = getCalibration();
-  const { distanceFactor: df, breakFactor: bf } = cal;
+  const { distanceFactor: df } = cal;
   const container = document.getElementById('cal-display');
 
   const dfPct  = factorToPct(df, 0.6, 1.0, 1.5);
-  const bfPct  = factorToPct(bf, 0.5, 1.0, 2.0);
   const center = 50;
 
   function barStyle(pct, aboveCenter) {
@@ -139,25 +85,17 @@ function renderCalibration() {
   }
 
   function dfNote(val) {
-    if (val < 0.85) return 'Swinging noticeably less than baseline';
-    if (val > 1.15) return 'Swinging noticeably more than baseline';
-    if (val < 0.95) return 'Slightly shorter than baseline';
-    if (val > 1.05) return 'Slightly longer than baseline';
-    return 'Calibrated to baseline';
-  }
-
-  function bfNote(val) {
-    if (val < 0.7)  return 'Aiming much less break than baseline';
-    if (val > 1.4)  return 'Aiming much more break than baseline';
-    if (val < 0.9)  return 'Aiming slightly less break';
-    if (val > 1.1)  return 'Aiming slightly more break';
-    return 'Calibrated to baseline';
+    if (val < 0.85) return 'Your stroke is noticeably shorter than the Bryson baseline';
+    if (val > 1.15) return 'Your stroke is noticeably longer than the Bryson baseline';
+    if (val < 0.95) return 'Your stroke is slightly shorter than the baseline';
+    if (val > 1.05) return 'Your stroke is slightly longer than the baseline';
+    return 'Your stroke matches the baseline — no adjustment needed';
   }
 
   container.innerHTML = `
     <div class="cal-factor">
       <div class="cal-factor-header">
-        <span class="cal-factor-label">Swing Power</span>
+        <span class="cal-factor-label">Your Stroke vs. Baseline</span>
         <span class="cal-factor-value">${df.toFixed(2)}×</span>
       </div>
       <div class="cal-bar-wrap">
@@ -165,17 +103,6 @@ function renderCalibration() {
         <div class="cal-bar-center"></div>
       </div>
       <div class="cal-note">${dfNote(df)}</div>
-    </div>
-    <div class="cal-factor">
-      <div class="cal-factor-header">
-        <span class="cal-factor-label">Break Reading</span>
-        <span class="cal-factor-value">${bf.toFixed(2)}×</span>
-      </div>
-      <div class="cal-bar-wrap">
-        <div class="cal-bar" style="${barStyle(bfPct, bf >= 1.0)}"></div>
-        <div class="cal-bar-center"></div>
-      </div>
-      <div class="cal-note">${bfNote(bf)}</div>
     </div>
   `;
 }
