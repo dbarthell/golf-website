@@ -1,4 +1,4 @@
-const CACHE_NAME = 'putt-calc-v13';
+const CACHE_NAME = 'putt-calc-v14';
 const FILES_TO_CACHE = [
   '/golf-website/',
   '/golf-website/index.html',
@@ -9,6 +9,8 @@ const FILES_TO_CACHE = [
   '/golf-website/log.html',
   '/golf-website/css/log.css',
   '/golf-website/js/log.js',
+  '/golf-website/full.html',
+  '/golf-website/css/styles.css',
 ];
 
 self.addEventListener('install', event => {

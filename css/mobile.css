@@ -327,7 +327,7 @@ body {
 
 .slope-row {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-around;
   padding: 0.35rem var(--space-sm);
   border-top: 1px solid var(--gray-200);
@@ -337,7 +337,7 @@ body {
 .slope-adj-item {
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
   gap: 0.3rem;
 }
