@@ -303,15 +303,18 @@ function updateLookupResult() {
       ? 'Straight'
       : (factors.breakFactor > 0 ? 'R→L' : 'L→R');
 
-    let slopeNote = '';
-    if (slope > 0) {
-      if (Math.abs(factors.uphillFactor) < 0.05) {
-        slopeNote = 'Pure sidehill';
-      } else if (factors.uphillFactor > 0) {
-        slopeNote = `↑ Uphill · ${adjDist} ft`;
-      } else {
-        slopeNote = `↓ Downhill · ${adjDist} ft`;
-      }
+    let clockSlopeRowHTML = '';
+    if (slope > 0 && Math.abs(factors.uphillFactor) > 0.05) {
+      const isUphill = factors.uphillFactor > 0;
+      clockSlopeRowHTML = `
+        <div class="slope-row">
+          <div class="slope-adj-item">
+            <span class="slope-dir ${isUphill ? 'slope-up' : 'slope-down'}">${isUphill ? '↑ Uphill' : '↓ Downhill'}</span>
+            <span class="slope-dist">${adjDist} ft</span>
+            <span class="slope-bs">${adjBS ? adjBS.inches : '—'}</span>
+          </div>
+        </div>
+      `;
     }
 
     result.innerHTML = `
@@ -320,7 +323,6 @@ function updateLookupResult() {
           <div class="result-item">
             <div class="result-value">${adjBS ? adjBS.inches : '—'}</div>
             <div class="result-label">Backswing</div>
-            ${slopeNote ? `<div class="slope-note">${slopeNote}</div>` : ''}
           </div>
           <div class="result-divider"></div>
           <div class="result-item">
@@ -328,6 +330,7 @@ function updateLookupResult() {
             <div class="result-label">Aim ${breakDir}</div>
           </div>
         </div>
+        ${clockSlopeRowHTML}
       </div>
     `;
     return;
