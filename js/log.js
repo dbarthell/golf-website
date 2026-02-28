@@ -1,8 +1,57 @@
 // ========================================
+// Backswing Data Helpers (mirrors mobile.js)
+// ========================================
+
+let puttingData = null;
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+function getDistanceForStimp(row, stimp) {
+  const d9  = parseFloat(row.stimp9.replace(' ft', ''));
+  const d10 = parseFloat(row.stimp10.replace(' ft', ''));
+  const d11 = parseFloat(row.stimp11.replace(' ft', ''));
+  if (stimp <= 9)  return d9;
+  if (stimp <= 10) return lerp(d9, d10, stimp - 9);
+  if (stimp <= 11) return lerp(d10, d11, stimp - 10);
+  return d11 + (d11 - d10) * (stimp - 11);
+}
+
+// Returns baseline backswing inches (number) for a given distance + stimp.
+// Returns null if out of range.
+function findBackswingInches(distanceFeet, stimp) {
+  const rows = puttingData.lagPuttingTable.rows;
+  let lower = null, upper = null;
+
+  for (let i = 0; i < rows.length; i++) {
+    const feet = getDistanceForStimp(rows[i], stimp);
+    if (feet < distanceFeet) {
+      lower = rows[i];
+    } else if (feet > distanceFeet) {
+      upper = rows[i];
+      break;
+    } else {
+      return parseFloat(rows[i].inches.replace('"', ''));
+    }
+  }
+
+  if (!lower && !upper) return null;
+  if (!lower) return parseFloat(upper.inches.replace('"', ''));
+  if (!upper) return parseFloat(lower.inches.replace('"', ''));
+
+  const lf = getDistanceForStimp(lower, stimp);
+  const uf = getDistanceForStimp(upper, stimp);
+  const t  = (distanceFeet - lf) / (uf - lf);
+  return lerp(
+    parseFloat(lower.inches.replace('"', '')),
+    parseFloat(upper.inches.replace('"', '')),
+    t
+  );
+}
+
+// ========================================
 // Storage
 // ========================================
 const CAL_KEY = 'putt-cal';
-const LOG_KEY = 'putt-log';
 const DEFAULT_CAL = { distanceFactor: 1.0 };
 
 function getCalibration() {
@@ -20,267 +69,216 @@ function saveCalibration(cal) {
   localStorage.setItem(CAL_KEY, JSON.stringify(cal));
 }
 
-function getLog() {
-  try {
-    const saved = localStorage.getItem(LOG_KEY);
-    if (saved) return JSON.parse(saved);
-  } catch (e) {}
-  return [];
-}
-
-function saveLog(log) {
-  localStorage.setItem(LOG_KEY, JSON.stringify(log.slice(-500)));
-}
+// ========================================
+// State
+// ========================================
+let testStimp = 10;
+let testDist  = 10;
+let myInches  = null; // null until data loads
 
 // ========================================
-// Calibration Update
+// Status Card
 // ========================================
-// Only Made/Short/Long inform the backswing calibration.
-// Left/Right are logged for reference but don't change any numbers —
-// the ZBL aim values are mathematically fixed.
-const DIST_RATE = 0.03;
-
-function updateCalibration(cal, entry) {
-  let { distanceFactor } = cal;
-  const { result } = entry;
-
-  if (result === 'short') {
-    distanceFactor += DIST_RATE;
-  } else if (result === 'long') {
-    distanceFactor -= DIST_RATE;
-  } else if (result === 'made') {
-    // Gentle pull toward 1.0 — confirms the current calibration is close
-    distanceFactor += (1.0 - distanceFactor) * 0.02;
-  }
-
-  distanceFactor = Math.max(0.6, Math.min(1.5, distanceFactor));
-  distanceFactor = Math.round(distanceFactor * 1000) / 1000;
-
-  return { distanceFactor };
-}
-
-// ========================================
-// Rendering
-// ========================================
-
-// Map a factor value to 0–100% bar position where center=1.0 is at 50%
 function factorToPct(val, min, center, max) {
   if (val <= center) return ((val - min) / (center - min)) * 50;
   return 50 + ((val - center) / (max - center)) * 50;
 }
 
-function renderCalibration() {
-  const cal = getCalibration();
-  const { distanceFactor: df } = cal;
-  const container = document.getElementById('cal-display');
+function factorNote(df) {
+  if (df < 0.85) return 'Your stroke is noticeably shorter than the Bryson baseline.';
+  if (df > 1.15) return 'Your stroke is noticeably longer than the Bryson baseline.';
+  if (df < 0.97) return 'Your stroke is slightly shorter than the baseline.';
+  if (df > 1.03) return 'Your stroke is slightly longer than the baseline.';
+  return 'Your stroke matches the baseline — no adjustment applied.';
+}
 
-  const dfPct  = factorToPct(df, 0.6, 1.0, 1.5);
-  const center = 50;
+function renderStatus() {
+  const { distanceFactor: df } = getCalibration();
+  const card = document.getElementById('status-card');
+  const pct  = factorToPct(df, 0.6, 1.0, 1.5);
+  const c    = 50;
+  const barLeft  = Math.min(c, pct);
+  const barWidth = Math.abs(pct - c);
+  const barColor = df >= 1.0 ? 'var(--green-accent)' : 'var(--gray-400)';
 
-  function barStyle(pct, aboveCenter) {
-    const left  = Math.min(center, pct);
-    const width = Math.abs(pct - center);
-    const color = aboveCenter ? 'var(--green-accent)' : 'var(--gray-400)';
-    return `left:${left}%;width:${width}%;background:${color};`;
-  }
+  const pctStr = df === 1.0
+    ? 'No adjustment'
+    : `${df > 1.0 ? '+' : ''}${Math.round((df - 1.0) * 100)}% vs baseline`;
 
-  function dfNote(val) {
-    if (val < 0.85) return 'Your stroke is noticeably shorter than the Bryson baseline';
-    if (val > 1.15) return 'Your stroke is noticeably longer than the Bryson baseline';
-    if (val < 0.95) return 'Your stroke is slightly shorter than the baseline';
-    if (val > 1.05) return 'Your stroke is slightly longer than the baseline';
-    return 'Your stroke matches the baseline — no adjustment needed';
-  }
-
-  container.innerHTML = `
-    <div class="cal-factor">
-      <div class="cal-factor-header">
-        <span class="cal-factor-label">Your Stroke vs. Baseline</span>
-        <span class="cal-factor-value">${df.toFixed(2)}×</span>
-      </div>
-      <div class="cal-bar-wrap">
-        <div class="cal-bar" style="${barStyle(dfPct, df >= 1.0)}"></div>
-        <div class="cal-bar-center"></div>
-      </div>
-      <div class="cal-note">${dfNote(df)}</div>
+  card.innerHTML = `
+    <div class="status-row">
+      <span class="status-label">Your Stroke</span>
+      <span class="status-value">${df.toFixed(2)}×</span>
     </div>
+    <div class="status-bar-wrap">
+      <div class="status-bar" style="left:${barLeft}%;width:${barWidth}%;background:${barColor};"></div>
+      <div class="status-bar-center"></div>
+    </div>
+    <div class="status-note">${pctStr} — ${factorNote(df)}</div>
   `;
 }
 
-function renderStats() {
-  const log = getLog();
-  const container = document.getElementById('stats-display');
+// ========================================
+// Tool
+// ========================================
+function fmt(inches) {
+  return inches.toFixed(1) + '"';
+}
 
-  if (log.length === 0) {
-    container.innerHTML = '<div class="history-empty">No putts logged yet</div>';
+function updateTool() {
+  const baseline = findBackswingInches(testDist, testStimp);
+  const baselineEl = document.getElementById('baseline-value');
+  const myEl       = document.getElementById('my-value');
+
+  if (baseline === null) {
+    baselineEl.textContent = '—';
+    myEl.textContent = '—';
+    myInches = null;
     return;
   }
 
-  const total = log.length;
-  const counts = { made: 0, short: 0, long: 0, left: 0, right: 0 };
-  log.forEach(e => { counts[e.result] = (counts[e.result] || 0) + 1; });
+  // On first load or distance/stimp change, set myInches from saved calibration
+  if (myInches === null) {
+    const { distanceFactor } = getCalibration();
+    myInches = Math.round(baseline * distanceFactor * 4) / 4; // round to 0.25"
+  }
 
-  const makePct = Math.round((counts.made / total) * 100);
-  const pct = key => total > 0 ? Math.round((counts[key] / total) * 100) : 0;
+  // Clamp myInches to a reasonable range around baseline
+  myInches = Math.max(0.5, Math.min(baseline * 2, myInches));
+  myInches = Math.round(myInches * 4) / 4; // keep on 0.25" grid
 
-  const missBarHTML = ['short', 'long', 'left', 'right'].map(m => `
-    <div class="miss-bar-row">
-      <div class="miss-bar-label">${m.charAt(0).toUpperCase() + m.slice(1)}</div>
-      <div class="miss-bar-track"><div class="miss-bar-fill" style="width:${pct(m)}%"></div></div>
-      <div class="miss-bar-pct">${pct(m)}%</div>
-    </div>
-  `).join('');
+  baselineEl.textContent = fmt(baseline);
+  myEl.textContent = fmt(myInches);
+}
 
-  container.innerHTML = `
-    <div class="stats-row">
-      <div class="stat-item">
-        <div class="stat-value">${total}</div>
-        <div class="stat-label">Logged</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-value">${makePct}%</div>
-        <div class="stat-label">Make Rate</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-value">${counts.made}</div>
-        <div class="stat-label">Made</div>
-      </div>
-    </div>
-    <div class="miss-bars">
-      ${missBarHTML}
+function resetMyInches() {
+  myInches = null; // force recalc from saved cal next updateTool()
+  updateTool();
+}
+
+// ========================================
+// Preview Table
+// ========================================
+const PREVIEW_DISTS = [5, 10, 15, 20, 25, 30, 40, 50];
+
+function renderPreview() {
+  const { distanceFactor: df } = getCalibration();
+  const container = document.getElementById('preview-display');
+  const isSame = Math.abs(df - 1.0) < 0.01;
+
+  const headerHTML = `
+    <div class="preview-header">
+      <div class="preview-header-dist">Dist</div>
+      <div class="preview-header-col">Baseline</div>
+      <div class="preview-header-arrow">·</div>
+      <div class="preview-header-col">Your Swing</div>
     </div>
   `;
-}
 
-function timeAgo(ts) {
-  const diff = Date.now() - ts;
-  const mins = Math.floor(diff / 60000);
-  const hrs  = Math.floor(mins / 60);
-  const days = Math.floor(hrs / 24);
-  if (days > 0) return `${days}d ago`;
-  if (hrs  > 0) return `${hrs}h ago`;
-  if (mins > 0) return `${mins}m ago`;
-  return 'just now';
-}
-
-function renderHistory() {
-  const log = getLog();
-  const container = document.getElementById('history-display');
-
-  if (log.length === 0) {
-    container.innerHTML = '<div class="history-empty">Log putts above to track your tendencies</div>';
-    return;
-  }
-
-  const recent = [...log].reverse().slice(0, 60);
-  container.innerHTML = recent.map(entry => {
-    const clock = entry.clock ? ` · ${entry.clock} o'clock` : '';
-    const slope = entry.slope ? ` · ${entry.slope}%` : '';
-    const stimp = entry.stimp ? ` · Stimp ${entry.stimp}` : '';
-    const resWord = entry.result.charAt(0).toUpperCase() + entry.result.slice(1);
-    const badge = entry.result === 'made' ? '✓' : resWord.charAt(0);
+  const rowsHTML = PREVIEW_DISTS.map(d => {
+    const baseline = findBackswingInches(d, testStimp);
+    if (baseline === null) return '';
+    const mine = baseline * df;
+    const isTestDist = d === testDist;
+    const sameClass = isSame ? ' same' : '';
     return `
-      <div class="history-item">
-        <div class="history-result result-badge-${entry.result}">${badge}</div>
-        <div class="history-details">
-          <div class="history-main">${entry.distance} ft${clock}</div>
-          <div class="history-sub">${resWord}${slope}${stimp}</div>
-        </div>
-        <div class="history-time">${timeAgo(entry.ts)}</div>
+      <div class="preview-row${isTestDist ? ' preview-highlight' : ''}">
+        <div class="preview-dist">${d} ft</div>
+        <div class="preview-baseline">${fmt(baseline)}</div>
+        <div class="preview-arrow">→</div>
+        <div class="preview-mine${sameClass}">${isSame ? fmt(baseline) : fmt(mine)}</div>
       </div>
     `;
   }).join('');
-}
 
-// ========================================
-// Entry Form
-// ========================================
-function initEntryForm() {
-  const params    = new URLSearchParams(window.location.search);
-  const distInput  = document.getElementById('log-distance');
-  const slopeInput = document.getElementById('log-slope');
-  const stimpInput = document.getElementById('log-stimp');
-  const clockInput = document.getElementById('log-clock');
-  const feedback   = document.getElementById('entry-feedback');
-
-  // Pre-fill from URL params
-  if (params.get('d'))     distInput.value  = params.get('d');
-  if (params.get('slope')) slopeInput.value = params.get('slope');
-  if (params.get('stimp')) stimpInput.value = params.get('stimp');
-  if (params.get('clock')) clockInput.value = params.get('clock');
-
-  document.querySelectorAll('.result-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const result   = btn.dataset.result;
-      const distance = parseFloat(distInput.value);
-      const slope    = parseFloat(slopeInput.value) || 0;
-      const stimp    = parseFloat(stimpInput.value) || 10;
-      const clock    = clockInput.value ? clockInput.value.trim() : null;
-
-      if (!distance || distance <= 0) {
-        feedback.textContent = 'Enter a distance first';
-        feedback.className = 'entry-feedback';
-        setTimeout(() => { feedback.textContent = ''; }, 2000);
-        return;
-      }
-
-      const entry = { ts: Date.now(), distance, slope, stimp, clock, result };
-
-      const log = getLog();
-      log.push(entry);
-      saveLog(log);
-
-      const cal    = getCalibration();
-      const newCal = updateCalibration(cal, entry);
-      saveCalibration(newCal);
-
-      const words = {
-        made: 'Logged: Made it!', short: 'Logged: Short miss',
-        long: 'Logged: Long miss', left: 'Logged: Left miss', right: 'Logged: Right miss',
-      };
-      feedback.textContent = words[result] || 'Logged!';
-      feedback.className = 'entry-feedback success';
-      setTimeout(() => {
-        feedback.textContent = '';
-        feedback.className = 'entry-feedback';
-      }, 2000);
-
-      renderCalibration();
-      renderStats();
-      renderHistory();
-    });
-  });
-}
-
-// ========================================
-// Controls
-// ========================================
-function initControls() {
-  document.getElementById('reset-cal-btn').addEventListener('click', () => {
-    if (confirm('Reset calibration to baseline?')) {
-      saveCalibration({ ...DEFAULT_CAL });
-      renderCalibration();
-    }
-  });
-
-  document.getElementById('clear-log-btn').addEventListener('click', () => {
-    if (confirm('Clear all putt history? This cannot be undone.')) {
-      saveLog([]);
-      renderStats();
-      renderHistory();
-    }
-  });
+  container.innerHTML = headerHTML + rowsHTML;
 }
 
 // ========================================
 // Init
 // ========================================
-function init() {
-  initEntryForm();
-  initControls();
-  renderCalibration();
-  renderStats();
-  renderHistory();
+function initTool() {
+  // Stimp toggle
+  document.getElementById('cal-stimp-toggle').addEventListener('click', e => {
+    const btn = e.target.closest('.stimp-btn');
+    if (!btn) return;
+    testStimp = parseFloat(btn.dataset.stimp);
+    document.querySelectorAll('#cal-stimp-toggle .stimp-btn').forEach(b => {
+      b.classList.toggle('stimp-btn-active', b === btn);
+    });
+    myInches = null; // recalc from saved cal at new stimp
+    updateTool();
+    renderPreview();
+  });
+
+  // Distance chips
+  document.getElementById('dist-chips').addEventListener('click', e => {
+    const btn = e.target.closest('.dist-chip');
+    if (!btn) return;
+    testDist = parseFloat(btn.dataset.dist);
+    document.querySelectorAll('.dist-chip').forEach(b => {
+      b.classList.toggle('dist-chip-active', b === btn);
+    });
+    myInches = null;
+    updateTool();
+    renderPreview();
+  });
+
+  // +/- buttons (0.25" steps)
+  document.getElementById('cal-minus').addEventListener('click', () => {
+    if (myInches === null) return;
+    myInches = Math.max(0.5, myInches - 0.25);
+    updateTool();
+  });
+  document.getElementById('cal-plus').addEventListener('click', () => {
+    if (myInches === null) return;
+    myInches = myInches + 0.25;
+    updateTool();
+  });
+
+  // Save
+  document.getElementById('save-cal-btn').addEventListener('click', () => {
+    const baseline = findBackswingInches(testDist, testStimp);
+    if (baseline === null || myInches === null) return;
+    const distanceFactor = Math.round((myInches / baseline) * 1000) / 1000;
+    saveCalibration({ distanceFactor });
+    renderStatus();
+    renderPreview();
+
+    const btn = document.getElementById('save-cal-btn');
+    btn.textContent = 'Saved!';
+    setTimeout(() => { btn.textContent = 'Save Calibration'; }, 1500);
+  });
+
+  // Reset
+  document.getElementById('reset-cal-btn').addEventListener('click', () => {
+    if (confirm('Reset to baseline? All calibration will be cleared.')) {
+      saveCalibration({ ...DEFAULT_CAL });
+      myInches = null;
+      updateTool();
+      renderStatus();
+      renderPreview();
+    }
+  });
+
+  updateTool();
+}
+
+async function init() {
+  try {
+    const resp = await fetch('data/putting.json');
+    if (!resp.ok) throw new Error('Failed to load data');
+    puttingData = await resp.json();
+
+    renderStatus();
+    initTool();
+    renderPreview();
+  } catch (e) {
+    document.getElementById('tool-card').innerHTML =
+      `<p style="padding:var(--space-lg);color:#c00;text-align:center;">
+        Failed to load putting data.<br><small>${e.message}</small>
+      </p>`;
+  }
 }
 
 document.addEventListener('DOMContentLoaded', init);

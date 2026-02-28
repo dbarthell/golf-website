@@ -19,72 +19,67 @@
     <div class="header-spacer"></div>
   </div>
 
-  <!-- Quick Entry -->
-  <div class="entry-card">
-    <div class="entry-fields">
-      <div class="entry-field">
-        <label>Distance</label>
-        <div class="field-input-wrap">
-          <input type="number" id="log-distance" min="1" max="100" inputmode="decimal" placeholder="ft">
-        </div>
-      </div>
-      <div class="entry-field">
-        <label>Slope</label>
-        <div class="field-input-wrap">
-          <input type="number" id="log-slope" min="0" max="6" inputmode="decimal" placeholder="%">
-        </div>
-      </div>
-      <div class="entry-field">
-        <label>Stimp</label>
-        <div class="field-input-wrap">
-          <input type="number" id="log-stimp" min="9" max="12" inputmode="decimal" placeholder="10">
-        </div>
-      </div>
-      <div class="entry-field">
-        <label>Clock</label>
-        <div class="field-input-wrap">
-          <input type="number" id="log-clock" min="1" max="12" inputmode="decimal" placeholder="—">
-        </div>
-      </div>
-    </div>
+  <p class="cal-intro">
+    Pick a distance you know well and adjust the backswing until it matches your stroke.
+    The app will scale all other distances to match.
+  </p>
 
-    <div class="result-btn-grid">
-      <button class="result-btn result-made"  data-result="made">Made ✓</button>
-      <button class="result-btn result-short" data-result="short">Short</button>
-      <button class="result-btn result-long"  data-result="long">Long</button>
-      <button class="result-btn result-left"  data-result="left">Left</button>
-      <button class="result-btn result-right" data-result="right">Right</button>
-    </div>
-
-    <div class="entry-feedback" id="entry-feedback"></div>
+  <!-- Current status -->
+  <div class="status-card" id="status-card">
+    <!-- Populated by JS -->
   </div>
 
-  <!-- Calibration -->
-  <div class="log-section">
-    <div class="section-header">
-      <h2 class="section-title">Backswing Calibration</h2>
-      <button class="text-btn" id="reset-cal-btn">Reset</button>
+  <!-- Calibration tool -->
+  <div class="tool-card" id="tool-card">
+
+    <div class="tool-field">
+      <label class="tool-label">Green Speed (Stimp)</label>
+      <div class="stimp-toggle" id="cal-stimp-toggle">
+        <button class="stimp-btn" data-stimp="9">9</button>
+        <button class="stimp-btn stimp-btn-active" data-stimp="10">10</button>
+        <button class="stimp-btn" data-stimp="10.5">10.5</button>
+        <button class="stimp-btn" data-stimp="11">11</button>
+        <button class="stimp-btn" data-stimp="11.5">11.5</button>
+        <button class="stimp-btn" data-stimp="12">12</button>
+      </div>
     </div>
-    <div id="cal-display">
-      <!-- Populated by JS -->
+
+    <div class="tool-field">
+      <label class="tool-label">Test Distance</label>
+      <div class="dist-chips" id="dist-chips">
+        <button class="dist-chip" data-dist="6">6 ft</button>
+        <button class="dist-chip dist-chip-active" data-dist="10">10 ft</button>
+        <button class="dist-chip" data-dist="15">15 ft</button>
+        <button class="dist-chip" data-dist="20">20 ft</button>
+        <button class="dist-chip" data-dist="30">30 ft</button>
+      </div>
     </div>
+
+    <div class="adjust-area">
+      <div class="adjust-col">
+        <div class="adjust-label">Baseline</div>
+        <div class="adjust-value baseline-val" id="baseline-value">—</div>
+      </div>
+      <div class="adjust-arrow">→</div>
+      <div class="adjust-col">
+        <div class="adjust-label">My Backswing</div>
+        <div class="adjust-my-row">
+          <button class="adj-btn" id="cal-minus">−</button>
+          <div class="adjust-value my-val" id="my-value">—</div>
+          <button class="adj-btn" id="cal-plus">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="save-btn" id="save-cal-btn">Save Calibration</button>
+    <button class="reset-btn" id="reset-cal-btn">Reset to Baseline</button>
+
   </div>
 
-  <!-- Stats -->
-  <div class="log-section">
-    <h2 class="section-title">Stats</h2>
-    <div id="stats-display">
-      <!-- Populated by JS -->
-    </div>
-  </div>
-
-  <!-- History -->
-  <div class="log-section">
-    <div class="section-header">
-      <h2 class="section-title">Recent Putts</h2>
-      <button class="text-btn danger" id="clear-log-btn">Clear All</button>
-    </div>
-    <div id="history-display">
+  <!-- Preview table -->
+  <div class="preview-card" id="preview-card">
+    <h2 class="preview-title">How This Changes Your Numbers</h2>
+    <div id="preview-display">
       <!-- Populated by JS -->
     </div>
   </div>
