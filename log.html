@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Putt Log — Vector Putt</title>
+  <link rel="icon" type="image/png" href="images/logo.png">
+  <link rel="apple-touch-icon" href="images/logo.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0d2137">
+  <link rel="stylesheet" href="css/log.css">
+</head>
+<body>
+
+  <div class="log-header">
+    <a href="index.html" class="back-link">← Back</a>
+    <h1>Putt Log</h1>
+    <div class="header-spacer"></div>
+  </div>
+
+  <!-- Quick Entry -->
+  <div class="entry-card">
+    <div class="entry-fields">
+      <div class="entry-field">
+        <label>Distance</label>
+        <div class="field-input-wrap">
+          <input type="number" id="log-distance" min="1" max="100" inputmode="decimal" placeholder="ft">
+        </div>
+      </div>
+      <div class="entry-field">
+        <label>Slope</label>
+        <div class="field-input-wrap">
+          <input type="number" id="log-slope" min="0" max="6" inputmode="decimal" placeholder="%">
+        </div>
+      </div>
+      <div class="entry-field">
+        <label>Stimp</label>
+        <div class="field-input-wrap">
+          <input type="number" id="log-stimp" min="9" max="12" inputmode="decimal" placeholder="10">
+        </div>
+      </div>
+      <div class="entry-field">
+        <label>Clock</label>
+        <div class="field-input-wrap">
+          <input type="number" id="log-clock" min="1" max="12" inputmode="decimal" placeholder="—">
+        </div>
+      </div>
+    </div>
+
+    <div class="result-btn-grid">
+      <button class="result-btn result-made"  data-result="made">Made ✓</button>
+      <button class="result-btn result-short" data-result="short">Short</button>
+      <button class="result-btn result-long"  data-result="long">Long</button>
+      <button class="result-btn result-left"  data-result="left">Left</button>
+      <button class="result-btn result-right" data-result="right">Right</button>
+    </div>
+
+    <div class="entry-feedback" id="entry-feedback"></div>
+  </div>
+
+  <!-- Calibration -->
+  <div class="log-section">
+    <div class="section-header">
+      <h2 class="section-title">My Calibration</h2>
+      <button class="text-btn" id="reset-cal-btn">Reset</button>
+    </div>
+    <div id="cal-display">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="log-section">
+    <h2 class="section-title">Stats</h2>
+    <div id="stats-display">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="log-section">
+    <div class="section-header">
+      <h2 class="section-title">Recent Putts</h2>
+      <button class="text-btn danger" id="clear-log-btn">Clear All</button>
+    </div>
+    <div id="history-display">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <script src="js/log.js"></script>
+</body>
+</html>

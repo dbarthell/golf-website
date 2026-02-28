@@ -6,6 +6,45 @@ let puttingData = null;
 let currentStimp = 10;
 let currentClock = null;
 
+// Calibration (loaded from localStorage, set via log.html)
+let puttCal = { distanceFactor: 1.0, breakFactor: 1.0 };
+
+function loadCalibration() {
+  try {
+    const saved = localStorage.getItem('putt-cal');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      puttCal = {
+        distanceFactor: parsed.distanceFactor ?? 1.0,
+        breakFactor:    parsed.breakFactor    ?? 1.0,
+      };
+    }
+  } catch (e) {}
+}
+
+function applyCalBS(rawInches) {
+  if (!rawInches) return '—';
+  const num = parseFloat(rawInches.replace('"', ''));
+  return (num * puttCal.distanceFactor).toFixed(1) + '"';
+}
+
+function applyCalAim(rawAimStr) {
+  return (parseFloat(rawAimStr) * puttCal.breakFactor).toFixed(1);
+}
+
+function updateLogLink() {
+  const logLink = document.getElementById('log-link');
+  if (!logLink) return;
+  const distance = document.getElementById('distance-input')?.value;
+  const slope    = document.getElementById('slope-input')?.value;
+  const p = new URLSearchParams();
+  if (distance) p.set('d', distance);
+  if (slope)    p.set('slope', slope);
+  p.set('stimp', currentStimp);
+  if (currentClock) p.set('clock', currentClock);
+  logLink.href = `log.html?${p.toString()}`;
+}
+
 // Clock positions: θ measured clockwise from 12 o'clock (30° per hour)
 const CLOCK_DATA = {
   '12': { theta: 0 },
@@ -302,7 +341,9 @@ function updateLookupResult() {
     const adjBS = findBackswingData(adjDist, currentStimp);
     const zblResult = calculateZBLVector(distance, slope, currentStimp);
     const zblAimBase = zblResult ? parseFloat(zblResult.aimInches) : 0;
-    const lateralAim = (zblAimBase * breakAbs).toFixed(1);
+    const lateralAimRaw = (zblAimBase * breakAbs).toFixed(1);
+    const lateralAim = applyCalAim(lateralAimRaw);
+    const adjBSDisplay = adjBS ? applyCalBS(adjBS.inches) : '—';
     const breakDir = breakAbs < 0.05
       ? 'Straight'
       : (factors.breakFactor > 0 ? 'R→L' : 'L→R');
@@ -315,17 +356,18 @@ function updateLookupResult() {
           <div class="slope-adj-item">
             <span class="slope-dir ${isUphill ? 'slope-up' : 'slope-down'}">${isUphill ? '↑ Uphill' : '↓ Downhill'}</span>
             <span class="slope-dist">${adjDist} ft</span>
-            <span class="slope-bs">${adjBS ? adjBS.inches : '—'}</span>
+            <span class="slope-bs">${adjBSDisplay}</span>
           </div>
         </div>
       `;
     }
 
+    updateLogLink();
     result.innerHTML = `
       <div class="result-content">
         <div class="result-row">
           <div class="result-item">
-            <div class="result-value">${adjBS ? adjBS.inches : '—'}</div>
+            <div class="result-value">${adjBSDisplay}</div>
             <div class="result-label">Backswing</div>
           </div>
           <div class="result-divider"></div>
@@ -348,9 +390,12 @@ function updateLookupResult() {
     return;
   }
 
-  const zblDisplay = zblData.aimInches + '"';
+  const calBsInches = applyCalBS(backswingData.inches);
+  const calAimInches = applyCalAim(zblData.aimInches);
+  const zblDisplay = calAimInches + '"';
   const hasVariance = zblData.plusInches || zblData.minusInches;
   const slopeLabel = slope > 0 ? `ZBL Aim (${slope}%)` : 'ZBL Aim (flat)';
+  updateLogLink();
 
   let slopeRowHTML = '';
   if (slope > 0) {
@@ -382,7 +427,7 @@ function updateLookupResult() {
     <div class="result-content">
       <div class="result-row">
         <div class="result-item">
-          <div class="result-value">${backswingData.inches}</div>
+          <div class="result-value">${calBsInches}</div>
           <div class="result-label">Backswing</div>
           ${slope === 0 ? `<div class="slope-note">${buildSlopeNote(distance, 0, currentStimp)}</div>` : ''}
         </div>
@@ -660,9 +705,10 @@ function renderZBLTable() {
 
 async function init() {
   try {
+    loadCalibration();
     const data = await loadJSON('data/putting.json');
     puttingData = data;
-    
+
     initQuickLookup();
     renderCommonDistances();
     renderBackswingTable();

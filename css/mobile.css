@@ -92,6 +92,11 @@ body {
   letter-spacing: -0.02em;
 }
 
+.header-links {
+  display: flex;
+  gap: var(--space-xs);
+}
+
 .full-view-link {
   color: var(--white);
   text-decoration: none;
