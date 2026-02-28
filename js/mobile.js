@@ -479,7 +479,8 @@ function initQuickLookup() {
   });
 
   // Clock position grid (no persistence — changes every putt)
-  document.getElementById('clock-grid').addEventListener('click', e => {
+  const clockGrid = document.getElementById('clock-grid');
+  if (clockGrid) clockGrid.addEventListener('click', e => {
     const btn = e.target.closest('.clock-btn');
     if (!btn) return;
     const key = btn.dataset.clock;
@@ -623,11 +624,12 @@ async function init() {
     renderZBLTable();
     
   } catch (error) {
-    console.error('Error loading data:', error);
+    console.error('Error in init():', error);
     document.body.innerHTML = `
       <div style="text-align:center; padding:3rem 1rem; color:#999;">
         <p>Failed to load data. Make sure you're running a local server.</p>
         <p style="font-size:0.8rem; margin-top:0.5rem;">Try: <code>npx serve</code> in the project root</p>
+        <p style="font-size:0.7rem; margin-top:0.5rem; color:#c00;">${error.message}</p>
       </div>
     `;
   }
