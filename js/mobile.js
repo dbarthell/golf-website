@@ -4,6 +4,30 @@
 
 let puttingData = null;
 let currentStimp = 10;
+let currentClock = null;
+
+// Clock positions: θ measured clockwise from 12 o'clock
+const CLOCK_DATA = {
+  '12:00': { theta: 0 },
+  '1:30':  { theta: Math.PI / 4 },
+  '3:00':  { theta: Math.PI / 2 },
+  '4:30':  { theta: 3 * Math.PI / 4 },
+  '6:00':  { theta: Math.PI },
+  '7:30':  { theta: 5 * Math.PI / 4 },
+  '9:00':  { theta: 3 * Math.PI / 2 },
+  '10:30': { theta: 7 * Math.PI / 4 },
+};
+
+// uphillFactor > 0 = uphill putt, < 0 = downhill putt
+// breakFactor > 0 = R→L break (aim right), < 0 = L→R break (aim left)
+function getClockFactors(clockKey) {
+  const data = CLOCK_DATA[clockKey];
+  if (!data) return null;
+  return {
+    uphillFactor: -Math.cos(data.theta),
+    breakFactor:   Math.sin(data.theta),
+  };
+}
 
 async function loadJSON(path) {
   const response = await fetch(path);
@@ -256,6 +280,59 @@ function updateLookupResult() {
     return;
   }
 
+  // Clock mode: decompose slope into uphill/downhill + break components
+  if (currentClock) {
+    const factors = getClockFactors(currentClock);
+    const stimpScale = currentStimp / 10;
+    const uphillComp = slope * factors.uphillFactor;
+    const breakAbs   = Math.abs(factors.breakFactor);
+
+    let adjDist;
+    if (uphillComp >= 0) {
+      adjDist = distance + distance * uphillComp / 10 * stimpScale;
+    } else {
+      adjDist = distance + distance * uphillComp * 1.5 / 10 * stimpScale;
+    }
+    adjDist = Math.max(1, Math.round(adjDist * 10) / 10);
+
+    const adjBS = findBackswingData(adjDist, currentStimp);
+    const zblResult = calculateZBLVector(distance, slope, currentStimp);
+    const zblAimBase = zblResult ? parseFloat(zblResult.aimInches) : 0;
+    const lateralAim = (zblAimBase * breakAbs).toFixed(1);
+    const breakDir = breakAbs < 0.05
+      ? 'Straight'
+      : (factors.breakFactor > 0 ? 'R→L' : 'L→R');
+
+    let slopeNote = '';
+    if (slope > 0) {
+      if (Math.abs(factors.uphillFactor) < 0.05) {
+        slopeNote = 'Pure sidehill';
+      } else if (factors.uphillFactor > 0) {
+        slopeNote = `↑ Uphill · ${adjDist} ft`;
+      } else {
+        slopeNote = `↓ Downhill · ${adjDist} ft`;
+      }
+    }
+
+    result.innerHTML = `
+      <div class="result-content">
+        <div class="result-row">
+          <div class="result-item">
+            <div class="result-value">${adjBS ? adjBS.inches : '—'}</div>
+            <div class="result-label">Backswing</div>
+            ${slopeNote ? `<div class="slope-note">${slopeNote}</div>` : ''}
+          </div>
+          <div class="result-divider"></div>
+          <div class="result-item">
+            <div class="result-value">${lateralAim}"</div>
+            <div class="result-label">Aim ${breakDir}</div>
+          </div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
   const backswingData = findBackswingData(distance, currentStimp);
   const zblData = calculateZBLVector(distance, slope, currentStimp);
 
@@ -399,6 +476,22 @@ function initQuickLookup() {
       localStorage.setItem('putt-slope', slopeInput.value);
       updateLookupResult();
     }
+  });
+
+  // Clock position grid (no persistence — changes every putt)
+  document.getElementById('clock-grid').addEventListener('click', e => {
+    const btn = e.target.closest('.clock-btn');
+    if (!btn) return;
+    const key = btn.dataset.clock;
+    if (currentClock === key) {
+      currentClock = null;
+      btn.classList.remove('clock-btn-active');
+    } else {
+      currentClock = key;
+      document.querySelectorAll('.clock-btn').forEach(b => b.classList.remove('clock-btn-active'));
+      btn.classList.add('clock-btn-active');
+    }
+    updateLookupResult();
   });
 }
 
