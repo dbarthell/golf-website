@@ -6,16 +6,20 @@ let puttingData = null;
 let currentStimp = 10;
 let currentClock = null;
 
-// Clock positions: θ measured clockwise from 12 o'clock
+// Clock positions: θ measured clockwise from 12 o'clock (30° per hour)
 const CLOCK_DATA = {
-  '12:00': { theta: 0 },
-  '1:30':  { theta: Math.PI / 4 },
-  '3:00':  { theta: Math.PI / 2 },
-  '4:30':  { theta: 3 * Math.PI / 4 },
-  '6:00':  { theta: Math.PI },
-  '7:30':  { theta: 5 * Math.PI / 4 },
-  '9:00':  { theta: 3 * Math.PI / 2 },
-  '10:30': { theta: 7 * Math.PI / 4 },
+  '12': { theta: 0 },
+  '1':  { theta: Math.PI / 6 },
+  '2':  { theta: Math.PI / 3 },
+  '3':  { theta: Math.PI / 2 },
+  '4':  { theta: 2 * Math.PI / 3 },
+  '5':  { theta: 5 * Math.PI / 6 },
+  '6':  { theta: Math.PI },
+  '7':  { theta: 7 * Math.PI / 6 },
+  '8':  { theta: 4 * Math.PI / 3 },
+  '9':  { theta: 3 * Math.PI / 2 },
+  '10': { theta: 5 * Math.PI / 3 },
+  '11': { theta: 11 * Math.PI / 6 },
 };
 
 // uphillFactor > 0 = uphill putt, < 0 = downhill putt
@@ -401,6 +405,59 @@ function updateLookupResult() {
   `;
 }
 
+// ========================================
+// Clock Face
+// ========================================
+
+function setClockHand(hour) {
+  const hand = document.getElementById('clock-hand');
+  if (!hand) return;
+  if (hour === null) {
+    hand.style.display = 'none';
+    return;
+  }
+  hand.style.display = 'block';
+  hand.style.transform = `translateX(-50%) rotate(${hour * 30}deg)`;
+}
+
+function initClockFace() {
+  const face = document.getElementById('clock-face');
+  if (!face) return;
+
+  const R = 75; // radius from center in px
+  const C = 90; // center (half of 180px face)
+
+  [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].forEach(h => {
+    const theta = (h * Math.PI) / 6;
+    const x = C + R * Math.sin(theta);
+    const y = C - R * Math.cos(theta);
+    const btn = document.createElement('button');
+    btn.className = 'clock-pos';
+    btn.dataset.clock = String(h);
+    btn.textContent = String(h);
+    btn.style.left = x + 'px';
+    btn.style.top  = y + 'px';
+    face.appendChild(btn);
+  });
+
+  face.addEventListener('click', e => {
+    const btn = e.target.closest('.clock-pos');
+    if (!btn) return;
+    const key = btn.dataset.clock;
+    if (currentClock === key) {
+      currentClock = null;
+      btn.classList.remove('clock-pos-active');
+      setClockHand(null);
+    } else {
+      currentClock = key;
+      face.querySelectorAll('.clock-pos').forEach(b => b.classList.remove('clock-pos-active'));
+      btn.classList.add('clock-pos-active');
+      setClockHand(parseInt(key));
+    }
+    updateLookupResult();
+  });
+}
+
 function initQuickLookup() {
   const input = document.getElementById('distance-input');
   const plusBtn = document.getElementById('plus-btn');
@@ -481,22 +538,7 @@ function initQuickLookup() {
     }
   });
 
-  // Clock position grid (no persistence — changes every putt)
-  const clockGrid = document.getElementById('clock-grid');
-  if (clockGrid) clockGrid.addEventListener('click', e => {
-    const btn = e.target.closest('.clock-btn');
-    if (!btn) return;
-    const key = btn.dataset.clock;
-    if (currentClock === key) {
-      currentClock = null;
-      btn.classList.remove('clock-btn-active');
-    } else {
-      currentClock = key;
-      document.querySelectorAll('.clock-btn').forEach(b => b.classList.remove('clock-btn-active'));
-      btn.classList.add('clock-btn-active');
-    }
-    updateLookupResult();
-  });
+  initClockFace();
 }
 
 // ========================================
