@@ -554,70 +554,52 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV,
     return e;
   }
 
-  // ── 1. Curved ball path (quadratic bezier, ball → hole) ────────
-  const cpX = (ballX + C) / 2 + highX * 18;
-  const cpY = (ballY + C) / 2 + highY * 18;
-  el('path', {
-    d: `M ${ballX} ${ballY} Q ${cpX} ${cpY} ${C} ${C}`,
-    stroke: 'rgba(255,255,255,0.80)',
-    'stroke-width': '2',
-    fill: 'none',
-    'stroke-linecap': 'round',
-  });
+  // Perpendicular to high direction (for label offsets)
+  const perpX = Math.sin(theta);
+  const perpY = -Math.cos(theta);
 
-  // ── 2. Dashed target line (ball → lateral aim point) ───────────
+  // ── 1. Dashed target line (ball → lateral aim point) ───────────
   el('line', {
     x1: ballX, y1: ballY, x2: aimX, y2: aimY,
     stroke: 'rgba(255,255,255,0.90)',
-    'stroke-width': '1.5',
-    'stroke-dasharray': '3 3',
+    'stroke-width': '2',
+    'stroke-dasharray': '4 3',
     'stroke-linecap': 'round',
   });
 
-  // ── 3. ZBL base aim point (hollow circle) ──────────────────────
-  // Only draw when variance correction meaningfully shifts the aim (> 0.5 px)
-  if (Math.abs(aimPx - basePx) > 0.5) {
-    el('circle', {
-      cx: baseX, cy: baseY, r: '3',
-      stroke: 'rgba(255,255,255,0.85)',
-      'stroke-width': '1.5',
-      fill: 'none',
-    });
-  }
-
-  // ── 4. Final lateral aim point (filled circle) ─────────────────
+  // ── 2. Final lateral aim point (filled circle) ─────────────────
   el('circle', {
-    cx: aimX, cy: aimY, r: '5',
+    cx: aimX, cy: aimY, r: '6',
     fill: 'white',
-    opacity: '1',
   });
 
-  // ── 5. Variance bracket ticks ──────────────────────────────────
-  const perpX = Math.sin(theta);
-  const perpY = -Math.cos(theta);
-  const tickHalf = 5;
-
-  function drawTick(offsetPx, color) {
-    const tx = C + highX * scale(offsetPx);
-    const ty = C + highY * scale(offsetPx);
-    el('line', {
-      x1: tx + perpX * tickHalf, y1: ty + perpY * tickHalf,
-      x2: tx - perpX * tickHalf, y2: ty - perpY * tickHalf,
-      stroke: color,
-      'stroke-width': '2',
-      'stroke-linecap': 'round',
-    });
+  // ── 3. Labels ──────────────────────────────────────────────────
+  // Dark-outlined white text so it reads on any background
+  function label(x, y, text, fontSize) {
+    const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t.setAttribute('x', x);
+    t.setAttribute('y', y);
+    t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('dominant-baseline', 'central');
+    t.setAttribute('font-size', fontSize);
+    t.setAttribute('font-weight', '700');
+    t.setAttribute('font-family', 'system-ui,-apple-system,sans-serif');
+    t.setAttribute('fill', 'white');
+    t.setAttribute('stroke', 'rgba(14,27,61,0.85)');
+    t.setAttribute('stroke-width', '3');
+    t.setAttribute('paint-order', 'stroke');
+    t.textContent = text;
+    svg.appendChild(t);
   }
 
-  const aboveBelow = Math.abs(uphillFactor);
-  if (plusV > 0) {
-    const upperAim = (zblAimBase * breakAbs) + plusV * aboveBelow;
-    drawTick(upperAim, 'rgba(255,255,255,0.75)');
-  }
-  if (minusV > 0) {
-    const lowerAim = Math.max(0, (zblAimBase * breakAbs) - minusV * aboveBelow);
-    drawTick(lowerAim, 'rgba(255,255,255,0.75)');
-  }
+  // Lateral aim: positioned beyond the aim dot, along the high direction
+  const latDist = Math.max(aimPx + 14, 20);
+  label(C + highX * latDist, C + highY * latDist, `${lateralAim}"`, 13);
+
+  // ZBL: midpoint of the dashed line, offset perpendicular so it doesn't sit on the line
+  const midX = (ballX + aimX) / 2 + perpX * 14;
+  const midY = (ballY + aimY) / 2 + perpY * 14;
+  label(midX, midY, `ZBL ${Math.round(zblAimBase)}"`, 10);
 }
 
 function initQuickLookup() {
