@@ -593,25 +593,13 @@ function initQuickLookup() {
 function renderCommonDistances() {
   const container = document.getElementById('distance-grid');
   const commonDistances = [3, 5, 6, 10, 15, 20, 25, 30, 40, 50, 65, 80];
-  
+
   const cards = commonDistances.map(feet => {
-    const backswingData = findBackswingData(feet, currentStimp);
-    const zblData = calculateZBLVector(feet, 2, currentStimp);
-    if (!backswingData || !zblData) return '';
-    
+    const bs = backswingDisplay(feet, currentStimp);
     return `
       <div class="distance-card" data-distance="${feet}">
         <div class="distance-card-feet">${feet} ft</div>
-        <div class="distance-card-info">
-          <div class="info-row">
-            <span class="info-label">Backswing:</span>
-            <span class="info-value">${backswingData.inches}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">ZBL Aim:</span>
-            <span class="info-value">${zblData.aimInches}"</span>
-          </div>
-        </div>
+        <div class="distance-card-bs">${bs}</div>
       </div>
     `;
   }).join('');
@@ -658,46 +646,6 @@ function renderBackswingTable() {
   table.innerHTML = headerHTML + '<tbody>' + bodyHTML + '</tbody>';
 }
 
-function renderZBLTable() {
-  const table = document.getElementById('zbl-table');
-  const rows = puttingData.brysonTable.rows.filter(r => r.original);
-  
-  const headerHTML = `
-    <thead>
-      <tr>
-        <th>Distance</th>
-        <th>ZBL Aim</th>
-        <th>+/−</th>
-      </tr>
-    </thead>
-  `;
-  
-  const bodyHTML = rows.map(r => {
-    const parsed = parseCell(r.pct2);
-    const aimInches = parsed.base.toFixed(1);
-    const plusInches = parsed.plusVariance > 0 ? parsed.plusVariance.toFixed(1) : null;
-    const minusInches = parsed.minusVariance > 0 ? parsed.minusVariance.toFixed(1) : null;
-    
-    let varianceStr = '—';
-    if (plusInches && minusInches) {
-      varianceStr = `<span style="color:var(--green-accent);">+${plusInches}</span> / <span style="color:var(--gray-600);">−${minusInches}</span>`;
-    } else if (plusInches) {
-      varianceStr = `<span style="color:var(--green-accent);">+${plusInches}</span>`;
-    } else if (minusInches) {
-      varianceStr = `<span style="color:var(--gray-600);">−${minusInches}</span>`;
-    }
-    
-    return `
-      <tr class="row-original">
-        <td>${r.feet} ft</td>
-        <td>${aimInches}"</td>
-        <td>${varianceStr}</td>
-      </tr>
-    `;
-  }).join('');
-  
-  table.innerHTML = headerHTML + '<tbody>' + bodyHTML + '</tbody>';
-}
 
 // ========================================
 // Init
@@ -712,7 +660,6 @@ async function init() {
     initQuickLookup();
     renderCommonDistances();
     renderBackswingTable();
-    renderZBLTable();
     
   } catch (error) {
     console.error('Error in init():', error);

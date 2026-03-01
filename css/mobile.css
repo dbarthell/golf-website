@@ -559,7 +559,7 @@ body {
 .distance-card {
   background: var(--white);
   border-radius: var(--radius-md);
-  padding: var(--space-lg);
+  padding: var(--space-sm) var(--space-xs);
   box-shadow: var(--shadow-sm);
   text-align: center;
   cursor: pointer;
@@ -574,37 +574,15 @@ body {
 }
 
 .distance-card-feet {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 800;
   color: var(--green-dark);
   line-height: 1;
-  margin-bottom: var(--space-md);
-  padding-bottom: var(--space-sm);
-  border-bottom: 2px solid var(--gray-200);
+  margin-bottom: 0.2rem;
 }
 
-.distance-card-info {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-}
-
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.info-label {
-  font-size: 0.7rem;
-  color: var(--text-secondary);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.info-value {
-  font-size: 0.95rem;
+.distance-card-bs {
+  font-size: 1rem;
   font-weight: 700;
   color: var(--green-accent);
 }
