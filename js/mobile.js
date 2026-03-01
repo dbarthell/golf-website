@@ -558,23 +558,42 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV,
   const perpX = Math.sin(theta);
   const perpY = -Math.cos(theta);
 
-  // ── 1. Dashed target line (ball → lateral aim point) ───────────
+  // ── 1. Dashed line: ball → ZBL reference point ─────────────────
   el('line', {
-    x1: ballX, y1: ballY, x2: aimX, y2: aimY,
+    x1: ballX, y1: ballY, x2: baseX, y2: baseY,
     stroke: 'rgba(255,255,255,0.90)',
     'stroke-width': '2',
     'stroke-dasharray': '4 3',
     'stroke-linecap': 'round',
   });
 
-  // ── 2. Final lateral aim point (filled circle) ─────────────────
+  // ── 2. ZBL reference dot (filled) ──────────────────────────────
   el('circle', {
-    cx: aimX, cy: aimY, r: '6',
+    cx: baseX, cy: baseY, r: '6',
     fill: 'white',
   });
 
-  // ── 3. Labels ──────────────────────────────────────────────────
-  // Dark-outlined white text so it reads on any background
+  // ── 3. Lateral aim: solid extension from ZBL dot → lateral dot ─
+  // The difference is the variance baked in; show it as a short
+  // solid line + hollow ring so the user sees the adjusted aim.
+  const lateralDotX = aimX;
+  const lateralDotY = aimY;
+  if (Math.abs(aimPx - basePx) > 1) {
+    el('line', {
+      x1: baseX, y1: baseY, x2: lateralDotX, y2: lateralDotY,
+      stroke: 'rgba(255,255,255,0.75)',
+      'stroke-width': '1.5',
+      'stroke-linecap': 'round',
+    });
+    el('circle', {
+      cx: lateralDotX, cy: lateralDotY, r: '4',
+      fill: 'none',
+      stroke: 'white',
+      'stroke-width': '2',
+    });
+  }
+
+  // ── 4. Labels ──────────────────────────────────────────────────
   function label(x, y, text, fontSize) {
     const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     t.setAttribute('x', x);
@@ -592,9 +611,10 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV,
     svg.appendChild(t);
   }
 
-  // Lateral aim: positioned beyond the aim dot, along the high direction
-  const latDist = Math.max(aimPx + 14, 20);
-  label(C + highX * latDist, C + highY * latDist, `${lateralAim}"`, 13);
+  // Lateral aim label: just beyond whichever dot is furthest from center
+  const labelRefPx = Math.max(aimPx, basePx);
+  const labelDist   = Math.max(labelRefPx + 14, 20);
+  label(C + highX * labelDist, C + highY * labelDist, `${lateralAim}"`, 13);
 
   // ZBL: fixed position above the hole, towards 12 o'clock
   label(C, C - 52, `ZBL ${Math.round(zblAimBase)}"`, 10);
