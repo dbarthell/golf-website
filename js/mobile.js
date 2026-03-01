@@ -439,7 +439,7 @@ function updateLookupResult() {
     `;
   }
 
-  drawClockAnnotations(null, {}); // clear SVG when not in clock mode
+  drawClockAnnotations(null, { zblAimBase: zblRaw }); // ZBL always visible when data available
   result.innerHTML = `
     <div class="result-content">
       <div class="result-row">
@@ -509,7 +509,6 @@ function initClockFace() {
       currentClock = null;
       btn.classList.remove('clock-pos-active');
       setClockHand(null);
-      drawClockAnnotations(null, {}); // clear SVG
     } else {
       currentClock = key;
       face.querySelectorAll('.clock-pos').forEach(b => b.classList.remove('clock-pos-active'));
@@ -520,22 +519,15 @@ function initClockFace() {
   });
 }
 
-function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {}) {
+function drawClockAnnotations(clockKey, { zblAimBase = 0, lateralAim = 0, breakAbs = 0 } = {}) {
   const svg = document.getElementById('clock-svg');
   if (!svg) return;
-  svg.innerHTML = '';           // clear previous frame
-  if (!clockKey || breakAbs < 0.05) return;   // straight putt — nothing to draw
+  svg.innerHTML = '';
+
+  if (!zblAimBase || zblAimBase <= 0) return;  // nothing to draw without ZBL data
 
   const C = 100;  // SVG center (hole)
   const R = 83;   // ball position radius
-  const theta = CLOCK_DATA[clockKey].theta;
-
-  // ── Positions ──────────────────────────────────────────────────
-  const ballX = C + R * Math.sin(theta);
-  const ballY = C - R * Math.cos(theta);
-
-  // breakSign: R→L (sin θ ≥ 0) = +1, L→R = −1
-  const breakSign = Math.sin(theta) >= 0 ? 1 : -1;
 
   // Visual scale: inches → SVG px, with a minimum for visibility
   const scaleIn = inches => Math.min(Math.max(inches * 3, 10), 45);
@@ -545,6 +537,13 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {
   const zblX  = C;
   const zblY  = C - zblPx;
 
+  // Only draw ball-dependent elements when a clock position with break is active
+  const hasBreak = clockKey && breakAbs >= 0.05;
+  const theta     = hasBreak ? CLOCK_DATA[clockKey].theta : null;
+  // breakSign determines which side the measurement label sits on;
+  // when no clock is selected default to left (−1 offset)
+  const breakSign = hasBreak ? (Math.sin(theta) >= 0 ? 1 : -1) : 1;
+
   // ── Helper ─────────────────────────────────────────────────────
   function el(tag, attrs) {
     const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -553,8 +552,7 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {
     return e;
   }
 
-  // ── 1. Measurement line: cup → ZBL (vertical, subtle) ─────────
-  // Visually shows the cup-to-ZBL distance
+  // ── 1. Measurement line: cup → ZBL (always visible) ───────────
   el('line', {
     x1: C, y1: C, x2: C, y2: zblY,
     stroke: 'rgba(255,255,255,0.40)',
@@ -562,14 +560,18 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {
     'stroke-linecap': 'round',
   });
 
-  // ── 2. Dashed line: ball → ZBL (zero break line, hypotenuse) ───
-  el('line', {
-    x1: ballX, y1: ballY, x2: zblX, y2: zblY,
-    stroke: 'rgba(255,255,255,0.90)',
-    'stroke-width': '2',
-    'stroke-dasharray': '4 3',
-    'stroke-linecap': 'round',
-  });
+  // ── 2. Dashed line: ball → ZBL (only when clock position selected)
+  if (hasBreak) {
+    const ballX = C + R * Math.sin(theta);
+    const ballY = C - R * Math.cos(theta);
+    el('line', {
+      x1: ballX, y1: ballY, x2: zblX, y2: zblY,
+      stroke: 'rgba(255,255,255,0.90)',
+      'stroke-width': '2',
+      'stroke-dasharray': '4 3',
+      'stroke-linecap': 'round',
+    });
+  }
 
   // ── 3. ZBL dot (top of measurement line, at 12 o'clock) ────────
   el('circle', {
@@ -596,7 +598,8 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {
     svg.appendChild(t);
   }
 
-  // ZBL: "ZBL" above the dot; measurement value alongside the vertical line
+  // ZBL label above the dot; measurement value alongside the vertical line
+  // on the opposite side from where the lateral aim would appear
   label(C, zblY - 12, 'ZBL', 8);
   label(C + (-breakSign) * 15, (C + zblY) / 2, `${Math.round(zblAimBase)}"`, 10);
 }
