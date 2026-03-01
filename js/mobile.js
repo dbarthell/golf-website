@@ -370,7 +370,10 @@ function updateLookupResult() {
     // ── Aim cell HTML ────────────────────────────────────────────────
     const aimCellHTML = `
       <div class="result-item">
-        <div class="result-value">${lateralAim}"</div>
+        <div class="result-value-container">
+          <div class="result-value">${lateralAim}"</div>
+          <div class="result-zbl-ref">ZBL ${Math.round(zblAimBase)}"</div>
+        </div>
         <div class="result-label">Aim ${breakDir}</div>
       </div>
     `;
@@ -540,12 +543,6 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {
   const zblX  = C;
   const zblY  = C - zblPx;
 
-  // ── Lateral aim: ALWAYS horizontal from cup (left or right) ────
-  // Keeps it perpendicular to ZBL so it can never cross the ZBL line
-  const aimPx = scaleIn(lateralAim);
-  const aimX  = C + breakSign * aimPx;
-  const aimY  = C;
-
   // ── Helper ─────────────────────────────────────────────────────
   function el(tag, attrs) {
     const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -579,18 +576,7 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {
     opacity: '0.95',
   });
 
-  if (lateralAim > 0) {
-    // ── 4. Lateral aim: diamond marker at cup level in break direction
-    // No connecting line — distinct shape from ZBL circle signals a
-    // different kind of measurement (horizontal offset at cup level)
-    el('polygon', {
-      points: `${aimX},${C-6} ${aimX+5},${C} ${aimX},${C+6} ${aimX-5},${C}`,
-      fill: 'white',
-      opacity: '0.90',
-    });
-  }
-
-  // ── 7. Labels ──────────────────────────────────────────────────
+  // ── 4. Labels ──────────────────────────────────────────────────
   function label(x, y, text, fontSize) {
     const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     t.setAttribute('x', x);
@@ -609,14 +595,8 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {
   }
 
   // ZBL: "ZBL" above the dot; measurement value alongside the vertical line
-  // (on the opposite side from the lateral aim diamond to avoid overlap)
   label(C, zblY - 12, 'ZBL', 8);
   label(C + (-breakSign) * 15, (C + zblY) / 2, `${Math.round(zblAimBase)}"`, 10);
-
-  // Lateral aim: value beyond the diamond in the break direction
-  if (lateralAim > 0) {
-    label(C + breakSign * (aimPx + 14), C, `${lateralAim}"`, 13);
-  }
 }
 
 function initQuickLookup() {
