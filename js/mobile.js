@@ -580,28 +580,13 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {
   });
 
   if (lateralAim > 0) {
-    // ── 4. Triangle hypotenuse: lateral aim → ZBL (aim direction) ─
-    el('line', {
-      x1: aimX, y1: aimY, x2: zblX, y2: zblY,
-      stroke: 'rgba(255,255,255,0.40)',
-      'stroke-width': '1',
-      'stroke-dasharray': '2 3',
-      'stroke-linecap': 'round',
-    });
-
-    // ── 5. Horizontal line: cup → lateral aim (right triangle leg) ─
-    el('line', {
-      x1: C, y1: C, x2: aimX, y2: aimY,
-      stroke: 'rgba(255,255,255,0.75)',
-      'stroke-width': '2',
-      'stroke-linecap': 'round',
-    });
-
-    // ── 6. Lateral aim dot ────────────────────────────────────────
-    el('circle', {
-      cx: aimX, cy: aimY, r: '5',
+    // ── 4. Lateral aim: diamond marker at cup level in break direction
+    // No connecting line — distinct shape from ZBL circle signals a
+    // different kind of measurement (horizontal offset at cup level)
+    el('polygon', {
+      points: `${aimX},${C-6} ${aimX+5},${C} ${aimX},${C+6} ${aimX-5},${C}`,
       fill: 'white',
-      opacity: '0.95',
+      opacity: '0.90',
     });
   }
 
@@ -624,11 +609,11 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {
   }
 
   // ZBL: "ZBL" above the dot; measurement value alongside the vertical line
-  // (on the opposite side from the lateral aim dot to avoid overlap)
+  // (on the opposite side from the lateral aim diamond to avoid overlap)
   label(C, zblY - 12, 'ZBL', 8);
   label(C + (-breakSign) * 15, (C + zblY) / 2, `${Math.round(zblAimBase)}"`, 10);
 
-  // Lateral aim: value beyond the aim dot in the break direction
+  // Lateral aim: value beyond the diamond in the break direction
   if (lateralAim > 0) {
     label(C + breakSign * (aimPx + 14), C, `${lateralAim}"`, 13);
   }
