@@ -378,6 +378,12 @@ body {
   gap: 0.15rem;
 }
 
+/* Clock mode: single centered line (direction + distance, no backswing) */
+.slope-row-centered {
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
 /* Normal mode: stacked horizontal rows (uphill / downhill) */
 .slope-row-stacked {
   flex-direction: column;

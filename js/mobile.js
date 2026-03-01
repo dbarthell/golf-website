@@ -342,7 +342,15 @@ function updateLookupResult() {
 
     const zblResult = calculateZBLVector(distance, slope, currentStimp);
     const zblAimBase = zblResult ? parseFloat(zblResult.aimInches) : 0;
-    const lateralAim = Math.round(zblAimBase * breakAbs);
+    const plusV  = zblResult ? parseFloat(zblResult.plusInches  || 0) : 0;
+    const minusV = zblResult ? parseFloat(zblResult.minusInches || 0) : 0;
+
+    const aboveBelow = Math.abs(factors.uphillFactor);
+    const varianceAdj = factors.uphillFactor < 0
+      ?  plusV  * aboveBelow   // from above hole: add superscript inches
+      : -minusV * aboveBelow;  // from below hole: subtract subscript inches
+
+    const lateralAim = Math.round((zblAimBase + varianceAdj) * breakAbs);
     const adjBSDisplay = backswingDisplay(adjDist, currentStimp);
     const breakDir = breakAbs < 0.05
       ? 'Straight'
@@ -352,16 +360,9 @@ function updateLookupResult() {
     if (slope > 0 && Math.abs(factors.uphillFactor) > 0.05) {
       const isUphill = factors.uphillFactor > 0;
       clockSlopeRowHTML = `
-        <div class="slope-row">
-          <div class="slope-col">
-            <span class="slope-dir ${isUphill ? 'slope-up' : 'slope-down'}">${isUphill ? '↑ Uphill' : '↓ Downhill'}</span>
-            <span class="slope-dist">${adjDist} ft</span>
-          </div>
-          <div class="slope-adj-divider"></div>
-          <div class="slope-col">
-            <span class="slope-bs-label">backswing</span>
-            <span class="slope-bs">${adjBSDisplay}</span>
-          </div>
+        <div class="slope-row slope-row-centered">
+          <span class="slope-dir ${isUphill ? 'slope-up' : 'slope-down'}">${isUphill ? '↑ Uphill' : '↓ Downhill'}</span>
+          <span class="slope-dist">${adjDist} ft</span>
         </div>
       `;
     }
