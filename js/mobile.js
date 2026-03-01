@@ -367,24 +367,10 @@ function updateLookupResult() {
       `;
     }
 
-    // ── compute variance display for clock mode ──────────────────────
-    const clockPlusDisplay  = (plusV  > 0 && aboveBelow > 0.05)
-      ? Math.round(plusV  * aboveBelow * breakAbs) : null;
-    const clockMinusDisplay = (minusV > 0 && aboveBelow > 0.05)
-      ? Math.round(minusV * aboveBelow * breakAbs) : null;
-    const hasClockVariance  = clockPlusDisplay || clockMinusDisplay;
-
     // ── Aim cell HTML ────────────────────────────────────────────────
     const aimCellHTML = `
       <div class="result-item">
-        <div class="result-value-container">
-          <div class="result-value">${lateralAim}"</div>
-          ${hasClockVariance ? `
-            <div class="variance-display">
-              ${clockPlusDisplay  ? `<span class="variance-plus">+${clockPlusDisplay}"</span>`  : ''}
-              ${clockMinusDisplay ? `<span class="variance-minus">−${clockMinusDisplay}"</span>` : ''}
-            </div>` : ''}
-        </div>
+        <div class="result-value">${lateralAim}"</div>
         <div class="result-label">Aim ${breakDir}</div>
       </div>
     `;
@@ -566,19 +552,7 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV,
     return e;
   }
 
-  // ── 1. Curved ball path (quadratic bezier, ball → hole) ────────
-  // Control point bows toward the high side at the midpoint
-  const cpX = (ballX + C) / 2 + highX * 18;
-  const cpY = (ballY + C) / 2 + highY * 18;
-  el('path', {
-    d: `M ${ballX} ${ballY} Q ${cpX} ${cpY} ${C} ${C}`,
-    stroke: 'rgba(255,255,255,0.55)',
-    'stroke-width': '1.5',
-    fill: 'none',
-    'stroke-linecap': 'round',
-  });
-
-  // ── 2. ZBL target line (straight, dashed — ball → aim point) ───
+  // ── 1. ZBL target line (straight, dashed — ball → aim point) ───
   el('line', {
     x1: ballX, y1: ballY, x2: aimX, y2: aimY,
     stroke: 'rgba(255,255,255,0.80)',
@@ -587,7 +561,7 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV,
     'stroke-linecap': 'round',
   });
 
-  // ── 3. ZBL base aim point (hollow circle) ──────────────────────
+  // ── 2. ZBL base aim point (hollow circle) ──────────────────────
   // Only draw when variance correction meaningfully shifts the aim (> 0.5 px)
   if (Math.abs(aimPx - basePx) > 0.5) {
     el('circle', {
