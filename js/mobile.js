@@ -515,7 +515,7 @@ function initClockFace() {
   });
 }
 
-function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV, breakAbs, uphillFactor } = {}) {
+function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {}) {
   const svg = document.getElementById('clock-svg');
   if (!svg) return;
   svg.innerHTML = '';           // clear previous frame
@@ -529,22 +529,24 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV,
   const ballX = C + R * Math.sin(theta);
   const ballY = C - R * Math.cos(theta);
 
-  // R→L break (sin θ > 0) aims left of hole from player's view = high side is (-cos θ, -sin θ).
-  // L→R break (sin θ < 0) is mirrored, so flip the sign.
+  // High-side direction: R→L (sin θ > 0) aims left → high side is (-cos θ, -sin θ).
+  // L→R (sin θ < 0) is mirrored, so flip the sign.
   const breakSign = Math.sin(theta) >= 0 ? 1 : -1;
   const highX = breakSign * (-Math.cos(theta));
   const highY = breakSign * (-Math.sin(theta));
 
-  // Visual scale: 1 inch ≈ 1.2 px, capped so large aims stay on-face
-  const scale = px => Math.min(px * 1.2, 22);
+  // Visual scale: inches → SVG px, with a minimum for visibility
+  const scaleIn = inches => Math.min(Math.max(inches * 3, 10), 45);
 
-  const aimPx  = scale(lateralAim);            // final corrected aim
-  const basePx = scale(zblAimBase * breakAbs); // raw ZBL base aim (before variance)
+  // ── ZBL: always DIRECTLY above cup at 12 o'clock ───────────────
+  const zblPx = scaleIn(zblAimBase);
+  const zblX  = C;
+  const zblY  = C - zblPx;
 
+  // ── Lateral aim: from cup center in high-side direction ─────────
+  const aimPx = scaleIn(lateralAim);
   const aimX  = C + highX * aimPx;
   const aimY  = C + highY * aimPx;
-  const baseX = C + highX * basePx;
-  const baseY = C + highY * basePx;
 
   // ── Helper ─────────────────────────────────────────────────────
   function el(tag, attrs) {
@@ -554,46 +556,40 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV,
     return e;
   }
 
-  // Perpendicular to high direction (for label offsets)
-  const perpX = Math.sin(theta);
-  const perpY = -Math.cos(theta);
-
-  // ── 1. Dashed line: ball → ZBL reference point ─────────────────
+  // ── 1. Dashed line: ball → ZBL point (12 o'clock above cup) ────
   el('line', {
-    x1: ballX, y1: ballY, x2: baseX, y2: baseY,
+    x1: ballX, y1: ballY, x2: zblX, y2: zblY,
     stroke: 'rgba(255,255,255,0.90)',
     'stroke-width': '2',
     'stroke-dasharray': '4 3',
     'stroke-linecap': 'round',
   });
 
-  // ── 2. ZBL reference dot (filled) ──────────────────────────────
+  // ── 2. ZBL dot (filled, at 12 o'clock) ─────────────────────────
   el('circle', {
-    cx: baseX, cy: baseY, r: '6',
+    cx: zblX, cy: zblY, r: '5',
     fill: 'white',
+    opacity: '0.95',
   });
 
-  // ── 3. Lateral aim: solid extension from ZBL dot → lateral dot ─
-  // The difference is the variance baked in; show it as a short
-  // solid line + hollow ring so the user sees the adjusted aim.
-  const lateralDotX = aimX;
-  const lateralDotY = aimY;
-  if (Math.abs(aimPx - basePx) > 1) {
+  // ── 3. Solid line: cup center → lateral aim point ───────────────
+  if (lateralAim > 0) {
     el('line', {
-      x1: baseX, y1: baseY, x2: lateralDotX, y2: lateralDotY,
+      x1: C, y1: C, x2: aimX, y2: aimY,
       stroke: 'rgba(255,255,255,0.75)',
-      'stroke-width': '1.5',
+      'stroke-width': '2',
       'stroke-linecap': 'round',
     });
+
+    // ── 4. Lateral aim dot ────────────────────────────────────────
     el('circle', {
-      cx: lateralDotX, cy: lateralDotY, r: '4',
-      fill: 'none',
-      stroke: 'white',
-      'stroke-width': '2',
+      cx: aimX, cy: aimY, r: '5',
+      fill: 'white',
+      opacity: '0.95',
     });
   }
 
-  // ── 4. Labels ──────────────────────────────────────────────────
+  // ── 5. Labels ──────────────────────────────────────────────────
   function label(x, y, text, fontSize) {
     const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     t.setAttribute('x', x);
@@ -611,13 +607,13 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV,
     svg.appendChild(t);
   }
 
-  // Lateral aim label: just beyond whichever dot is furthest from center
-  const labelRefPx = Math.max(aimPx, basePx);
-  const labelDist   = Math.max(labelRefPx + 14, 20);
-  label(C + highX * labelDist, C + highY * labelDist, `${lateralAim}"`, 13);
+  // ZBL label: above the ZBL dot toward 12 o'clock
+  label(zblX, zblY - 13, `ZBL ${Math.round(zblAimBase)}"`, 10);
 
-  // ZBL: fixed position above the hole, towards 12 o'clock
-  label(C, C - 52, `ZBL ${Math.round(zblAimBase)}"`, 10);
+  // Lateral aim label: beyond the aim dot in the high-side direction
+  if (lateralAim > 0) {
+    label(C + highX * (aimPx + 14), C + highY * (aimPx + 14), `${lateralAim}"`, 13);
+  }
 }
 
 function initQuickLookup() {
