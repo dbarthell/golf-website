@@ -596,10 +596,8 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV,
   const latDist = Math.max(aimPx + 14, 20);
   label(C + highX * latDist, C + highY * latDist, `${lateralAim}"`, 13);
 
-  // ZBL: midpoint of the dashed line, offset perpendicular so it doesn't sit on the line
-  const midX = (ballX + aimX) / 2 + perpX * 14;
-  const midY = (ballY + aimY) / 2 + perpY * 14;
-  label(midX, midY, `ZBL ${Math.round(zblAimBase)}"`, 10);
+  // ZBL: fixed position above the hole, towards 12 o'clock
+  label(C, C - 52, `ZBL ${Math.round(zblAimBase)}"`, 10);
 }
 
 function initQuickLookup() {

@@ -491,13 +491,13 @@ body {
 
 .clock-pos {
   position: absolute;
-  width: 30px;
-  height: 30px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.1);
   border: 1.5px solid rgba(255, 255, 255, 0.3);
   color: rgba(255, 255, 255, 0.75);
-  font-size: 0.72rem;
+  font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
   font-family: var(--font-sans);
