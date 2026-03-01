@@ -26,6 +26,14 @@ function applyCalBS(rawInches) {
   return (num * puttCal.distanceFactor).toFixed(1) + '"';
 }
 
+// "1 foot past the cup" backswing: look up dist+1, apply cal, round to integer
+function backswingDisplay(distFeet, stimp) {
+  const data = findBackswingData(distFeet + 1, stimp);
+  if (!data) return '—';
+  const raw = parseFloat(data.inches.replace('"', ''));
+  return Math.round(raw * puttCal.distanceFactor) + '"';
+}
+
 function updateLogLink() {
   const logLink = document.getElementById('log-link');
   if (!logLink) return;
@@ -330,13 +338,12 @@ function updateLookupResult() {
     } else {
       adjDist = distance + distance * uphillComp * 1.5 / 10 * stimpScale;
     }
-    adjDist = Math.max(1, Math.round(adjDist * 10) / 10);
+    adjDist = Math.max(1, Math.round(adjDist));
 
-    const adjBS = findBackswingData(adjDist, currentStimp);
     const zblResult = calculateZBLVector(distance, slope, currentStimp);
     const zblAimBase = zblResult ? parseFloat(zblResult.aimInches) : 0;
-    const lateralAim = (zblAimBase * breakAbs).toFixed(1);
-    const adjBSDisplay = adjBS ? applyCalBS(adjBS.inches) : '—';
+    const lateralAim = Math.round(zblAimBase * breakAbs);
+    const adjBSDisplay = backswingDisplay(adjDist, currentStimp);
     const breakDir = breakAbs < 0.05
       ? 'Straight'
       : (factors.breakFactor > 0 ? 'R→L' : 'L→R');
@@ -387,31 +394,37 @@ function updateLookupResult() {
     return;
   }
 
-  const calBsInches = applyCalBS(backswingData.inches);
-  const zblDisplay = zblData.aimInches + '"';
-  const hasVariance = zblData.plusInches || zblData.minusInches;
+  const calBsInches = backswingDisplay(distance, currentStimp);
+  const zblRaw = parseFloat(zblData.aimInches);
+  const zblDisplay = Math.round(zblRaw) + '"';
+  const zblPlusRounded  = zblData.plusInches  ? Math.round(parseFloat(zblData.plusInches))  : null;
+  const zblMinusRounded = zblData.minusInches ? Math.round(parseFloat(zblData.minusInches)) : null;
+  const hasVariance = zblPlusRounded || zblMinusRounded;
   const slopeLabel = slope > 0 ? `ZBL Aim (${slope}%)` : 'ZBL Aim (flat)';
   updateLogLink();
 
   let slopeRowHTML = '';
   if (slope > 0) {
     const stimpScale = currentStimp / 10;
-    const uphillAdj  = Math.round(distance * slope / 10 * stimpScale * 10) / 10;
-    const downhillAdj = Math.round(distance * slope * 1.5 / 10 * stimpScale * 10) / 10;
-    const uphillTotal   = Math.round((distance + uphillAdj) * 10) / 10;
-    const downhillTotal = Math.max(1, Math.round((distance - downhillAdj) * 10) / 10);
-    const uphillBS   = findBackswingData(uphillTotal, currentStimp);
-    const downhillBS = findBackswingData(downhillTotal, currentStimp);
+    const uphillAdj   = distance * slope / 10 * stimpScale;
+    const downhillAdj = distance * slope * 1.5 / 10 * stimpScale;
+    const uphillTotal   = Math.round(distance + uphillAdj);
+    const downhillTotal = Math.max(1, Math.round(distance - downhillAdj));
+    const uphillBSDisp   = backswingDisplay(uphillTotal, currentStimp);
+    const downhillBSDisp = backswingDisplay(downhillTotal, currentStimp);
+    // Uphill breaks less → floor ZBL; downhill breaks more → ceil ZBL
+    const uphillZBL   = Math.floor(zblRaw) + '"';
+    const downhillZBL = Math.ceil(zblRaw)  + '"';
     slopeRowHTML = `
       <div class="slope-row">
         <div class="slope-col">
           <span class="slope-dir slope-up">↑ Uphill</span>
-          <span class="slope-dist-bs">${uphillTotal} ft · ${uphillBS ? uphillBS.inches : '—'}</span>
+          <span class="slope-dist-bs">${uphillTotal} ft · ${uphillBSDisp} · ${uphillZBL}</span>
         </div>
         <div class="slope-adj-divider"></div>
         <div class="slope-col">
           <span class="slope-dir slope-down">↓ Downhill</span>
-          <span class="slope-dist-bs">${downhillTotal} ft · ${downhillBS ? downhillBS.inches : '—'}</span>
+          <span class="slope-dist-bs">${downhillTotal} ft · ${downhillBSDisp} · ${downhillZBL}</span>
         </div>
       </div>
     `;
@@ -431,8 +444,8 @@ function updateLookupResult() {
             <div class="result-value">${zblDisplay}</div>
             ${hasVariance ? `
               <div class="variance-display">
-                ${zblData.plusInches ? `<span class="variance-plus">+${zblData.plusInches}</span>` : ''}
-                ${zblData.minusInches ? `<span class="variance-minus">−${zblData.minusInches}</span>` : ''}
+                ${zblPlusRounded  ? `<span class="variance-plus">+${zblPlusRounded}"</span>`  : ''}
+                ${zblMinusRounded ? `<span class="variance-minus">−${zblMinusRounded}"</span>` : ''}
               </div>
             ` : ''}
           </div>
