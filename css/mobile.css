@@ -344,11 +344,12 @@ body {
 }
 
 .result-zbl-ref {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: var(--gray-600);
   opacity: 0.75;
   letter-spacing: 0.01em;
+  margin-top: 2px;
 }
 
 .result-label {
