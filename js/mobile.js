@@ -346,14 +346,14 @@ function updateLookupResult() {
       const isUphill = factors.uphillFactor > 0;
       clockSlopeRowHTML = `
         <div class="slope-row">
-          <div class="slope-adj-item">
+          <div class="slope-col">
             <span class="slope-dir ${isUphill ? 'slope-up' : 'slope-down'}">${isUphill ? '↑ Uphill' : '↓ Downhill'}</span>
             <span class="slope-dist">${adjDist} ft</span>
           </div>
           <div class="slope-adj-divider"></div>
-          <div class="slope-adj-item">
-            <span class="slope-bs">${adjBSDisplay}</span>
+          <div class="slope-col">
             <span class="slope-bs-label">backswing</span>
+            <span class="slope-bs">${adjBSDisplay}</span>
           </div>
         </div>
       `;
@@ -404,13 +404,13 @@ function updateLookupResult() {
     const downhillBS = findBackswingData(downhillTotal, currentStimp);
     slopeRowHTML = `
       <div class="slope-row">
-        <div class="slope-adj-item">
+        <div class="slope-col">
           <span class="slope-dir slope-up">↑ Uphill</span>
           <span class="slope-dist">${uphillTotal} ft</span>
           <span class="slope-bs">${uphillBS ? uphillBS.inches : '—'}</span>
         </div>
         <div class="slope-adj-divider"></div>
-        <div class="slope-adj-item">
+        <div class="slope-col">
           <span class="slope-dir slope-down">↓ Downhill</span>
           <span class="slope-dist">${downhillTotal} ft</span>
           <span class="slope-bs">${downhillBS ? downhillBS.inches : '—'}</span>

@@ -327,19 +327,19 @@ body {
 
 .slope-row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-around;
   padding: 0.35rem var(--space-sm);
   border-top: 1px solid var(--gray-200);
   gap: var(--space-sm);
 }
 
-.slope-adj-item {
+.slope-col {
   flex: 1;
   display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 0.3rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
 }
 
 .slope-dir {
