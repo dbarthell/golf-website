@@ -118,6 +118,29 @@ body {
   margin-bottom: 0.6rem;
 }
 
+.inputs-row {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: 0.6rem;
+}
+
+.inputs-row .lookup-input-section {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.inputs-row .input-btn {
+  width: 2.25rem;
+  height: 2.25rem;
+  font-size: 1.5rem;
+}
+
+.inputs-row .distance-input,
+.inputs-row .slope-input {
+  font-size: 1.75rem;
+  padding: 0.3rem 0.25rem;
+}
+
 .stimp-toggle {
   display: flex;
   border-radius: var(--radius-md);

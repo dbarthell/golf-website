@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Putting Quick Reference</title>
+  <title>ZeroBreak</title>
   <link rel="icon" type="image/png" href="images/logo.png">
   <link rel="apple-touch-icon" href="images/logo.png">
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Vector Putt">
+  <meta name="apple-mobile-web-app-title" content="ZeroBreak">
   <meta name="theme-color" content="#0e1b3d">
   <link rel="stylesheet" href="css/mobile.css">
 </head>
@@ -18,31 +18,13 @@
   <!-- Quick Lookup -->
   <div class="quick-lookup">
     <div class="lookup-header">
-      <h1>Putt Calculator</h1>
+      <h1>ZeroBreak</h1>
       <div class="header-links">
         <a href="log.html" class="full-view-link" id="log-link">Cal</a>
         <a href="full.html" class="full-view-link">Full</a>
       </div>
     </div>
     
-    <div class="lookup-input-section">
-      <label for="distance-input" class="lookup-label">Distance to Hole</label>
-      <div class="input-wrapper">
-        <button class="input-btn input-minus" id="minus-btn">−</button>
-        <input 
-          type="number" 
-          id="distance-input" 
-          class="distance-input" 
-          placeholder="Enter feet"
-          min="1"
-          max="100"
-          inputmode="decimal"
-        >
-        <span class="input-unit">ft</span>
-        <button class="input-btn input-plus" id="plus-btn">+</button>
-      </div>
-    </div>
-
     <div class="lookup-input-section">
       <label class="lookup-label">Green Speed (Stimp)</label>
       <div class="stimp-toggle" id="stimp-toggle">
@@ -55,22 +37,39 @@
       </div>
     </div>
 
-    <div class="lookup-input-section">
-      <label for="slope-input" class="lookup-label">Slope %</label>
-      <div class="input-wrapper">
-        <button class="input-btn input-minus" id="slope-minus-btn">−</button>
-        <input 
-          type="number" 
-          id="slope-input" 
-          class="slope-input" 
-          placeholder="0"
-          min="0"
-          max="6"
-          value="2"
-          inputmode="decimal"
-        >
-        <span class="input-unit">%</span>
-        <button class="input-btn input-plus" id="slope-plus-btn">+</button>
+    <div class="inputs-row">
+      <div class="lookup-input-section">
+        <label for="distance-input" class="lookup-label">Distance (ft)</label>
+        <div class="input-wrapper">
+          <button class="input-btn input-minus" id="minus-btn">−</button>
+          <input
+            type="number"
+            id="distance-input"
+            class="distance-input"
+            placeholder="—"
+            min="1"
+            max="100"
+            inputmode="decimal"
+          >
+          <button class="input-btn input-plus" id="plus-btn">+</button>
+        </div>
+      </div>
+      <div class="lookup-input-section">
+        <label for="slope-input" class="lookup-label">Slope (%)</label>
+        <div class="input-wrapper">
+          <button class="input-btn input-minus" id="slope-minus-btn">−</button>
+          <input
+            type="number"
+            id="slope-input"
+            class="slope-input"
+            placeholder="0"
+            min="0"
+            max="6"
+            value="2"
+            inputmode="decimal"
+          >
+          <button class="input-btn input-plus" id="slope-plus-btn">+</button>
+        </div>
       </div>
     </div>
 
