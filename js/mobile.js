@@ -367,6 +367,28 @@ function updateLookupResult() {
       `;
     }
 
+    // ── compute variance display for clock mode ──────────────────────
+    const clockPlusDisplay  = (plusV  > 0 && aboveBelow > 0.05)
+      ? Math.round(plusV  * aboveBelow * breakAbs) : null;
+    const clockMinusDisplay = (minusV > 0 && aboveBelow > 0.05)
+      ? Math.round(minusV * aboveBelow * breakAbs) : null;
+    const hasClockVariance  = clockPlusDisplay || clockMinusDisplay;
+
+    // ── Aim cell HTML ────────────────────────────────────────────────
+    const aimCellHTML = `
+      <div class="result-item">
+        <div class="result-value-container">
+          <div class="result-value">${lateralAim}"</div>
+          ${hasClockVariance ? `
+            <div class="variance-display">
+              ${clockPlusDisplay  ? `<span class="variance-plus">+${clockPlusDisplay}"</span>`  : ''}
+              ${clockMinusDisplay ? `<span class="variance-minus">−${clockMinusDisplay}"</span>` : ''}
+            </div>` : ''}
+        </div>
+        <div class="result-label">Aim ${breakDir}</div>
+      </div>
+    `;
+
     updateLogLink();
     result.innerHTML = `
       <div class="result-content">
@@ -376,14 +398,19 @@ function updateLookupResult() {
             <div class="result-label">Backswing</div>
           </div>
           <div class="result-divider"></div>
-          <div class="result-item">
-            <div class="result-value">${lateralAim}"</div>
-            <div class="result-label">Aim ${breakDir}</div>
-          </div>
+          ${aimCellHTML}
         </div>
         ${clockSlopeRowHTML}
       </div>
     `;
+    drawClockAnnotations(currentClock, {
+      zblAimBase,
+      lateralAim,
+      plusV,
+      minusV,
+      breakAbs,
+      uphillFactor: factors.uphillFactor,
+    });
     return;
   }
 
@@ -398,9 +425,6 @@ function updateLookupResult() {
   const calBsInches = backswingDisplay(distance, currentStimp);
   const zblRaw = parseFloat(zblData.aimInches);
   const zblDisplay = Math.round(zblRaw) + '"';
-  const zblPlusRounded  = zblData.plusInches  ? Math.round(parseFloat(zblData.plusInches))  : null;
-  const zblMinusRounded = zblData.minusInches ? Math.round(parseFloat(zblData.minusInches)) : null;
-  const hasVariance = zblPlusRounded || zblMinusRounded;
   const slopeLabel = slope > 0 ? `ZBL Aim (${slope}%)` : 'ZBL Aim (flat)';
   updateLogLink();
 
@@ -424,6 +448,7 @@ function updateLookupResult() {
     `;
   }
 
+  drawClockAnnotations(null, {}); // clear SVG when not in clock mode
   result.innerHTML = `
     <div class="result-content">
       <div class="result-row">
@@ -434,15 +459,7 @@ function updateLookupResult() {
         </div>
         <div class="result-divider"></div>
         <div class="result-item">
-          <div class="result-value-container">
-            <div class="result-value">${zblDisplay}</div>
-            ${hasVariance ? `
-              <div class="variance-display">
-                ${zblPlusRounded  ? `<span class="variance-plus">+${zblPlusRounded}"</span>`  : ''}
-                ${zblMinusRounded ? `<span class="variance-minus">−${zblMinusRounded}"</span>` : ''}
-              </div>
-            ` : ''}
-          </div>
+          <div class="result-value">${zblDisplay}</div>
           <div class="result-label">${slopeLabel}</div>
         </div>
       </div>
@@ -470,8 +487,8 @@ function initClockFace() {
   const face = document.getElementById('clock-face');
   if (!face) return;
 
-  const R = 66; // radius from center in px
-  const C = 80; // center (half of 160px face)
+  const R = 83; // radius from center in px
+  const C = 100; // center (half of 200px face)
 
   [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].forEach(h => {
     const theta = (h * Math.PI) / 6;
@@ -486,6 +503,13 @@ function initClockFace() {
     face.appendChild(btn);
   });
 
+  // SVG overlay for visual annotations
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.id = 'clock-svg';
+  svg.setAttribute('viewBox', '0 0 200 200');
+  svg.setAttribute('aria-hidden', 'true');
+  face.appendChild(svg);
+
   face.addEventListener('click', e => {
     const btn = e.target.closest('.clock-pos');
     if (!btn) return;
@@ -494,6 +518,7 @@ function initClockFace() {
       currentClock = null;
       btn.classList.remove('clock-pos-active');
       setClockHand(null);
+      drawClockAnnotations(null, {}); // clear SVG
     } else {
       currentClock = key;
       face.querySelectorAll('.clock-pos').forEach(b => b.classList.remove('clock-pos-active'));
@@ -502,6 +527,111 @@ function initClockFace() {
     }
     updateLookupResult();
   });
+}
+
+function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV, breakAbs, uphillFactor } = {}) {
+  const svg = document.getElementById('clock-svg');
+  if (!svg) return;
+  svg.innerHTML = '';           // clear previous frame
+  if (!clockKey || breakAbs < 0.05) return;   // straight putt — nothing to draw
+
+  const C = 100;  // SVG center (hole)
+  const R = 83;   // ball position radius
+  const theta = CLOCK_DATA[clockKey].theta;
+
+  // ── Positions ──────────────────────────────────────────────────
+  const ballX = C + R * Math.sin(theta);
+  const ballY = C - R * Math.cos(theta);
+
+  // Direction from center toward the high side (perpendicular to putt line)
+  const highX = -Math.cos(theta);
+  const highY = -Math.sin(theta);
+
+  // Visual scale: 1 inch ≈ 1.2 px, capped so large aims stay on-face
+  const scale = px => Math.min(px * 1.2, 22);
+
+  const aimPx  = scale(lateralAim);            // final corrected aim
+  const basePx = scale(zblAimBase * breakAbs); // raw ZBL base aim (before variance)
+
+  const aimX  = C + highX * aimPx;
+  const aimY  = C + highY * aimPx;
+  const baseX = C + highX * basePx;
+  const baseY = C + highY * basePx;
+
+  // ── Helper ─────────────────────────────────────────────────────
+  function el(tag, attrs) {
+    const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v));
+    svg.appendChild(e);
+    return e;
+  }
+
+  // ── 1. Curved ball path (quadratic bezier, ball → hole) ────────
+  // Control point bows toward the high side at the midpoint
+  const cpX = (ballX + C) / 2 + highX * 18;
+  const cpY = (ballY + C) / 2 + highY * 18;
+  el('path', {
+    d: `M ${ballX} ${ballY} Q ${cpX} ${cpY} ${C} ${C}`,
+    stroke: 'rgba(255,255,255,0.55)',
+    'stroke-width': '1.5',
+    fill: 'none',
+    'stroke-linecap': 'round',
+  });
+
+  // ── 2. ZBL target line (straight, dashed — ball → aim point) ───
+  el('line', {
+    x1: ballX, y1: ballY, x2: aimX, y2: aimY,
+    stroke: 'rgba(255,255,255,0.80)',
+    'stroke-width': '1',
+    'stroke-dasharray': '3 3',
+    'stroke-linecap': 'round',
+  });
+
+  // ── 3. ZBL base aim point (hollow circle) ──────────────────────
+  // Only draw when variance correction meaningfully shifts the aim (> 0.5 px)
+  if (Math.abs(aimPx - basePx) > 0.5) {
+    el('circle', {
+      cx: baseX, cy: baseY, r: '2.5',
+      stroke: 'rgba(255,255,255,0.60)',
+      'stroke-width': '1',
+      fill: 'none',
+    });
+  }
+
+  // ── 4. Final lateral aim point (filled circle) ─────────────────
+  el('circle', {
+    cx: aimX, cy: aimY, r: '4',
+    fill: 'white',
+    opacity: '0.90',
+  });
+
+  // ── 5. Variance bracket ticks ──────────────────────────────────
+  // Perpendicular direction for tick orientation
+  const perpX = Math.sin(theta);
+  const perpY = Math.cos(theta);
+  const tickHalf = 4; // half-length of each tick in px
+
+  function drawTick(offsetPx, color) {
+    const tx = C + highX * scale(offsetPx);
+    const ty = C + highY * scale(offsetPx);
+    el('line', {
+      x1: tx + perpX * tickHalf, y1: ty + perpY * tickHalf,
+      x2: tx - perpX * tickHalf, y2: ty - perpY * tickHalf,
+      stroke: color,
+      'stroke-width': '1.5',
+      'stroke-linecap': 'round',
+    });
+  }
+
+  const aboveBelow = Math.abs(uphillFactor);
+  if (plusV > 0) {
+    const upperAim = (zblAimBase * breakAbs) + plusV * aboveBelow;
+    drawTick(upperAim, 'rgba(255,255,255,0.50)');
+  }
+  if (minusV > 0) {
+    const lowerAim = Math.max(0, (zblAimBase * breakAbs) - minusV * aboveBelow);
+    drawTick(lowerAim, 'rgba(255,255,255,0.50)');
+  }
 }
 
 function initQuickLookup() {
