@@ -356,7 +356,7 @@ function updateLookupResult() {
       ?  plusV  * aboveBelow   // from above hole: add superscript inches
       : -minusV * aboveBelow;  // from below hole: subtract subscript inches
 
-    const lateralAim = fmtInches((zblAimBase + varianceAdj) * breakAbs);
+    const lateralAim = (zblAimBase + varianceAdj) * breakAbs;
     const adjBSDisplay = backswingDisplay(adjDist, currentStimp);
     const breakDir = breakAbs < 0.05
       ? 'Straight'
@@ -376,7 +376,7 @@ function updateLookupResult() {
     // ── Aim cell HTML ────────────────────────────────────────────────
     const aimCellHTML = lateralAim > 0 ? `
       <div class="result-item">
-        <div class="result-value">${lateralAim}" out</div>
+        <div class="result-value">${fmtInches(lateralAim)} out</div>
         <div class="result-label">Aim ${breakDir}</div>
         <div class="result-zbl-ref">ZBL ${fmtInches(zblAimBase)}</div>
       </div>
