@@ -568,7 +568,7 @@ function initQuickLookup() {
   slopePlusBtn.addEventListener('click', () => {
     const current = parseFloat(slopeInput.value) || 0;
     if (current < 6) {
-      slopeInput.value = Math.min(6, current + 1);
+      slopeInput.value = Math.round(Math.min(6, current + 0.5) * 10) / 10;
       localStorage.setItem('putt-slope', slopeInput.value);
       updateLookupResult();
     }
@@ -577,7 +577,7 @@ function initQuickLookup() {
   slopeMinusBtn.addEventListener('click', () => {
     const current = parseFloat(slopeInput.value) || 0;
     if (current > 0) {
-      slopeInput.value = Math.max(0, current - 1);
+      slopeInput.value = Math.round(Math.max(0, current - 0.5) * 10) / 10;
       localStorage.setItem('putt-slope', slopeInput.value);
       updateLookupResult();
     }
