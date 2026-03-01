@@ -710,7 +710,7 @@ function initOnboarding() {
       goTo(current + 1);
     } else {
       localStorage.setItem('zerobreak-onboarded', '1');
-      window.location.href = 'log.html';
+      window.location.href = 'log.html?from=onboarding';
     }
   });
 

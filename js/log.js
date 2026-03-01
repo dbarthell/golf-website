@@ -197,7 +197,7 @@ function renderPreview() {
 // ========================================
 // Init
 // ========================================
-function initTool() {
+function initTool(fromOnboarding = false) {
   // Stimp toggle
   document.getElementById('cal-stimp-toggle').addEventListener('click', e => {
     const btn = e.target.closest('.stimp-btn');
@@ -242,9 +242,14 @@ function initTool() {
     if (baseline === null || myInches === null) return;
     const distanceFactor = Math.round((myInches / baseline) * 1000) / 1000;
     saveCalibration({ distanceFactor });
+
+    if (fromOnboarding) {
+      window.location.href = 'index.html';
+      return;
+    }
+
     renderStatus();
     renderPreview();
-
     const btn = document.getElementById('save-cal-btn');
     btn.textContent = 'Saved!';
     setTimeout(() => { btn.textContent = 'Save Calibration'; }, 1500);
@@ -265,13 +270,19 @@ function initTool() {
 }
 
 async function init() {
+  const fromOnboarding = new URLSearchParams(window.location.search).get('from') === 'onboarding';
+  if (fromOnboarding) {
+    const backLink = document.querySelector('.back-link');
+    if (backLink) backLink.style.visibility = 'hidden';
+  }
+
   try {
     const resp = await fetch('data/putting.json');
     if (!resp.ok) throw new Error('Failed to load data');
     puttingData = await resp.json();
 
     renderStatus();
-    initTool();
+    initTool(fromOnboarding);
     renderPreview();
   } catch (e) {
     document.getElementById('tool-card').innerHTML =
