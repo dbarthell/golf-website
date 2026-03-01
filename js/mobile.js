@@ -552,12 +552,14 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV,
     return e;
   }
 
-  // ── 1. ZBL target line (straight, dashed — ball → aim point) ───
-  el('line', {
-    x1: ballX, y1: ballY, x2: aimX, y2: aimY,
-    stroke: 'rgba(255,255,255,0.80)',
-    'stroke-width': '1',
-    'stroke-dasharray': '3 3',
+  // ── 1. Curved ball path (quadratic bezier, ball → hole) ────────
+  const cpX = (ballX + C) / 2 + highX * 18;
+  const cpY = (ballY + C) / 2 + highY * 18;
+  el('path', {
+    d: `M ${ballX} ${ballY} Q ${cpX} ${cpY} ${C} ${C}`,
+    stroke: 'rgba(255,255,255,0.55)',
+    'stroke-width': '1.5',
+    fill: 'none',
     'stroke-linecap': 'round',
   });
 
