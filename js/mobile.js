@@ -641,7 +641,7 @@ function renderBackswingTable() {
     return `
       <tr class="row-original">
         <td>${calDist}</td>
-        <td>${r.inches}</td>
+        <td>${Math.round(parseFloat(r.inches))}"</td>
         <td>${r.landmark}</td>
       </tr>
     `;
