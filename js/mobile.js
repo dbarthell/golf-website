@@ -473,8 +473,8 @@ function initClockFace() {
   const face = document.getElementById('clock-face');
   if (!face) return;
 
-  const R = 83; // radius from center in px
-  const C = 100; // center (half of 200px face)
+  const R = 116; // radius from center in px
+  const C = 140; // center (half of 280px face)
 
   [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].forEach(h => {
     const theta = (h * Math.PI) / 6;
