@@ -86,6 +86,18 @@ body {
   margin-bottom: 0.6rem;
 }
 
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-logo {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 6px;
+}
+
 .lookup-header h1 {
   font-size: 1.5rem;
   font-weight: 700;
