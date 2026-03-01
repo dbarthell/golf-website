@@ -529,9 +529,11 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV,
   const ballX = C + R * Math.sin(theta);
   const ballY = C - R * Math.cos(theta);
 
-  // Direction from center toward the high side (perpendicular to putt line)
-  const highX = -Math.cos(theta);
-  const highY = -Math.sin(theta);
+  // R→L break (sin θ > 0) aims left of hole from player's view = high side is (-cos θ, -sin θ).
+  // L→R break (sin θ < 0) is mirrored, so flip the sign.
+  const breakSign = Math.sin(theta) >= 0 ? 1 : -1;
+  const highX = breakSign * (-Math.cos(theta));
+  const highY = breakSign * (-Math.sin(theta));
 
   // Visual scale: 1 inch ≈ 1.2 px, capped so large aims stay on-face
   const scale = px => Math.min(px * 1.2, 22);
@@ -592,7 +594,7 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV,
 
   // ── 5. Variance bracket ticks ──────────────────────────────────
   const perpX = Math.sin(theta);
-  const perpY = Math.cos(theta);
+  const perpY = -Math.cos(theta);
   const tickHalf = 5;
 
   function drawTick(offsetPx, color) {
