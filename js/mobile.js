@@ -376,7 +376,7 @@ function updateLookupResult() {
       </div>
     ` : `
       <div class="result-item">
-        <div class="result-value">Straight</div>
+        <div class="result-value result-value-word">Straight</div>
       </div>
     `;
 

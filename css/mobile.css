@@ -323,7 +323,10 @@ body {
   font-weight: 800;
   color: var(--green-dark);
   line-height: 1.15;
-  word-break: break-all;
+}
+
+.result-value-word {
+  font-size: 1.75rem;
 }
 
 .variance-display {
