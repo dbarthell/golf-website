@@ -529,24 +529,22 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {
   const ballX = C + R * Math.sin(theta);
   const ballY = C - R * Math.cos(theta);
 
-  // High-side direction: R→L (sin θ > 0) aims left → high side is (-cos θ, -sin θ).
-  // L→R (sin θ < 0) is mirrored, so flip the sign.
+  // breakSign: R→L (sin θ ≥ 0) = +1, L→R = −1
   const breakSign = Math.sin(theta) >= 0 ? 1 : -1;
-  const highX = breakSign * (-Math.cos(theta));
-  const highY = breakSign * (-Math.sin(theta));
 
   // Visual scale: inches → SVG px, with a minimum for visibility
   const scaleIn = inches => Math.min(Math.max(inches * 3, 10), 45);
 
-  // ── ZBL: always DIRECTLY above cup at 12 o'clock ───────────────
+  // ── ZBL: ALWAYS directly above cup at 12 o'clock ───────────────
   const zblPx = scaleIn(zblAimBase);
   const zblX  = C;
   const zblY  = C - zblPx;
 
-  // ── Lateral aim: from cup center in high-side direction ─────────
+  // ── Lateral aim: ALWAYS horizontal from cup (left or right) ────
+  // Keeps it perpendicular to ZBL so it can never cross the ZBL line
   const aimPx = scaleIn(lateralAim);
-  const aimX  = C + highX * aimPx;
-  const aimY  = C + highY * aimPx;
+  const aimX  = C + breakSign * aimPx;
+  const aimY  = C;
 
   // ── Helper ─────────────────────────────────────────────────────
   function el(tag, attrs) {
@@ -556,7 +554,16 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {
     return e;
   }
 
-  // ── 1. Dashed line: ball → ZBL point (12 o'clock above cup) ────
+  // ── 1. Measurement line: cup → ZBL (vertical, subtle) ─────────
+  // Visually shows the cup-to-ZBL distance
+  el('line', {
+    x1: C, y1: C, x2: C, y2: zblY,
+    stroke: 'rgba(255,255,255,0.40)',
+    'stroke-width': '1',
+    'stroke-linecap': 'round',
+  });
+
+  // ── 2. Dashed line: ball → ZBL (zero break line, hypotenuse) ───
   el('line', {
     x1: ballX, y1: ballY, x2: zblX, y2: zblY,
     stroke: 'rgba(255,255,255,0.90)',
@@ -565,15 +572,24 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {
     'stroke-linecap': 'round',
   });
 
-  // ── 2. ZBL dot (filled, at 12 o'clock) ─────────────────────────
+  // ── 3. ZBL dot (top of measurement line, at 12 o'clock) ────────
   el('circle', {
     cx: zblX, cy: zblY, r: '5',
     fill: 'white',
     opacity: '0.95',
   });
 
-  // ── 3. Solid line: cup center → lateral aim point ───────────────
   if (lateralAim > 0) {
+    // ── 4. Triangle hypotenuse: lateral aim → ZBL (aim direction) ─
+    el('line', {
+      x1: aimX, y1: aimY, x2: zblX, y2: zblY,
+      stroke: 'rgba(255,255,255,0.40)',
+      'stroke-width': '1',
+      'stroke-dasharray': '2 3',
+      'stroke-linecap': 'round',
+    });
+
+    // ── 5. Horizontal line: cup → lateral aim (right triangle leg) ─
     el('line', {
       x1: C, y1: C, x2: aimX, y2: aimY,
       stroke: 'rgba(255,255,255,0.75)',
@@ -581,7 +597,7 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {
       'stroke-linecap': 'round',
     });
 
-    // ── 4. Lateral aim dot ────────────────────────────────────────
+    // ── 6. Lateral aim dot ────────────────────────────────────────
     el('circle', {
       cx: aimX, cy: aimY, r: '5',
       fill: 'white',
@@ -589,7 +605,7 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {
     });
   }
 
-  // ── 5. Labels ──────────────────────────────────────────────────
+  // ── 7. Labels ──────────────────────────────────────────────────
   function label(x, y, text, fontSize) {
     const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     t.setAttribute('x', x);
@@ -607,12 +623,14 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, breakAbs } = {
     svg.appendChild(t);
   }
 
-  // ZBL label: above the ZBL dot toward 12 o'clock
-  label(zblX, zblY - 13, `ZBL ${Math.round(zblAimBase)}"`, 10);
+  // ZBL: "ZBL" above the dot; measurement value alongside the vertical line
+  // (on the opposite side from the lateral aim dot to avoid overlap)
+  label(C, zblY - 12, 'ZBL', 8);
+  label(C + (-breakSign) * 15, (C + zblY) / 2, `${Math.round(zblAimBase)}"`, 10);
 
-  // Lateral aim label: beyond the aim dot in the high-side direction
+  // Lateral aim: value beyond the aim dot in the break direction
   if (lateralAim > 0) {
-    label(C + highX * (aimPx + 14), C + highY * (aimPx + 14), `${lateralAim}"`, 13);
+    label(C + breakSign * (aimPx + 14), C, `${lateralAim}"`, 13);
   }
 }
 
