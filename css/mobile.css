@@ -376,6 +376,13 @@ body {
   white-space: nowrap;
 }
 
+.slope-dist-bs {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--green-dark);
+  white-space: nowrap;
+}
+
 .slope-bs {
   font-size: 0.9rem;
   font-weight: 800;

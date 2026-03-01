@@ -403,16 +403,15 @@ function updateLookupResult() {
     const uphillBS   = findBackswingData(uphillTotal, currentStimp);
     const downhillBS = findBackswingData(downhillTotal, currentStimp);
     slopeRowHTML = `
-      <div class="slope-row slope-row-stacked">
-        <div class="slope-adj-row">
+      <div class="slope-row">
+        <div class="slope-col">
           <span class="slope-dir slope-up">↑ Uphill</span>
-          <span class="slope-dist">${uphillTotal} ft</span>
-          <span class="slope-bs">${uphillBS ? uphillBS.inches : '—'}</span>
+          <span class="slope-dist-bs">${uphillTotal} ft · ${uphillBS ? uphillBS.inches : '—'}</span>
         </div>
-        <div class="slope-adj-row">
+        <div class="slope-adj-divider"></div>
+        <div class="slope-col">
           <span class="slope-dir slope-down">↓ Downhill</span>
-          <span class="slope-dist">${downhillTotal} ft</span>
-          <span class="slope-bs">${downhillBS ? downhillBS.inches : '—'}</span>
+          <span class="slope-dist-bs">${downhillTotal} ft · ${downhillBS ? downhillBS.inches : '—'}</span>
         </div>
       </div>
     `;
