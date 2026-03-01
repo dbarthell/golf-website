@@ -1,4 +1,4 @@
-const CACHE_NAME = 'putt-calc-v15';
+const CACHE_NAME = 'putt-calc-v16';
 const FILES_TO_CACHE = [
   '/golf-website/',
   '/golf-website/index.html',

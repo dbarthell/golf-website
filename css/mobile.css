@@ -334,12 +334,27 @@ body {
   gap: var(--space-sm);
 }
 
+/* Clock mode: two vertical columns side by side */
 .slope-col {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.15rem;
+}
+
+/* Normal mode: stacked horizontal rows (uphill / downhill) */
+.slope-row-stacked {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: initial;
+  gap: 0.15rem;
+}
+
+.slope-adj-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .slope-dir {
@@ -357,6 +372,7 @@ body {
   font-size: 0.9rem;
   font-weight: 800;
   color: var(--green-dark);
+  white-space: nowrap;
 }
 
 .slope-bs {
