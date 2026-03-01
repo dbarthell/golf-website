@@ -68,6 +68,18 @@ body {
 }
 .back-link:active { opacity: 1; background: rgba(255,255,255,0.1); }
 
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-logo {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 6px;
+}
+
 .log-header h1 {
   font-size: 1.25rem;
   font-weight: 700;
