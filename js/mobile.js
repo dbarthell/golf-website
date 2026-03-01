@@ -26,12 +26,18 @@ function applyCalBS(rawInches) {
   return (num * puttCal.distanceFactor).toFixed(1) + '"';
 }
 
+// Round to nearest 0.5", drop .0 suffix
+function fmtInches(val) {
+  const r = Math.round(val * 2) / 2;
+  return (r % 1 === 0 ? r.toFixed(0) : r.toFixed(1)) + '"';
+}
+
 // "1 foot past the cup" backswing: look up dist+1, apply cal
 function backswingDisplay(distFeet, stimp) {
   const data = findBackswingData(distFeet + 1, stimp);
   if (!data) return '—';
   const raw = parseFloat(data.inches.replace('"', ''));
-  return (raw * puttCal.distanceFactor).toFixed(1) + '"';
+  return fmtInches(raw * puttCal.distanceFactor);
 }
 
 function updateLogLink() {
@@ -350,7 +356,7 @@ function updateLookupResult() {
       ?  plusV  * aboveBelow   // from above hole: add superscript inches
       : -minusV * aboveBelow;  // from below hole: subtract subscript inches
 
-    const lateralAim = ((zblAimBase + varianceAdj) * breakAbs).toFixed(1);
+    const lateralAim = fmtInches((zblAimBase + varianceAdj) * breakAbs);
     const adjBSDisplay = backswingDisplay(adjDist, currentStimp);
     const breakDir = breakAbs < 0.05
       ? 'Straight'
@@ -372,12 +378,12 @@ function updateLookupResult() {
       <div class="result-item">
         <div class="result-value">${lateralAim}" out</div>
         <div class="result-label">Aim ${breakDir}</div>
-        <div class="result-zbl-ref">ZBL ${zblAimBase.toFixed(1)}"</div>
+        <div class="result-zbl-ref">ZBL ${fmtInches(zblAimBase)}</div>
       </div>
     ` : `
       <div class="result-item">
         <div class="result-value result-value-word">Straight</div>
-        <div class="result-zbl-ref">ZBL ${zblAimBase.toFixed(1)}"</div>
+        <div class="result-zbl-ref">ZBL ${fmtInches(zblAimBase)}</div>
       </div>
     `;
 
@@ -416,7 +422,7 @@ function updateLookupResult() {
 
   const calBsInches = backswingDisplay(distance, currentStimp);
   const zblRaw = parseFloat(zblData.aimInches);
-  const zblDisplay = zblRaw.toFixed(1) + '"';
+  const zblDisplay = fmtInches(zblRaw);
   const slopeLabel = slope > 0 ? `ZBL Aim (${slope}%)` : 'ZBL Aim (flat)';
   updateLogLink();
 
@@ -429,8 +435,8 @@ function updateLookupResult() {
     const downhillTotal = Math.max(1, Math.round(distance - downhillAdj));
     const uphillBSDisp   = backswingDisplay(uphillTotal, currentStimp);
     const downhillBSDisp = backswingDisplay(downhillTotal, currentStimp);
-    const uphillZBL   = zblRaw.toFixed(1) + '"';
-    const downhillZBL = zblRaw.toFixed(1) + '"';
+    const uphillZBL   = fmtInches(zblRaw);
+    const downhillZBL = fmtInches(zblRaw);
     slopeRowHTML = `
       <div class="slope-row">
         <span class="slope-item slope-up">↑ ${uphillTotal} ft · ${uphillBSDisp}</span>
@@ -742,7 +748,7 @@ function renderBackswingTable() {
     return `
       <tr class="row-original">
         <td>${calDist}</td>
-        <td>${parseFloat(r.inches).toFixed(1)}"</td>
+        <td>${fmtInches(parseFloat(r.inches))}</td>
         <td>${r.landmark}</td>
       </tr>
     `;
