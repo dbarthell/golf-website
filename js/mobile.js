@@ -432,7 +432,7 @@ function updateLookupResult() {
     const uphillZBL   = Math.floor(zblRaw) + '"';
     const downhillZBL = Math.ceil(zblRaw)  + '"';
     slopeRowHTML = `
-      <div class="slope-row">
+      <div class="slope-row slope-row-stacked">
         <span class="slope-item slope-up">↑ ${uphillTotal} ft · ${uphillBSDisp}</span>
         <span class="slope-item slope-down">↓ ${downhillTotal} ft · ${downhillBSDisp}</span>
       </div>
