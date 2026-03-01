@@ -322,7 +322,7 @@ body {
   font-size: 2.5rem;
   font-weight: 800;
   color: var(--green-dark);
-  line-height: 1;
+  line-height: 1.15;
   word-break: break-all;
 }
 
@@ -372,10 +372,10 @@ body {
 .slope-row {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
   padding: 0.35rem var(--space-sm);
   border-top: 1px solid var(--gray-200);
-  gap: var(--space-sm);
+  gap: var(--space-md);
 }
 
 /* Clock mode: two vertical columns side by side */
