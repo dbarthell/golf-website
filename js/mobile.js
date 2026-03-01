@@ -677,4 +677,50 @@ async function init() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', init);
+// ========================================
+// Onboarding
+// ========================================
+
+function initOnboarding() {
+  if (localStorage.getItem('zerobreak-onboarded')) return;
+
+  const overlay = document.getElementById('onboarding-overlay');
+  if (!overlay) return;
+  overlay.classList.add('onboarding-visible');
+
+  const slides = overlay.querySelectorAll('.onboarding-slide');
+  const dots   = overlay.querySelectorAll('.dot');
+  const nextBtn = document.getElementById('onboarding-next');
+  const skipBtn = document.getElementById('onboarding-skip');
+  let current = 0;
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('dot-active');
+    current = n;
+    slides[current].classList.add('active');
+    dots[current].classList.add('dot-active');
+    const isLast = current === slides.length - 1;
+    nextBtn.textContent = isLast ? 'Calibrate Now' : 'Next';
+    skipBtn.style.display = isLast ? 'block' : 'none';
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if (current < slides.length - 1) {
+      goTo(current + 1);
+    } else {
+      localStorage.setItem('zerobreak-onboarded', '1');
+      window.location.href = 'log.html';
+    }
+  });
+
+  skipBtn.addEventListener('click', () => {
+    localStorage.setItem('zerobreak-onboarded', '1');
+    overlay.classList.remove('onboarding-visible');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initOnboarding();
+  init();
+});
