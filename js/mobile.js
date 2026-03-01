@@ -377,6 +377,7 @@ function updateLookupResult() {
     ` : `
       <div class="result-item">
         <div class="result-value result-value-word">Straight</div>
+        <div class="result-zbl-ref">ZBL ${Math.round(zblAimBase)}"</div>
       </div>
     `;
 
