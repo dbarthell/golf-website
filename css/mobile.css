@@ -383,6 +383,12 @@ body {
   white-space: nowrap;
 }
 
+.slope-item {
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .slope-bs {
   font-size: 0.9rem;
   font-weight: 800;
