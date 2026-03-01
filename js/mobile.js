@@ -419,12 +419,12 @@ function updateLookupResult() {
       <div class="slope-row">
         <div class="slope-col">
           <span class="slope-dir slope-up">↑ Uphill</span>
-          <span class="slope-dist-bs">${uphillTotal} ft · ${uphillBSDisp} · ${uphillZBL}</span>
+          <span class="slope-dist-bs">${uphillTotal} ft · ${uphillBSDisp}</span>
         </div>
         <div class="slope-adj-divider"></div>
         <div class="slope-col">
           <span class="slope-dir slope-down">↓ Downhill</span>
-          <span class="slope-dist-bs">${downhillTotal} ft · ${downhillBSDisp} · ${downhillZBL}</span>
+          <span class="slope-dist-bs">${downhillTotal} ft · ${downhillBSDisp}</span>
         </div>
       </div>
     `;
