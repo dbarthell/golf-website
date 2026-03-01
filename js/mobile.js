@@ -557,35 +557,43 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV,
   const cpY = (ballY + C) / 2 + highY * 18;
   el('path', {
     d: `M ${ballX} ${ballY} Q ${cpX} ${cpY} ${C} ${C}`,
-    stroke: 'rgba(255,255,255,0.55)',
-    'stroke-width': '1.5',
+    stroke: 'rgba(255,255,255,0.80)',
+    'stroke-width': '2',
     fill: 'none',
     'stroke-linecap': 'round',
   });
 
-  // ── 2. ZBL base aim point (hollow circle) ──────────────────────
+  // ── 2. Dashed target line (ball → lateral aim point) ───────────
+  el('line', {
+    x1: ballX, y1: ballY, x2: aimX, y2: aimY,
+    stroke: 'rgba(255,255,255,0.90)',
+    'stroke-width': '1.5',
+    'stroke-dasharray': '3 3',
+    'stroke-linecap': 'round',
+  });
+
+  // ── 3. ZBL base aim point (hollow circle) ──────────────────────
   // Only draw when variance correction meaningfully shifts the aim (> 0.5 px)
   if (Math.abs(aimPx - basePx) > 0.5) {
     el('circle', {
-      cx: baseX, cy: baseY, r: '2.5',
-      stroke: 'rgba(255,255,255,0.60)',
-      'stroke-width': '1',
+      cx: baseX, cy: baseY, r: '3',
+      stroke: 'rgba(255,255,255,0.85)',
+      'stroke-width': '1.5',
       fill: 'none',
     });
   }
 
   // ── 4. Final lateral aim point (filled circle) ─────────────────
   el('circle', {
-    cx: aimX, cy: aimY, r: '4',
+    cx: aimX, cy: aimY, r: '5',
     fill: 'white',
-    opacity: '0.90',
+    opacity: '1',
   });
 
   // ── 5. Variance bracket ticks ──────────────────────────────────
-  // Perpendicular direction for tick orientation
   const perpX = Math.sin(theta);
   const perpY = Math.cos(theta);
-  const tickHalf = 4; // half-length of each tick in px
+  const tickHalf = 5;
 
   function drawTick(offsetPx, color) {
     const tx = C + highX * scale(offsetPx);
@@ -594,7 +602,7 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV,
       x1: tx + perpX * tickHalf, y1: ty + perpY * tickHalf,
       x2: tx - perpX * tickHalf, y2: ty - perpY * tickHalf,
       stroke: color,
-      'stroke-width': '1.5',
+      'stroke-width': '2',
       'stroke-linecap': 'round',
     });
   }
@@ -602,11 +610,11 @@ function drawClockAnnotations(clockKey, { zblAimBase, lateralAim, plusV, minusV,
   const aboveBelow = Math.abs(uphillFactor);
   if (plusV > 0) {
     const upperAim = (zblAimBase * breakAbs) + plusV * aboveBelow;
-    drawTick(upperAim, 'rgba(255,255,255,0.50)');
+    drawTick(upperAim, 'rgba(255,255,255,0.75)');
   }
   if (minusV > 0) {
     const lowerAim = Math.max(0, (zblAimBase * breakAbs) - minusV * aboveBelow);
-    drawTick(lowerAim, 'rgba(255,255,255,0.50)');
+    drawTick(lowerAim, 'rgba(255,255,255,0.75)');
   }
 }
 
