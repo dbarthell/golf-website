@@ -624,7 +624,7 @@ function renderCommonDistances() {
 function renderBackswingTable() {
   const table = document.getElementById('backswing-table');
   const rows = puttingData.lagPuttingTable.rows.filter(r => r.original);
-  
+
   const headerHTML = `
     <thead>
       <tr>
@@ -634,15 +634,19 @@ function renderBackswingTable() {
       </tr>
     </thead>
   `;
-  
-  const bodyHTML = rows.map(r => `
-    <tr class="row-original">
-      <td>${r.stimp10}</td>
-      <td>${r.inches}</td>
-      <td>${r.landmark}</td>
-    </tr>
-  `).join('');
-  
+
+  const bodyHTML = rows.map(r => {
+    const rawDist = parseFloat(r.stimp10);
+    const calDist = Math.round(rawDist / puttCal.distanceFactor) + ' ft';
+    return `
+      <tr class="row-original">
+        <td>${calDist}</td>
+        <td>${r.inches}</td>
+        <td>${r.landmark}</td>
+      </tr>
+    `;
+  }).join('');
+
   table.innerHTML = headerHTML + '<tbody>' + bodyHTML + '</tbody>';
 }
 
