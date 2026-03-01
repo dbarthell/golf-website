@@ -368,11 +368,16 @@ function updateLookupResult() {
     }
 
     // ── Aim cell HTML ────────────────────────────────────────────────
-    const aimCellHTML = `
+    const aimCellHTML = lateralAim > 0 ? `
       <div class="result-item">
         <div class="result-value">${lateralAim}" out</div>
         <div class="result-label">Aim ${breakDir}</div>
         <div class="result-zbl-ref">ZBL ${Math.round(zblAimBase)}"</div>
+      </div>
+    ` : `
+      <div class="result-item">
+        <div class="result-value">Straight</div>
+        <div class="result-label">Aim</div>
       </div>
     `;
 
