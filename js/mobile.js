@@ -374,7 +374,7 @@ function updateLookupResult() {
     }
 
     // ── Aim cell HTML ────────────────────────────────────────────────
-    const aimCellHTML = lateralAim > 0 ? `
+    const aimCellHTML = breakAbs >= 0.05 ? `
       <div class="result-item">
         <div class="result-value">${fmtInches(lateralAim)} out</div>
         <div class="result-label">Aim ${breakDir}</div>
