@@ -473,15 +473,15 @@ function updateLookupResult() {
 // Clock Face
 // ========================================
 
-function setClockHand(hour) {
+function setClockHand(degrees) {
   const hand = document.getElementById('clock-hand');
   if (!hand) return;
-  if (hour === null) {
+  if (degrees === null) {
     hand.style.display = 'none';
     return;
   }
   hand.style.display = 'block';
-  hand.style.transform = `translateX(-50%) rotate(${hour * 30}deg)`;
+  hand.style.transform = `translateX(-50%) rotate(${degrees}deg)`;
 }
 
 function initClockFace() {
@@ -546,7 +546,7 @@ function initClockFace() {
       currentClock = key;
       face.querySelectorAll('.clock-pos').forEach(b => b.classList.remove('clock-pos-active'));
       btn.classList.add('clock-pos-active');
-      setClockHand(parseFloat(key));
+      setClockHand(parseFloat(btn.dataset.displayTheta) * (180 / Math.PI));
     }
     updateLookupResult();
   });
