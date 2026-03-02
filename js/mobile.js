@@ -376,7 +376,7 @@ function updateLookupResult() {
     // ── Aim cell HTML ────────────────────────────────────────────────
     const aimCellHTML = breakAbs >= 0.05 ? `
       <div class="result-item">
-        <div class="result-value">${fmtInches(lateralAim)} out</div>
+        <div class="result-value-with-unit">${fmtInches(lateralAim)}<span class="result-unit">out</span></div>
         <div class="result-label">Aim ${breakDir}</div>
         <div class="result-zbl-ref">ZBL ${fmtInches(zblAimBase)}</div>
       </div>
