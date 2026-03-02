@@ -32,6 +32,16 @@ function fmtInches(val) {
   return (r % 1 === 0 ? r.toFixed(0) : r.toFixed(1)) + '"';
 }
 
+// Returns a named aim zone label, or null if outside the cup (show inches instead).
+// Cup radius = 2.125" (4.25" diameter).
+function aimPoint(lateralAim, breakFactor) {
+  const dir = breakFactor > 0 ? 'Right' : 'Left';
+  if (lateralAim < 0.85) return `${dir} Center`;
+  if (lateralAim < 1.6)  return `Inside ${dir}`;
+  if (lateralAim < 2.5)  return `${dir} Edge`;
+  return null; // outside cup: show inches out
+}
+
 // "1 foot past the cup" backswing: look up dist+1, apply cal
 function backswingDisplay(distFeet, stimp) {
   const data = findBackswingData(distFeet + 1, stimp);
@@ -379,15 +389,15 @@ function updateLookupResult() {
     }
 
     // ── Aim cell HTML ────────────────────────────────────────────────
-    const edgeAimRounded = Math.round(edgeAim * 2) / 2; // nearest 0.5
-    const aimDisplay = edgeAimRounded <= 0
-      ? `<div class="result-value result-value-word">Edge</div>`
+    const namedAim = aimPoint(lateralAim, factors.breakFactor);
+    const aimDisplay = namedAim
+      ? `<div class="result-value result-value-word">${namedAim}</div>`
       : `<div class="result-value-with-unit">${fmtInches(edgeAim)}<span class="result-unit">out</span></div>`;
 
     const aimCellHTML = breakAbs >= 0.05 ? `
       <div class="result-item">
         ${aimDisplay}
-        <div class="result-label">Aim ${breakDir}</div>
+        <div class="result-label">Aim</div>
         <div class="result-zbl-ref">ZBL ${fmtInches(zblAimBase)}</div>
       </div>
     ` : `
