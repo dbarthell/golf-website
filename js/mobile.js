@@ -491,23 +491,27 @@ function initClockFace() {
   const R = 116; // radius from center in px
   const C = 140; // center (half of 280px face)
 
+  // Visual positions: cardinals at 0/90/180/270°, non-cardinals compressed
+  // to 22.5° and 67.5° within each quadrant so :30 buttons have equal gaps.
+  // CLOCK_DATA thetas (used for math) are unchanged.
+  const P = Math.PI;
   const hourPositions = [
-    { key: '12',   theta: 0,               label: '12' },
-    { key: '1',    theta: Math.PI / 6,     label: '1' },
-    { key: '1.5',  theta: Math.PI / 4,     label: '1:30', half: true },
-    { key: '2',    theta: Math.PI / 3,     label: '2' },
-    { key: '3',    theta: Math.PI / 2,     label: '3' },
-    { key: '4',    theta: 2 * Math.PI / 3, label: '4' },
-    { key: '4.5',  theta: 3 * Math.PI / 4, label: '4:30', half: true },
-    { key: '5',    theta: 5 * Math.PI / 6, label: '5' },
-    { key: '6',    theta: Math.PI,          label: '6' },
-    { key: '7',    theta: 7 * Math.PI / 6, label: '7' },
-    { key: '7.5',  theta: 5 * Math.PI / 4, label: '7:30', half: true },
-    { key: '8',    theta: 4 * Math.PI / 3, label: '8' },
-    { key: '9',    theta: 3 * Math.PI / 2, label: '9' },
-    { key: '10',   theta: 5 * Math.PI / 3, label: '10' },
-    { key: '10.5', theta: 7 * Math.PI / 4, label: '10:30', half: true },
-    { key: '11',   theta: 11 * Math.PI / 6, label: '11' },
+    { key: '12',   theta: 0,             label: '12' },
+    { key: '1',    theta: P / 8,         label: '1' },
+    { key: '1.5',  theta: P / 4,         label: '1:30', half: true },
+    { key: '2',    theta: 3 * P / 8,     label: '2' },
+    { key: '3',    theta: P / 2,         label: '3' },
+    { key: '4',    theta: 5 * P / 8,     label: '4' },
+    { key: '4.5',  theta: 3 * P / 4,     label: '4:30', half: true },
+    { key: '5',    theta: 7 * P / 8,     label: '5' },
+    { key: '6',    theta: P,             label: '6' },
+    { key: '7',    theta: 9 * P / 8,     label: '7' },
+    { key: '7.5',  theta: 5 * P / 4,     label: '7:30', half: true },
+    { key: '8',    theta: 11 * P / 8,    label: '8' },
+    { key: '9',    theta: 3 * P / 2,     label: '9' },
+    { key: '10',   theta: 13 * P / 8,    label: '10' },
+    { key: '10.5', theta: 7 * P / 4,     label: '10:30', half: true },
+    { key: '11',   theta: 15 * P / 8,    label: '11' },
   ];
 
   hourPositions.forEach(({ key, theta, label, half }) => {
