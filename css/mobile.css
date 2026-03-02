@@ -538,6 +538,13 @@ body {
   touch-action: manipulation;
 }
 
+.clock-pos-half {
+  font-size: 0.6rem;
+  width: 34px;
+  height: 34px;
+  opacity: 0.85;
+}
+
 .clock-pos.clock-pos-active {
   background: rgba(255, 255, 255, 0.92);
   color: var(--green-dark);

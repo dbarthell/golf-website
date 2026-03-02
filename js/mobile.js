@@ -55,18 +55,22 @@ function updateLogLink() {
 
 // Clock positions: θ measured clockwise from 12 o'clock (30° per hour)
 const CLOCK_DATA = {
-  '12': { theta: 0 },
-  '1':  { theta: Math.PI / 6 },
-  '2':  { theta: Math.PI / 3 },
-  '3':  { theta: Math.PI / 2 },
-  '4':  { theta: 2 * Math.PI / 3 },
-  '5':  { theta: 5 * Math.PI / 6 },
-  '6':  { theta: Math.PI },
-  '7':  { theta: 7 * Math.PI / 6 },
-  '8':  { theta: 4 * Math.PI / 3 },
-  '9':  { theta: 3 * Math.PI / 2 },
-  '10': { theta: 5 * Math.PI / 3 },
-  '11': { theta: 11 * Math.PI / 6 },
+  '12':  { theta: 0 },
+  '1':   { theta: Math.PI / 6 },
+  '1.5': { theta: Math.PI / 4 },
+  '2':   { theta: Math.PI / 3 },
+  '3':   { theta: Math.PI / 2 },
+  '4':   { theta: 2 * Math.PI / 3 },
+  '4.5': { theta: 3 * Math.PI / 4 },
+  '5':   { theta: 5 * Math.PI / 6 },
+  '6':   { theta: Math.PI },
+  '7':   { theta: 7 * Math.PI / 6 },
+  '7.5': { theta: 5 * Math.PI / 4 },
+  '8':   { theta: 4 * Math.PI / 3 },
+  '9':   { theta: 3 * Math.PI / 2 },
+  '10':  { theta: 5 * Math.PI / 3 },
+  '10.5':{ theta: 7 * Math.PI / 4 },
+  '11':  { theta: 11 * Math.PI / 6 },
 };
 
 // uphillFactor > 0 = uphill putt, < 0 = downhill putt
@@ -487,14 +491,32 @@ function initClockFace() {
   const R = 116; // radius from center in px
   const C = 140; // center (half of 280px face)
 
-  [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].forEach(h => {
-    const theta = (h * Math.PI) / 6;
+  const hourPositions = [
+    { key: '12',   theta: 0,               label: '12' },
+    { key: '1',    theta: Math.PI / 6,     label: '1' },
+    { key: '1.5',  theta: Math.PI / 4,     label: '1:30', half: true },
+    { key: '2',    theta: Math.PI / 3,     label: '2' },
+    { key: '3',    theta: Math.PI / 2,     label: '3' },
+    { key: '4',    theta: 2 * Math.PI / 3, label: '4' },
+    { key: '4.5',  theta: 3 * Math.PI / 4, label: '4:30', half: true },
+    { key: '5',    theta: 5 * Math.PI / 6, label: '5' },
+    { key: '6',    theta: Math.PI,          label: '6' },
+    { key: '7',    theta: 7 * Math.PI / 6, label: '7' },
+    { key: '7.5',  theta: 5 * Math.PI / 4, label: '7:30', half: true },
+    { key: '8',    theta: 4 * Math.PI / 3, label: '8' },
+    { key: '9',    theta: 3 * Math.PI / 2, label: '9' },
+    { key: '10',   theta: 5 * Math.PI / 3, label: '10' },
+    { key: '10.5', theta: 7 * Math.PI / 4, label: '10:30', half: true },
+    { key: '11',   theta: 11 * Math.PI / 6, label: '11' },
+  ];
+
+  hourPositions.forEach(({ key, theta, label, half }) => {
     const x = C + R * Math.sin(theta);
     const y = C - R * Math.cos(theta);
     const btn = document.createElement('button');
-    btn.className = 'clock-pos';
-    btn.dataset.clock = String(h);
-    btn.textContent = String(h);
+    btn.className = 'clock-pos' + (half ? ' clock-pos-half' : '');
+    btn.dataset.clock = key;
+    btn.textContent = label;
     btn.style.left = x + 'px';
     btn.style.top  = y + 'px';
     face.appendChild(btn);
@@ -519,7 +541,7 @@ function initClockFace() {
       currentClock = key;
       face.querySelectorAll('.clock-pos').forEach(b => b.classList.remove('clock-pos-active'));
       btn.classList.add('clock-pos-active');
-      setClockHand(parseInt(key));
+      setClockHand(parseFloat(key));
     }
     updateLookupResult();
   });
