@@ -361,6 +361,7 @@ function updateLookupResult() {
       : -minusV * aboveBelow;  // from below hole: subtract subscript inches
 
     const lateralAim = (zblAimBase + varianceAdj) * breakAbs;
+    const edgeAim = lateralAim - 2.125; // convert from cup center to cup edge
     const adjBSDisplay = backswingDisplay(adjDist, currentStimp);
     const breakDir = breakAbs < 0.05
       ? 'Straight'
@@ -378,9 +379,14 @@ function updateLookupResult() {
     }
 
     // ── Aim cell HTML ────────────────────────────────────────────────
+    const edgeAimRounded = Math.round(edgeAim * 2) / 2; // nearest 0.5
+    const aimDisplay = edgeAimRounded <= 0
+      ? `<div class="result-value result-value-word">Edge</div>`
+      : `<div class="result-value-with-unit">${fmtInches(edgeAim)}<span class="result-unit">out</span></div>`;
+
     const aimCellHTML = breakAbs >= 0.05 ? `
       <div class="result-item">
-        <div class="result-value-with-unit">${fmtInches(lateralAim)}<span class="result-unit">out</span></div>
+        ${aimDisplay}
         <div class="result-label">Aim ${breakDir}</div>
         <div class="result-zbl-ref">ZBL ${fmtInches(zblAimBase)}</div>
       </div>
