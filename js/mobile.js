@@ -520,6 +520,7 @@ function initClockFace() {
     const btn = document.createElement('button');
     btn.className = 'clock-pos' + (half ? ' clock-pos-half' : '');
     btn.dataset.clock = key;
+    btn.dataset.displayTheta = theta;
     btn.textContent = label;
     btn.style.left = x + 'px';
     btn.style.top  = y + 'px';
@@ -571,7 +572,10 @@ function drawClockAnnotations(clockKey, { zblAimBase = 0, lateralAim = 0, breakA
 
   // Only draw ball-dependent elements when a clock position with break is active
   const hasBreak = clockKey && breakAbs >= 0.05;
-  const theta     = hasBreak ? CLOCK_DATA[clockKey].theta : null;
+  const activeBtn = clockKey ? document.querySelector(`.clock-pos[data-clock="${clockKey}"]`) : null;
+  const theta = hasBreak
+    ? (activeBtn ? parseFloat(activeBtn.dataset.displayTheta) : CLOCK_DATA[clockKey].theta)
+    : null;
   // breakSign determines which side the measurement label sits on;
   // when no clock is selected default to left (−1 offset)
   const breakSign = hasBreak ? (Math.sin(theta) >= 0 ? 1 : -1) : 1;
