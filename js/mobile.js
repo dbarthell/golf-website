@@ -637,7 +637,7 @@ function drawClockAnnotations(clockKey, { zblAimBase = 0, lateralAim = 0, breakA
   // ZBL label above the dot; measurement value alongside the vertical line
   // on the opposite side from where the lateral aim would appear
   label(C, zblY - 12, 'ZBL', 8);
-  label(C + (-breakSign) * 15, (C + zblY) / 2, `${Math.round(zblAimBase)}"`, 10);
+  label(C + (-breakSign) * 15, (C + zblY) / 2, fmtInches(zblAimBase), 10);
 }
 
 function initQuickLookup() {
