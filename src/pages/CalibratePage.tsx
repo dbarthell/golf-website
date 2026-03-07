@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IconArrowLeft } from '@tabler/icons-react';
 
-import { usePuttingData } from '../hooks/usePuttingData';
+import { getPuttingData } from '../hooks/usePuttingData';
 import { useCalibration } from '../hooks/useCalibration';
 import { StimpToggle } from '../components/StimpToggle';
 import { findBackswingInches } from '../lib/backswing';
@@ -33,9 +33,10 @@ function factorNote(df: number): string {
 // ── Page component ────────────────────────────────────────────────────────────
 
 export function CalibratePage() {
-  const data = usePuttingData();
+  const data = getPuttingData();
   const { calibration, saveCalibration, resetCalibration } = useCalibration();
   const location = useLocation();
+  const navigate = useNavigate();
   const fromOnboarding = new URLSearchParams(location.search).get('from') === 'onboarding';
 
   const [testStimp, setTestStimp] = useState(10);
@@ -67,7 +68,7 @@ export function CalibratePage() {
     const distanceFactor = Math.round((myInches / baseline) * 1000) / 1000;
     saveCalibration({ distanceFactor });
     if (fromOnboarding) {
-      window.location.hash = '#/';
+      navigate('/');
       return;
     }
     setSaveLabel('Saved!');

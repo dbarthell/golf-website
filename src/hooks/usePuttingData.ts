@@ -4,6 +4,11 @@ import rawData from '../../data/putting.json';
 
 const puttingData = rawData as unknown as PuttingData;
 
-export function usePuttingData(): PuttingData {
+/**
+ * Returns the bundled putting data. Not a React hook (no hook APIs used
+ * internally) — named without the `use` prefix to avoid ESLint
+ * react-hooks/rules-of-hooks false positives.
+ */
+export function getPuttingData(): PuttingData {
   return puttingData;
 }

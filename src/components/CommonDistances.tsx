@@ -1,3 +1,4 @@
+import { SimpleGrid, UnstyledButton } from '@mantine/core';
 import type { LagRow } from '../lib/types';
 import { backswingDisplay } from '../lib/backswing';
 
@@ -16,21 +17,21 @@ export function CommonDistances({ stimp, distanceFactor, lagRows, onSelect }: Pr
       <h2 className="section-title">
         Common Distances <span className="section-title-sub">· Backswing</span>
       </h2>
-      <div className="distance-grid">
+      <SimpleGrid cols={{ base: 2, xs: 3, sm: 4 }} className="distance-grid">
         {COMMON_DISTANCES.map(feet => {
           const bs = backswingDisplay(feet, stimp, lagRows, distanceFactor);
           return (
-            <button
+            <UnstyledButton
               key={feet}
               className="distance-card"
               onClick={() => onSelect(feet)}
             >
               <div className="distance-card-feet">{feet} ft</div>
               <div className="distance-card-bs">{bs}</div>
-            </button>
+            </UnstyledButton>
           );
         })}
-      </div>
+      </SimpleGrid>
     </div>
   );
 }

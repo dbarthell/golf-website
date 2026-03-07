@@ -1,3 +1,5 @@
+import { SegmentedControl } from '@mantine/core';
+
 const STIMPS = [9, 10, 10.5, 11, 11.5, 12];
 
 interface Props {
@@ -8,17 +10,17 @@ interface Props {
 }
 
 export function StimpToggle({ value, onChange, variant = 'dark' }: Props) {
+  const isDark = variant === 'dark';
   return (
-    <div className={`stimp-toggle${variant === 'light' ? ' stimp-toggle-light' : ''}`}>
-      {STIMPS.map(s => (
-        <button
-          key={s}
-          className={`stimp-btn${value === s ? ' stimp-btn-active' : ''}`}
-          onClick={() => onChange(s)}
-        >
-          {s}
-        </button>
-      ))}
-    </div>
+    <SegmentedControl
+      value={String(value)}
+      onChange={v => onChange(parseFloat(v))}
+      data={STIMPS.map(s => ({ value: String(s), label: String(s) }))}
+      classNames={{
+        root:      isDark ? 'stimp-sc-dark'           : 'stimp-sc-light',
+        indicator: isDark ? 'stimp-sc-indicator-dark' : 'stimp-sc-indicator-light',
+        label:     isDark ? 'stimp-sc-label-dark'     : 'stimp-sc-label-light',
+      }}
+    />
   );
 }

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IconAdjustments } from '@tabler/icons-react';
 
-import { usePuttingData } from '../hooks/usePuttingData';
+import { getPuttingData } from '../hooks/usePuttingData';
 import { useCalibration } from '../hooks/useCalibration';
 import { useLookupState } from '../hooks/useLookupState';
 
@@ -28,8 +28,8 @@ function computeResult(
   stimp: number,
   clock: string | null,
   distanceFactor: number,
-  lagRows: ReturnType<typeof usePuttingData>['lagPuttingTable']['rows'],
-  brysonRows: ReturnType<typeof usePuttingData>['brysonTable']['rows'],
+  lagRows: ReturnType<typeof getPuttingData>['lagPuttingTable']['rows'],
+  brysonRows: ReturnType<typeof getPuttingData>['brysonTable']['rows'],
 ): LookupResult {
   if (distance === '' || !distance || distance <= 0) {
     return { kind: 'empty', message: 'Enter a distance above' };
@@ -128,13 +128,12 @@ function computeResult(
 // ── Page component ────────────────────────────────────────────────────────────
 
 export function LookupPage() {
-  const data = usePuttingData();
+  const data = getPuttingData();
   const { calibration } = useCalibration();
   const { distance, setDistance, slope, setSlope, stimp, setStimp, clock, setClock } =
     useLookupState();
 
-  const [showOnboarding] = useState(() => !localStorage.getItem('zerobreak-onboarded'));
-  const [onboardingDone, setOnboardingDone] = useState(!showOnboarding);
+  const [onboardingDone, setOnboardingDone] = useState(() => !!localStorage.getItem('zerobreak-onboarded'));
 
   const result = useMemo(
     () =>

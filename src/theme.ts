@@ -25,4 +25,11 @@ export const theme = createTheme({
   fontFamily:
     '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   defaultRadius: 'md',
+  breakpoints: {
+    xs: '23.4375em', // 375 px — iPhone SE / 12 / 13 / 14 / 15
+    sm: '30em',      // 480 px
+    md: '48em',
+    lg: '74em',
+    xl: '90em',
+  },
 });

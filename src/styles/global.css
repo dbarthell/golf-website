@@ -819,3 +819,91 @@ body {
 .preview-header-dist  { width: 48px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); }
 .preview-header-col   { flex: 1; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); text-align: center; }
 .preview-header-arrow { font-size: 0.65rem; color: transparent; }
+
+/* ========================================
+   Mantine Component Overrides
+   ======================================== */
+
+/* ── StimpToggle: SegmentedControl dark variant (hero panel) ── */
+.stimp-sc-dark {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  border-radius: var(--radius-md);
+  width: 100%;
+  gap: 2px;
+}
+.stimp-sc-indicator-dark {
+  background: var(--green-accent);
+  border-radius: calc(var(--radius-md) - 2px);
+  box-shadow: none;
+}
+.stimp-sc-label-dark {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.92rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  transition: color 0.15s;
+}
+.stimp-sc-label-dark[data-active] { color: var(--white); }
+
+/* ── StimpToggle: SegmentedControl light variant (calibrate page) ── */
+.stimp-sc-light {
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  width: 100%;
+  gap: 2px;
+}
+.stimp-sc-indicator-light {
+  background: var(--white);
+  border-radius: calc(var(--radius-md) - 2px);
+  box-shadow: var(--shadow-sm);
+}
+.stimp-sc-label-light {
+  color: var(--gray-600);
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  transition: color 0.15s;
+}
+.stimp-sc-label-light[data-active] { color: var(--green-dark); }
+
+/* ── OnboardingModal: Modal fullScreen navy background ── */
+.onboarding-modal-content {
+  background: var(--green-dark);
+  display: flex;
+  flex-direction: column;
+}
+.onboarding-modal-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  background: var(--green-dark);
+}
+
+/* ── NumberInput: strip Mantine wrapper chrome so distance/slope inputs
+      inherit the existing .distance-input / .slope-input styles ── */
+.input-wrapper .mantine-NumberInput-root { flex: 1; }
+.input-wrapper .mantine-NumberInput-wrapper { height: 100%; }
+.input-wrapper .mantine-NumberInput-input { border: none; border-radius: 0; }
+
+/* ── ActionIcon: match the existing .input-btn sizing/style ── */
+.input-btn.mantine-ActionIcon-root {
+  color: inherit;
+  background: transparent;
+}
+.input-btn.mantine-ActionIcon-root:hover { background: rgba(255, 255, 255, 0.12); }
+
+/* ── Paper: strip Mantine's default shadow/bg so .lookup-result CSS applies ── */
+.lookup-result.mantine-Paper-root {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* ── Table: align Mantine table with .quick-table styles ── */
+.quick-table.mantine-Table-table {
+  border-collapse: collapse;
+  width: 100%;
+}

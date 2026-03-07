@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Modal, Button } from '@mantine/core';
 
 const SLIDES = [
   {
@@ -44,7 +45,16 @@ export function OnboardingModal({ onDismiss }: Props) {
   }
 
   return (
-    <div className="onboarding-overlay">
+    <Modal
+      opened={true}
+      onClose={handleSkip}
+      fullScreen
+      withCloseButton={false}
+      classNames={{
+        content: 'onboarding-modal-content',
+        body: 'onboarding-modal-body',
+      }}
+    >
       <div className="onboarding-slides">
         <div className="onboarding-slide">
           <div className="onboarding-tag">{slide.tag}</div>
@@ -60,15 +70,24 @@ export function OnboardingModal({ onDismiss }: Props) {
       </div>
 
       <div className="onboarding-actions">
-        <button className="onboarding-next" onClick={handleNext}>
+        <Button
+          className="onboarding-next"
+          onClick={handleNext}
+          fullWidth
+        >
           {isLast ? 'Calibrate Now' : 'Next'}
-        </button>
+        </Button>
         {isLast && (
-          <button className="onboarding-skip" onClick={handleSkip}>
+          <Button
+            variant="subtle"
+            className="onboarding-skip"
+            onClick={handleSkip}
+            fullWidth
+          >
             Skip for now
-          </button>
+          </Button>
         )}
       </div>
-    </div>
+    </Modal>
   );
 }
