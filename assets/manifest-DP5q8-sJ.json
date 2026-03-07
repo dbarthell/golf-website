@@ -1,0 +1,16 @@
+{
+  "name": "ZeroBreak",
+  "short_name": "ZeroBreak",
+  "start_url": "/golf-website/",
+  "scope": "/golf-website/",
+  "display": "standalone",
+  "background_color": "#0e1b3d",
+  "theme_color": "#0e1b3d",
+  "icons": [
+    {
+      "src": "images/logo.png",
+      "sizes": "any",
+      "type": "image/png"
+    }
+  ]
+}
