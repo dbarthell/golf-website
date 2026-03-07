@@ -690,6 +690,7 @@ function initQuickLookup() {
     });
     updateLookupResult();
     renderCommonDistances();
+    renderBackswingTable();
   });
 
   input.addEventListener('input', () => {
@@ -776,7 +777,15 @@ function renderCommonDistances() {
 
 function renderBackswingTable() {
   const table = document.getElementById('backswing-table');
-  const rows = puttingData.lagPuttingTable.rows.filter(r => r.original);
+  const title = document.getElementById('backswing-table-title');
+  const extendedInches = [24, 27, 30]; // 9", 12", 15" past outside
+  const rows = puttingData.lagPuttingTable.rows.filter(r =>
+    r.original || extendedInches.includes(parseFloat(r.inches))
+  );
+
+  if (title) {
+    title.textContent = `Backswing Reference (Stimp ${currentStimp})`;
+  }
 
   const headerHTML = `
     <thead>
@@ -789,7 +798,7 @@ function renderBackswingTable() {
   `;
 
   const bodyHTML = rows.map(r => {
-    const rawDist = parseFloat(r.stimp10);
+    const rawDist = getDistanceForStimp(r, currentStimp);
     const calDist = Math.round(rawDist / puttCal.distanceFactor) + ' ft';
     return `
       <tr class="row-original">
