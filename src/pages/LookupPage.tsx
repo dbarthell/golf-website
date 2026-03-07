@@ -212,6 +212,7 @@ export function LookupPage() {
       <BackswingTable
         lagRows={data.lagPuttingTable.rows}
         distanceFactor={calibration.distanceFactor}
+        stimp={stimp}
       />
     </>
   );

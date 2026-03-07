@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Modal, Button } from '@mantine/core';
 
 const SLIDES = [
   {
@@ -26,35 +24,24 @@ interface Props {
 
 export function OnboardingModal({ onDismiss }: Props) {
   const [current, setCurrent] = useState(0);
-  const navigate = useNavigate();
   const isLast = current === SLIDES.length - 1;
   const slide = SLIDES[current];
 
+  function dismiss() {
+    localStorage.setItem('zerobreak-onboarded', '1');
+    onDismiss();
+  }
+
   function handleNext() {
     if (isLast) {
-      localStorage.setItem('zerobreak-onboarded', '1');
-      navigate('/calibrate');
+      dismiss();
     } else {
       setCurrent(c => c + 1);
     }
   }
 
-  function handleSkip() {
-    localStorage.setItem('zerobreak-onboarded', '1');
-    onDismiss();
-  }
-
   return (
-    <Modal
-      opened={true}
-      onClose={handleSkip}
-      fullScreen
-      withCloseButton={false}
-      classNames={{
-        content: 'onboarding-modal-content',
-        body: 'onboarding-modal-body',
-      }}
-    >
+    <div className="onboarding-overlay">
       <div className="onboarding-slides">
         <div className="onboarding-slide">
           <div className="onboarding-tag">{slide.tag}</div>
@@ -70,24 +57,15 @@ export function OnboardingModal({ onDismiss }: Props) {
       </div>
 
       <div className="onboarding-actions">
-        <Button
-          className="onboarding-next"
-          onClick={handleNext}
-          fullWidth
-        >
-          {isLast ? 'Calibrate Now' : 'Next'}
-        </Button>
+        <button className="onboarding-next" onClick={handleNext}>
+          {isLast ? 'Get Started' : 'Next'}
+        </button>
         {isLast && (
-          <Button
-            variant="subtle"
-            className="onboarding-skip"
-            onClick={handleSkip}
-            fullWidth
-          >
+          <button className="onboarding-skip" onClick={dismiss}>
             Skip for now
-          </Button>
+          </button>
         )}
       </div>
-    </Modal>
+    </div>
   );
 }

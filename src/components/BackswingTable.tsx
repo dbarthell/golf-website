@@ -1,18 +1,25 @@
 import { Table } from '@mantine/core';
 import type { LagRow } from '../lib/types';
 import { fmtInches } from '../lib/zbl';
+import { getDistanceForStimp } from '../lib/backswing';
+
+// Extended rows: 9", 12", 15" past outside trail foot (24/27/30" backswing)
+const EXTENDED_INCHES = [24, 27, 30];
 
 interface Props {
   lagRows: LagRow[];
   distanceFactor: number;
+  stimp: number;
 }
 
-export function BackswingTable({ lagRows, distanceFactor }: Props) {
-  const originalRows = lagRows.filter(r => r.original);
+export function BackswingTable({ lagRows, distanceFactor, stimp }: Props) {
+  const rows = lagRows.filter(r =>
+    r.original || EXTENDED_INCHES.includes(parseFloat(r.inches.replace('"', ''))),
+  );
 
   return (
     <div className="quick-table-section">
-      <h2 className="section-title">Backswing Reference (Stimp 10)</h2>
+      <h2 className="section-title">Backswing Reference (Stimp {stimp})</h2>
       <div className="table-wrapper">
         <Table className="quick-table">
           <Table.Thead>
@@ -23,8 +30,8 @@ export function BackswingTable({ lagRows, distanceFactor }: Props) {
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {originalRows.map(r => {
-              const rawDist = parseFloat(r.stimp10.replace(' ft', ''));
+            {rows.map(r => {
+              const rawDist = getDistanceForStimp(r, stimp);
               const calDist = Math.round(rawDist / distanceFactor) + ' ft';
               return (
                 <Table.Tr key={r.landmark} className="row-original">

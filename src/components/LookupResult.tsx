@@ -1,4 +1,3 @@
-import { Paper } from '@mantine/core';
 import type { LookupResult } from '../lib/types';
 import { fmtInches } from '../lib/zbl';
 
@@ -9,11 +8,11 @@ interface Props {
 export function LookupResultPanel({ result }: Props) {
   if (!result || result.kind === 'empty') {
     return (
-      <Paper className="lookup-result">
+      <div className="lookup-result">
         <div className="result-empty">
           {result ? result.message : 'Enter a distance above'}
         </div>
-      </Paper>
+      </div>
     );
   }
 
@@ -29,7 +28,7 @@ export function LookupResultPanel({ result }: Props) {
     const flatNote = `Uphill: +${uphillRate} ft/10 ft/1%  ·  Downhill: −${downhillRate} ft/10 ft/1%`;
 
     return (
-      <Paper className="lookup-result">
+      <div className="lookup-result">
         <div className="result-content">
           <div className="result-row">
             <div className="result-item">
@@ -56,7 +55,7 @@ export function LookupResultPanel({ result }: Props) {
             </div>
           )}
         </div>
-      </Paper>
+      </div>
     );
   }
 
@@ -94,7 +93,7 @@ export function LookupResultPanel({ result }: Props) {
   const isUphill = uphillFactor > 0;
 
   return (
-    <Paper className="lookup-result">
+    <div className="lookup-result">
       <div className="result-content">
         <div className="result-row">
           <div className="result-item">
@@ -120,6 +119,6 @@ export function LookupResultPanel({ result }: Props) {
           </div>
         )}
       </div>
-    </Paper>
+    </div>
   );
 }
