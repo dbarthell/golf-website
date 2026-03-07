@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SLIDES = [
   {
@@ -24,6 +25,7 @@ interface Props {
 
 export function OnboardingModal({ onDismiss }: Props) {
   const [current, setCurrent] = useState(0);
+  const navigate = useNavigate();
   const isLast = current === SLIDES.length - 1;
   const slide = SLIDES[current];
 
@@ -34,7 +36,8 @@ export function OnboardingModal({ onDismiss }: Props) {
 
   function handleNext() {
     if (isLast) {
-      dismiss();
+      localStorage.setItem('zerobreak-onboarded', '1');
+      navigate('/calibrate?from=onboarding');
     } else {
       setCurrent(c => c + 1);
     }
