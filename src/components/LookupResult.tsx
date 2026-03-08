@@ -24,10 +24,11 @@ export function LookupResultPanel({ result }: Props) {
 
     const varianceLine = (() => {
       if (!zblPlus && !zblMinus) return null;
-      const p = zblPlus  ?? '0';
-      const m = zblMinus ?? '0';
-      if (p === m) return `±${p}"`;
-      return `+${p}" / −${m}"`;
+      if (zblPlus && zblMinus) {
+        return zblPlus === zblMinus ? `±${zblPlus}"` : `+${zblPlus}" / −${zblMinus}"`;
+      }
+      if (zblPlus) return `+${zblPlus}"`;
+      return `−${zblMinus}"`;
     })();
 
     const stimpScale = stimp / 10;
