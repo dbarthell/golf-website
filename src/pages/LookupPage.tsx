@@ -6,6 +6,7 @@ import { getPuttingData } from '../hooks/usePuttingData';
 import { useCalibration } from '../hooks/useCalibration';
 import { useLookupState } from '../hooks/useLookupState';
 import { usePuttLog } from '../hooks/usePuttLog';
+import { useUnits } from '../hooks/useUnits';
 
 import { StimpToggle } from '../components/StimpToggle';
 import { DistanceInput } from '../components/DistanceInput';
@@ -99,6 +100,7 @@ function computeResult(
   const zblRaw     = parseFloat(zblData.aimInches);
   const zblDisplay = fmtInches(zblRaw);
   const slopeLabel = slope > 0 ? `ZBL Aim (${slope}%)` : 'ZBL Aim (flat)';
+  // zblRaw is exposed so LookupResultPanel can format it in the current unit
   const backswing  = backswingDisplay(distance, stimp, lagRows, distanceFactor);
 
   const uphillAdj    = distance * slope / 10 * stimpScale;
@@ -114,6 +116,7 @@ function computeResult(
     kind: 'straight',
     backswing,
     zblDisplay,
+    zblRaw,
     zblPlus: zblData.plusInches,
     zblMinus: zblData.minusInches,
     slopeLabel,
@@ -133,6 +136,7 @@ function computeResult(
 export function LookupPage() {
   const data = getPuttingData();
   const { calibration } = useCalibration();
+  const { unit, toggleUnit } = useUnits();
   const { distance, setDistance, slope, setSlope, stimp, setStimp, clock, setClock } =
     useLookupState();
   const { addPutt } = usePuttLog();
@@ -172,6 +176,13 @@ export function LookupPage() {
             <h1>ZeroBreak</h1>
           </div>
           <div className="header-links">
+            <button
+              className="unit-toggle"
+              onClick={toggleUnit}
+              aria-label={`Switch to ${unit === 'ft' ? 'metres' : 'feet'}`}
+            >
+              {unit === 'ft' ? 'ft' : 'm'}
+            </button>
             <Link to="/log" className="full-view-link">
               <IconClipboardList size={16} stroke={2} />
               Log

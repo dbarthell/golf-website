@@ -1,6 +1,7 @@
 import { SimpleGrid, UnstyledButton } from '@mantine/core';
 import type { LagRow } from '../lib/types';
 import { backswingDisplay } from '../lib/backswing';
+import { useUnits } from '../hooks/useUnits';
 
 const COMMON_DISTANCES = [3, 5, 6, 10, 15, 20, 25, 30, 40, 50, 65, 80];
 
@@ -12,6 +13,8 @@ interface Props {
 }
 
 export function CommonDistances({ stimp, distanceFactor, lagRows, onSelect }: Props) {
+  const { fmtDist } = useUnits();
+
   return (
     <div className="common-distances">
       <h2 className="section-title">
@@ -26,7 +29,7 @@ export function CommonDistances({ stimp, distanceFactor, lagRows, onSelect }: Pr
               className="distance-card"
               onClick={() => onSelect(feet)}
             >
-              <div className="distance-card-feet">{feet} ft</div>
+              <div className="distance-card-feet">{fmtDist(feet)}</div>
               <div className="distance-card-bs">{bs}</div>
             </UnstyledButton>
           );
