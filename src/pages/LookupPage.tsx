@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IconAdjustments } from '@tabler/icons-react';
+import { IconAdjustments, IconClipboardList } from '@tabler/icons-react';
 
 import { getPuttingData } from '../hooks/usePuttingData';
 import { useCalibration } from '../hooks/useCalibration';
 import { useLookupState } from '../hooks/useLookupState';
+import { usePuttLog } from '../hooks/usePuttLog';
 
 import { StimpToggle } from '../components/StimpToggle';
 import { DistanceInput } from '../components/DistanceInput';
@@ -134,6 +135,7 @@ export function LookupPage() {
   const { calibration } = useCalibration();
   const { distance, setDistance, slope, setSlope, stimp, setStimp, clock, setClock } =
     useLookupState();
+  const { addPutt } = usePuttLog();
 
   const [onboardingDone, setOnboardingDone] = useState(() => !!localStorage.getItem('zerobreak-onboarded'));
 
@@ -170,6 +172,10 @@ export function LookupPage() {
             <h1>ZeroBreak</h1>
           </div>
           <div className="header-links">
+            <Link to="/log" className="full-view-link">
+              <IconClipboardList size={16} stroke={2} />
+              Log
+            </Link>
             <Link to="/calibrate" className="full-view-link">
               <IconAdjustments size={16} stroke={2} />
               Calibrate
@@ -197,7 +203,11 @@ export function LookupPage() {
         />
 
         {/* Result */}
-        <LookupResultPanel result={result} />
+        <LookupResultPanel
+          result={result}
+          puttContext={distance !== '' ? { distance, slope, stimp, clock } : undefined}
+          onLogPutt={addPutt}
+        />
       </div>
 
       {/* ── Light sections ────────────────────────────────────────────────── */}
