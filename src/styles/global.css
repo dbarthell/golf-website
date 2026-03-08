@@ -845,6 +845,331 @@ body {
 .preview-header-arrow { font-size: 0.65rem; color: transparent; }
 
 /* ========================================
+   Log Putt — outcome picker inside result panel
+   ======================================== */
+.log-putt-section {
+  border-top: 1px solid var(--gray-200);
+  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 44px;
+}
+
+.log-putt-btn {
+  background: none;
+  border: 1.5px solid var(--green-accent);
+  border-radius: 99px;
+  color: var(--green-accent);
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  padding: 0.35rem var(--space-md);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.01em;
+}
+.log-putt-btn:active { background: var(--green-pale); }
+
+.outcome-picker {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.outcome-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 0.3rem 0.4rem;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid transparent;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all 0.15s;
+  min-width: 44px;
+  line-height: 1;
+}
+.outcome-btn-made {
+  background: var(--green-pale);
+  border-color: var(--green-accent);
+  color: var(--green-dark);
+}
+.outcome-btn-made:active { background: #d0dff4; }
+.outcome-btn-miss {
+  background: var(--gray-100);
+  border-color: var(--gray-200);
+  color: var(--gray-800);
+}
+.outcome-btn-miss:active { background: var(--gray-200); }
+
+.outcome-emoji {
+  font-size: 0.85rem;
+  font-style: normal;
+}
+.outcome-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.outcome-cancel {
+  background: none;
+  border: none;
+  color: var(--gray-400);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  padding: 0.25rem 0.35rem;
+  line-height: 1;
+  margin-left: 0.1rem;
+}
+.outcome-cancel:active { color: var(--gray-800); }
+
+.outcome-saved {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--green-accent);
+  letter-spacing: 0.01em;
+}
+
+/* ========================================
+   Log Page
+   ======================================== */
+.log-round-selector {
+  display: flex;
+  gap: var(--space-xs);
+  padding: var(--space-md) var(--space-md) var(--space-xs);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.log-round-chip {
+  flex-shrink: 0;
+  padding: 0.4rem var(--space-md);
+  border: 2px solid var(--gray-200);
+  border-radius: 99px;
+  background: var(--gray-100);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.log-round-chip-active {
+  background: var(--green-dark);
+  color: var(--white);
+  border-color: var(--green-dark);
+}
+.log-round-chip:active { opacity: 0.8; }
+
+.log-body {
+  padding: var(--space-xs) var(--space-md) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.log-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.log-card-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  padding: var(--space-md) var(--space-md) var(--space-sm);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+/* Summary row */
+.log-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: var(--space-md);
+}
+.log-summary-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.log-summary-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--green-dark);
+  line-height: 1;
+}
+.log-summary-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+.log-summary-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--gray-200);
+}
+
+/* Distance buckets */
+.log-bucket-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--gray-200);
+}
+.log-bucket-row:last-child { border-bottom: none; }
+
+.log-bucket-label {
+  width: 64px;
+  flex-shrink: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+.log-bucket-bar-wrap {
+  flex: 1;
+  height: 8px;
+  background: var(--gray-200);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.log-bucket-bar {
+  height: 100%;
+  background: var(--green-accent);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+  min-width: 2px;
+}
+.log-bucket-stats {
+  width: 80px;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* Miss tendency */
+.log-outcome-grid {
+  display: flex;
+  justify-content: space-around;
+  padding: var(--space-md) var(--space-sm);
+  gap: var(--space-xs);
+}
+.log-outcome-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--space-sm) 0;
+  border-radius: var(--radius-sm);
+}
+.log-outcome-made {
+  background: var(--green-pale);
+}
+.log-outcome-pct {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--green-dark);
+  line-height: 1;
+}
+.log-outcome-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+}
+.log-outcome-count {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--gray-400);
+}
+
+/* Empty state */
+.log-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-2xl) var(--space-md);
+  gap: var(--space-sm);
+}
+.log-empty-icon { font-size: 2.5rem; }
+.log-empty-text {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gray-600);
+}
+.log-empty-sub {
+  font-size: 0.85rem;
+  color: var(--gray-400);
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+/* Premium upsell */
+.log-upsell-card {
+  margin: 0 var(--space-md) var(--space-xl);
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1.5px solid var(--gray-200);
+  padding: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+.log-upsell-icon { font-size: 1.5rem; flex-shrink: 0; }
+.log-upsell-content { flex: 1; min-width: 0; }
+.log-upsell-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.log-upsell-sub {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+.log-upsell-btn {
+  flex-shrink: 0;
+  padding: 0.45rem var(--space-md);
+  background: var(--green-accent);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.log-upsell-btn:active { filter: brightness(0.9); }
+
+/* ========================================
    Mantine Component Overrides
    ======================================== */
 
