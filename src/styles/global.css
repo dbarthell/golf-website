@@ -313,6 +313,14 @@ body {
   margin-top: var(--space-sm);
 }
 
+.result-variance {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+}
+
 .slope-note {
   font-size: 0.65rem;
   color: var(--gray-600);
