@@ -1,13 +1,70 @@
+import { useState } from 'react';
 import type { LookupResult } from '../lib/types';
 import { fmtInches } from '../lib/zbl';
+import type { PuttOutcome } from '../hooks/usePuttLog';
 import { useUnits } from '../hooks/useUnits';
+
+interface PuttContext {
+  distance: number;
+  slope: number;
+  stimp: number;
+  clock: string | null;
+}
 
 interface Props {
   result: LookupResult | null;
+  puttContext?: PuttContext;
+  onLogPutt?: (entry: Omit<import('../hooks/usePuttLog').PuttEntry, 'id' | 'timestamp'>) => void;
 }
 
-export function LookupResultPanel({ result }: Props) {
+const OUTCOMES: { key: PuttOutcome; label: string; emoji: string }[] = [
+  { key: 'made',  label: 'Made',  emoji: '✓' },
+  { key: 'short', label: 'Short', emoji: '↓' },
+  { key: 'long',  label: 'Long',  emoji: '↑' },
+  { key: 'left',  label: 'Left',  emoji: '←' },
+  { key: 'right', label: 'Right', emoji: '→' },
+];
+
+export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
   const { unit, fmtDist, fmtAim, fmtAimVariance } = useUnits();
+  const [picking, setPicking] = useState(false);
+  const [savedLabel, setSavedLabel] = useState<string | null>(null);
+
+  function handleOutcome(outcome: PuttOutcome) {
+    if (!puttContext || !onLogPutt) return;
+    onLogPutt({ ...puttContext, outcome });
+    setPicking(false);
+    setSavedLabel(`Logged: ${outcome}`);
+    setTimeout(() => setSavedLabel(null), 2000);
+  }
+
+  const canLog = !!(puttContext && onLogPutt && result && result.kind !== 'empty');
+
+  const logSection = canLog ? (
+    <div className="log-putt-section">
+      {savedLabel ? (
+        <div className="outcome-saved">{savedLabel}</div>
+      ) : picking ? (
+        <div className="outcome-picker">
+          {OUTCOMES.map(({ key, label, emoji }) => (
+            <button
+              key={key}
+              className={`outcome-btn${key === 'made' ? ' outcome-btn-made' : ' outcome-btn-miss'}`}
+              onClick={() => handleOutcome(key)}
+            >
+              <span className="outcome-emoji">{emoji}</span>
+              <span className="outcome-label">{label}</span>
+            </button>
+          ))}
+          <button className="outcome-cancel" onClick={() => setPicking(false)}>✕</button>
+        </div>
+      ) : (
+        <button className="log-putt-btn" onClick={() => setPicking(true)}>
+          Log this putt
+        </button>
+      )}
+    </div>
+  ) : null;
 
   if (!result || result.kind === 'empty') {
     return (
@@ -82,6 +139,7 @@ export function LookupResultPanel({ result }: Props) {
             </div>
           )}
         </div>
+        {logSection}
       </div>
     );
   }
@@ -155,6 +213,7 @@ export function LookupResultPanel({ result }: Props) {
           </div>
         )}
       </div>
+      {logSection}
     </div>
   );
 }
