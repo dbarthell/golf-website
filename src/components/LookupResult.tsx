@@ -82,24 +82,24 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
       uphillTotal, downhillTotal, uphillBS, downhillBS,
     } = result;
 
-    // Format aim value and variance in the current unit
+    // Format aim value in the current unit
     const zblDisplayFmt = fmtAim(zblRaw);
 
-    const varianceLine = (() => {
-      if (!zblPlus && !zblMinus) return null;
-      if (zblPlus && zblMinus) {
-        if (unit === 'm') {
-          const pCm = fmtAimVariance(zblPlus);
-          const mCm = fmtAimVariance(zblMinus);
-          return pCm === mCm ? `±${pCm}` : `+${pCm} / −${mCm}`;
-        }
-        return zblPlus === zblMinus ? `±${zblPlus}"` : `+${zblPlus}" / −${zblMinus}"`;
+    // Format a variance value in the current unit:
+    // imperial → round to nearest 0.5" (return null if rounds to zero)
+    // metric   → convert via fmtAimVariance (includes "cm" unit suffix)
+    function vFmt(s: string | null): string | null {
+      if (!s) return null;
+      if (unit === 'm') {
+        const cm = fmtAimVariance(s);
+        return cm || null;
       }
-      if (zblPlus) {
-        return unit === 'm' ? `+${fmtAimVariance(zblPlus)}` : `+${zblPlus}"`;
-      }
-      return unit === 'm' ? `−${fmtAimVariance(zblMinus!)}` : `−${zblMinus}"`;
-    })();
+      const r = Math.round(parseFloat(s) * 2) / 2;
+      return r > 0 ? (r % 1 === 0 ? r.toFixed(0) : r.toFixed(1)) + '"' : null;
+    }
+    const vPlus  = vFmt(zblPlus);
+    const vMinus = vFmt(zblMinus);
+    const symmetric = vPlus !== null && vPlus === vMinus;
 
     const stimpScale = stimp / 10;
     const uphillRate   = Math.round(1   * stimpScale * 10) / 10;
@@ -126,8 +126,14 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
             <div className="result-item">
               <div className="result-value">{zblDisplayFmt}</div>
               <div className="result-label">{slopeLabel}</div>
-              {varianceLine && (
-                <div className="result-variance">{varianceLine}</div>
+              {symmetric && (
+                <div className="result-variance">&plusmn;{vPlus}</div>
+              )}
+              {!symmetric && vPlus && (
+                <div className="result-variance">+{vPlus}</div>
+              )}
+              {!symmetric && vMinus && (
+                <div className="result-variance">&minus;{vMinus}</div>
               )}
             </div>
           </div>
