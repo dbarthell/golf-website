@@ -18,9 +18,17 @@ export function LookupResultPanel({ result }: Props) {
 
   if (result.kind === 'straight') {
     const {
-      backswing, zblDisplay, slopeLabel, slope, stimp,
+      backswing, zblDisplay, zblPlus, zblMinus, slopeLabel, slope, stimp,
       uphillTotal, downhillTotal, uphillBS, downhillBS,
     } = result;
+
+    const varianceLine = (() => {
+      if (!zblPlus && !zblMinus) return null;
+      const p = zblPlus  ?? '0';
+      const m = zblMinus ?? '0';
+      if (p === m) return `±${p}"`;
+      return `+${p}" / −${m}"`;
+    })();
 
     const stimpScale = stimp / 10;
     const uphillRate   = Math.round(1   * stimpScale * 10) / 10;
@@ -45,6 +53,9 @@ export function LookupResultPanel({ result }: Props) {
             <div className="result-item">
               <div className="result-value">{zblDisplay}</div>
               <div className="result-label">{slopeLabel}</div>
+              {varianceLine && (
+                <div className="result-variance">{varianceLine}</div>
+              )}
             </div>
           </div>
 

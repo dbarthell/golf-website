@@ -113,6 +113,8 @@ function computeResult(
     kind: 'straight',
     backswing,
     zblDisplay,
+    zblPlus: zblData.plusInches,
+    zblMinus: zblData.minusInches,
     slopeLabel,
     slope,
     distance,
