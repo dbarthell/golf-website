@@ -66,6 +66,7 @@ export type LookupResult =
       kind: 'straight';
       backswing: string;
       zblDisplay: string;
+      zblRaw: number;
       zblPlus: string | null;
       zblMinus: string | null;
       slopeLabel: string;

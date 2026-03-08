@@ -4,6 +4,7 @@ import { IconArrowLeft } from '@tabler/icons-react';
 
 import { getPuttingData } from '../hooks/usePuttingData';
 import { useCalibration } from '../hooks/useCalibration';
+import { useUnits } from '../hooks/useUnits';
 import { StimpToggle } from '../components/StimpToggle';
 import { findBackswingInches } from '../lib/backswing';
 
@@ -35,6 +36,7 @@ function factorNote(df: number): string {
 export function CalibratePage() {
   const data = getPuttingData();
   const { calibration, saveCalibration, resetCalibration } = useCalibration();
+  const { unit, toggleUnit, fmtDist } = useUnits();
   const location = useLocation();
   const navigate = useNavigate();
   const fromOnboarding = new URLSearchParams(location.search).get('from') === 'onboarding';
@@ -103,7 +105,13 @@ export function CalibratePage() {
           Back
         </Link>
         <h1>Calibrate</h1>
-        <div className="header-spacer" />
+        <button
+          className="unit-toggle"
+          onClick={toggleUnit}
+          aria-label={`Switch to ${unit === 'ft' ? 'metres' : 'feet'}`}
+        >
+          {unit === 'ft' ? 'ft' : 'm'}
+        </button>
       </div>
 
       <p className="cal-intro">
@@ -147,7 +155,7 @@ export function CalibratePage() {
                 className={`dist-chip${testDist === d ? ' dist-chip-active' : ''}`}
                 onClick={() => setTestDist(d)}
               >
-                {d} ft
+                {fmtDist(d)}
               </button>
             ))}
           </div>
@@ -196,7 +204,7 @@ export function CalibratePage() {
             const isTest  = d === testDist;
             return (
               <div key={d} className={`preview-row${isTest ? ' preview-highlight' : ''}`}>
-                <div className="preview-dist">{d} ft</div>
+                <div className="preview-dist">{fmtDist(d)}</div>
                 <div className="preview-baseline">{fmt(bl)}</div>
                 <div className="preview-arrow">→</div>
                 <div className={`preview-mine${isSame ? ' same' : ''}`}>

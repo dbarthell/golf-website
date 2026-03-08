@@ -78,7 +78,23 @@ body {
   letter-spacing: -0.02em;
 }
 
-.header-links { display: flex; gap: var(--space-xs); }
+.header-links { display: flex; gap: var(--space-xs); align-items: center; }
+
+/* Unit toggle — shared by LookupPage header and CalibratePage header */
+.unit-toggle {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+  color: var(--white);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.unit-toggle:hover  { background: rgba(255, 255, 255, 0.2); }
+.unit-toggle:active { background: rgba(255, 255, 255, 0.1); }
 
 .full-view-link {
   color: var(--white);
