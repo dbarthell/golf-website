@@ -85,21 +85,16 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
     // Format aim value in the current unit
     const zblDisplayFmt = fmtAim(zblRaw);
 
-    // Format a variance value in the current unit:
-    // imperial → round to nearest 0.5" (return null if rounds to zero)
-    // metric   → convert via fmtAimVariance (includes "cm" unit suffix)
-    function vFmt(s: string | null): string | null {
+    // Format a variance inches string in the current unit.
+    // Returns null for missing/zero values. Keeps raw precision from the data.
+    function fmtV(s: string | null): string | null {
       if (!s) return null;
-      if (unit === 'm') {
-        const cm = fmtAimVariance(s);
-        return cm || null;
-      }
-      const r = Math.round(parseFloat(s) * 2) / 2;
-      return r > 0 ? (r % 1 === 0 ? r.toFixed(0) : r.toFixed(1)) + '"' : null;
+      const n = parseFloat(s);
+      if (!n || n <= 0) return null;
+      return fmtAimVariance(s); // "1.2"" imperial  |  "3.0 cm" metric
     }
-    // Always show a single ±N line using whichever side is available.
-    // Minus is preferred (present on every row); plus is the fallback.
-    const v = vFmt(zblMinus ?? zblPlus);
+    const vp = fmtV(zblPlus);   // e.g. "1.2"" or null
+    const vm = fmtV(zblMinus);  // e.g. "1.5"" or null
 
     const stimpScale = stimp / 10;
     const uphillRate   = Math.round(1   * stimpScale * 10) / 10;
@@ -126,8 +121,14 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
             <div className="result-item">
               <div className="result-value">{zblDisplayFmt}</div>
               <div className="result-label">{slopeLabel}</div>
-              {v && (
-                <div className="result-variance">&plusmn;{v}</div>
+              {(vp || vm) && (
+                <div className="result-variance">
+                  {vp && vm
+                    ? <>+{vp} / &minus;{vm}</>
+                    : vp
+                      ? <>+{vp}</>
+                      : <>&minus;{vm}</>}
+                </div>
               )}
             </div>
           </div>
