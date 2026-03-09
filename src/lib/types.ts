@@ -64,7 +64,7 @@ export type LookupResult =
   | { kind: 'empty'; message: string }
   | {
       kind: 'straight';
-      backswing: string;
+      backswing: number | null;
       zblDisplay: string;
       zblRaw: number;
       zblPlus: string | null;
@@ -75,13 +75,13 @@ export type LookupResult =
       stimp: number;
       uphillTotal: number;
       downhillTotal: number;
-      uphillBS: string;
-      downhillBS: string;
+      uphillBS: number | null;
+      downhillBS: number | null;
       annotations: ClockAnnotations;
     }
   | {
       kind: 'clock';
-      backswing: string;
+      backswing: number | null;
       namedAim: string | null;
       edgeAim: number;
       zblAimBase: number;

@@ -35,6 +35,13 @@ export function useUnits() {
     return (r % 1 === 0 ? r.toFixed(0) : r.toFixed(1)) + '"';
   }
 
+  /** Format raw calibrated inches as a backswing display value (inches or cm) */
+  function fmtBackswing(inches: number): string {
+    if (unit === 'm') return `${(inches * 2.54).toFixed(1)} cm`;
+    const r = Math.round(inches * 2) / 2;
+    return (r % 1 === 0 ? r.toFixed(0) : r.toFixed(1)) + '"';
+  }
+
   /** Format variance inches (like "1.5") as aim variance in current unit */
   function fmtAimVariance(inches: string): string {
     if (unit === 'm') return inToCm(parseFloat(inches)).toFixed(1) + ' cm';
@@ -60,6 +67,7 @@ export function useUnits() {
     fmtDist,
     fmtAim,
     fmtAimVariance,
+    fmtBackswing,
     ftToDisplay,
     displayToFt,
     unitLabel,

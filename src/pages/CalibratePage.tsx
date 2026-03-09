@@ -11,10 +11,6 @@ import { findBackswingInches } from '../lib/backswing';
 const TEST_DISTANCES = [6, 10, 15, 20, 30];
 const PREVIEW_DISTANCES = [5, 10, 15, 20, 25, 30, 40, 50];
 
-function fmt(inches: number) {
-  return inches.toFixed(1) + '"';
-}
-
 // ── Calibration status ────────────────────────────────────────────────────────
 
 function factorToPct(df: number): number {
@@ -36,7 +32,7 @@ function factorNote(df: number): string {
 export function CalibratePage() {
   const data = getPuttingData();
   const { calibration, saveCalibration, resetCalibration } = useCalibration();
-  const { unit, toggleUnit, fmtDist } = useUnits();
+  const { unit, toggleUnit, fmtDist, fmtBackswing } = useUnits();
   const location = useLocation();
   const navigate = useNavigate();
   const fromOnboarding = new URLSearchParams(location.search).get('from') === 'onboarding';
@@ -166,7 +162,7 @@ export function CalibratePage() {
           <div className="adjust-col">
             <div className="adjust-label">Baseline</div>
             <div className="adjust-value baseline-val">
-              {baseline !== null ? fmt(baseline) : '—'}
+              {baseline !== null ? fmtBackswing(baseline) : '—'}
             </div>
           </div>
           <div className="adjust-arrow">→</div>
@@ -175,7 +171,7 @@ export function CalibratePage() {
             <div className="adjust-my-row">
               <button className="adj-btn" onClick={() => adjustMy(-0.25)} aria-label="Decrease">−</button>
               <div className="adjust-value my-val">
-                {myInches !== null ? fmt(myInches) : '—'}
+                {myInches !== null ? fmtBackswing(myInches) : '—'}
               </div>
               <button className="adj-btn" onClick={() => adjustMy(+0.25)} aria-label="Increase">+</button>
             </div>
@@ -205,10 +201,10 @@ export function CalibratePage() {
             return (
               <div key={d} className={`preview-row${isTest ? ' preview-highlight' : ''}`}>
                 <div className="preview-dist">{fmtDist(d)}</div>
-                <div className="preview-baseline">{fmt(bl)}</div>
+                <div className="preview-baseline">{fmtBackswing(bl)}</div>
                 <div className="preview-arrow">→</div>
                 <div className={`preview-mine${isSame ? ' same' : ''}`}>
-                  {isSame ? fmt(bl) : fmt(mine)}
+                  {isSame ? fmtBackswing(bl) : fmtBackswing(mine)}
                 </div>
               </div>
             );
