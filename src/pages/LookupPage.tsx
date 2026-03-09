@@ -18,7 +18,7 @@ import { BackswingTable } from '../components/BackswingTable';
 import { OnboardingModal } from '../components/OnboardingModal';
 
 import { calculateZBLVector, aimPoint, fmtInches } from '../lib/zbl';
-import { backswingDisplay, findBackswingData } from '../lib/backswing';
+import { backswingRaw, findBackswingData } from '../lib/backswing';
 import { getClockFactors } from '../lib/clockMath';
 import type { LookupResult, ClockAnnotations } from '../lib/types';
 
@@ -70,7 +70,7 @@ function computeResult(
     const edgeAim    = lateralAim - 2.125;
     const namedAim   = breakAbs >= 0.05 ? aimPoint(lateralAim, breakFactor) : null;
 
-    const backswing = backswingDisplay(adjDist, stimp, lagRows, distanceFactor);
+    const backswing = backswingRaw(adjDist, stimp, lagRows, distanceFactor);
 
     const annotations: ClockAnnotations = { zblAimBase, lateralAim, breakAbs, clockKey: clock };
 
@@ -101,14 +101,14 @@ function computeResult(
   const zblDisplay = fmtInches(zblRaw);
   const slopeLabel = slope > 0 ? `ZBL Aim (${slope}%)` : 'ZBL Aim (flat)';
   // zblRaw is exposed so LookupResultPanel can format it in the current unit
-  const backswing  = backswingDisplay(distance, stimp, lagRows, distanceFactor);
+  const backswing  = backswingRaw(distance, stimp, lagRows, distanceFactor);
 
   const uphillAdj    = distance * slope / 10 * stimpScale;
   const downhillAdj  = distance * slope * 1.5 / 10 * stimpScale;
   const uphillTotal  = Math.round(distance + uphillAdj);
   const downhillTotal = Math.max(1, Math.round(distance - downhillAdj));
-  const uphillBS     = backswingDisplay(uphillTotal, stimp, lagRows, distanceFactor);
-  const downhillBS   = backswingDisplay(downhillTotal, stimp, lagRows, distanceFactor);
+  const uphillBS     = backswingRaw(uphillTotal, stimp, lagRows, distanceFactor);
+  const downhillBS   = backswingRaw(downhillTotal, stimp, lagRows, distanceFactor);
 
   const annotations: ClockAnnotations = { zblAimBase: zblRaw, lateralAim: 0, breakAbs: 0, clockKey: null };
 

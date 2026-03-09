@@ -26,7 +26,7 @@ const OUTCOMES: { key: PuttOutcome; label: string; emoji: string }[] = [
 ];
 
 export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
-  const { unit, fmtDist, fmtAim, fmtAimVariance } = useUnits();
+  const { unit, fmtDist, fmtAim, fmtAimVariance, fmtBackswing } = useUnits();
   const [picking, setPicking] = useState(false);
   const [savedLabel, setSavedLabel] = useState<string | null>(null);
 
@@ -113,7 +113,7 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
         <div className="result-content">
           <div className="result-row">
             <div className="result-item">
-              <div className="result-value">{backswing}</div>
+              <div className="result-value">{backswing !== null ? fmtBackswing(backswing) : '—'}</div>
               <div className="result-label">Backswing</div>
               {slope === 0 && (
                 <div
@@ -140,8 +140,8 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
 
           {slope > 0 && (
             <div className="slope-row">
-              <span className="slope-item slope-up">↑ {fmtDist(uphillTotal)} · {uphillBS}</span>
-              <span className="slope-item slope-down">↓ {fmtDist(downhillTotal)} · {downhillBS}</span>
+              <span className="slope-item slope-up">↑ {fmtDist(uphillTotal)} · {uphillBS !== null ? fmtBackswing(uphillBS) : '—'}</span>
+              <span className="slope-item slope-down">↓ {fmtDist(downhillTotal)} · {downhillBS !== null ? fmtBackswing(downhillBS) : '—'}</span>
             </div>
           )}
         </div>
