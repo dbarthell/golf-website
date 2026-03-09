@@ -168,7 +168,10 @@ export function LogPage() {
           <IconArrowLeft size={16} stroke={2} />
           Back
         </Link>
-        <h1>Putt Log</h1>
+        <div className="header-brand">
+          <img src="images/new-logo.png" alt="" className="header-logo" />
+          <h1>Putt Log</h1>
+        </div>
         <div className="header-spacer" />
       </div>
 

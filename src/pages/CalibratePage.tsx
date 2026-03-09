@@ -100,7 +100,10 @@ export function CalibratePage() {
           <IconArrowLeft size={16} stroke={2} />
           Back
         </Link>
-        <h1>Calibrate</h1>
+        <div className="header-brand">
+          <img src="images/new-logo.png" alt="" className="header-logo" />
+          <h1>Calibrate</h1>
+        </div>
         <button
           className="unit-toggle"
           onClick={toggleUnit}
