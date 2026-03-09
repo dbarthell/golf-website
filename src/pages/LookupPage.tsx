@@ -185,11 +185,11 @@ export function LookupPage() {
             </button>
             <Link to="/log" className="full-view-link">
               <IconClipboardList size={16} stroke={2} />
-              Log
+              <span className="full-view-link-label">Log</span>
             </Link>
             <Link to="/calibrate" className="full-view-link">
               <IconAdjustments size={16} stroke={2} />
-              Calibrate
+              <span className="full-view-link-label">Calibrate</span>
             </Link>
           </div>
         </div>
