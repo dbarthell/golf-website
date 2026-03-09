@@ -316,6 +316,14 @@ body {
   color: var(--gray-600);
 }
 
+/* Mid-size unit label (e.g. cm / ") — smaller than the big number but larger
+   than the tiny direction/qualifier label, same green as the number itself. */
+.result-unit-md {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+
 .result-value-word { font-size: 2rem; }
 
 .result-zbl-ref {

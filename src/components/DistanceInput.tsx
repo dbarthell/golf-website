@@ -19,20 +19,22 @@ export function DistanceInput({ value, onChange }: Props) {
   }
 
   // Both units step by 1 whole unit per button press (1 ft or 1 m).
-  // Sub-unit precision can still be entered via the keyboard (step={0.5} for metric).
-  const step = 1;
-
+  // In metric we use floor/ceil — not round — so that any non-whole starting
+  // value (e.g. "4.9 m" from a ft↔m round-trip) always steps to the next
+  // clean whole metre rather than accumulating imprecision.
   function decrement() {
     if (value === '' || (value as number) <= 0) return;
-    const curDisplay = ftToDisplay(value as number);
-    const minDisplay = unit === 'm' ? 0.3 : 1;
-    const next = Math.max(minDisplay, Math.round(curDisplay) - step);
+    const cur = ftToDisplay(value as number);
+    const next = unit === 'm'
+      ? Math.max(1, Math.ceil(cur) - 1)
+      : Math.max(1, cur - 1);
     onChange(displayToFt(next));
   }
 
   function increment() {
-    const curDisplay = value === '' ? 0 : ftToDisplay(value as number);
-    onChange(displayToFt(Math.round(curDisplay) + step));
+    const cur = value === '' ? 0 : ftToDisplay(value as number);
+    const next = unit === 'm' ? Math.floor(cur) + 1 : cur + 1;
+    onChange(displayToFt(next));
   }
 
   return (
