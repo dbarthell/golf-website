@@ -109,8 +109,8 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
         <div className="result-content">
           <div className="result-row">
             <div className="result-item">
-              <div className="result-value-with-unit">
-                {bsNum}<span className="result-unit-md">{bsUnit}</span>
+              <div className={bsUnit ? 'result-value-with-unit' : 'result-value'}>
+                {bsNum}{bsUnit && <span className="result-unit-md">{bsUnit}</span>}
               </div>
               <div className="result-label">Backswing</div>
               {slope === 0 && (
@@ -122,8 +122,8 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
             </div>
             <div className="result-divider" />
             <div className="result-item">
-              <div className="result-value-with-unit">
-                {aimNum}<span className="result-unit-md">{aimUnit}</span>
+              <div className={aimUnit ? 'result-value-with-unit' : 'result-value'}>
+                {aimNum}{aimUnit && <span className="result-unit-md">{aimUnit}</span>}
               </div>
               <div className="result-label">{slopeLabel}</div>
               {(vp || vm) && (
@@ -163,9 +163,9 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
   // Format backswing and edge aim as split [num, unit] pairs for the big display.
   const [clockBsNum, clockBsUnit] = backswing !== null ? fmtBackswingParts(backswing) : ['—', ''];
   const [edgeNum, edgeUnit] = fmtAimParts(edgeAim);
-  const edgeAimFmt = (
-    <>{edgeNum}<span className="result-unit-md">{edgeUnit}</span><span className="result-unit">out</span></>
-  );
+  const edgeAimFmt = edgeUnit
+    ? <>{edgeNum}<span className="result-unit-md">{edgeUnit}</span><span className="result-unit">out</span></>
+    : <>{edgeNum}<span className="result-unit">out</span></>;
 
   const zblAimFmt = unit === 'm'
     ? fmtAim(zblAimBase)
@@ -199,8 +199,8 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
       <div className="result-content">
         <div className="result-row">
           <div className="result-item">
-            <div className="result-value-with-unit">
-              {clockBsNum}<span className="result-unit-md">{clockBsUnit}</span>
+            <div className={clockBsUnit ? 'result-value-with-unit' : 'result-value'}>
+              {clockBsNum}{clockBsUnit && <span className="result-unit-md">{clockBsUnit}</span>}
             </div>
             <div className="result-label">Backswing</div>
           </div>

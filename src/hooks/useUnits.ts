@@ -58,16 +58,18 @@ export function useUnits() {
    */
   function fmtBackswingParts(inches: number): [string, string] {
     if (unit === 'm') return [r05(inches * 2.54), 'cm'];
-    return [r05(inches), '"'];
+    return [r05(inches) + '"', ''];   // " stays fused into the number for imperial
   }
 
   /**
    * Return [numericString, unitLabel] for an aim value — used to render
    * the number at large size and the unit at a smaller mid-weight size.
+   * Imperial fuses the " into the number so baseline alignment doesn't
+   * push it to the bottom of the big digit.
    */
   function fmtAimParts(inches: number): [string, string] {
     if (unit === 'm') return [r05(inToCm(inches)), 'cm'];
-    return [r05(inches), '"'];
+    return [r05(inches) + '"', ''];   // " stays fused into the number for imperial
   }
 
   /**
