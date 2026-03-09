@@ -303,7 +303,9 @@ body {
   display: flex;
   align-items: baseline;
   gap: 0.2rem;
-  font-size: 2.5rem;
+  /* Scale down smoothly on narrow screens (e.g. iPhone 13 mini 375 px)
+     so multi-part values like "75.5 cm out" don't overflow their cell. */
+  font-size: clamp(1.8rem, 7.5vw, 2.5rem);
   font-weight: 800;
   color: var(--green-dark);
   line-height: 1.15;
@@ -316,10 +318,11 @@ body {
   color: var(--gray-600);
 }
 
-/* Mid-size unit label (e.g. cm / ") — smaller than the big number but larger
-   than the tiny direction/qualifier label, same green as the number itself. */
+/* Mid-size unit label (e.g. "cm") — smaller than the big number but larger
+   than the tiny direction/qualifier label, same green as the number itself.
+   Scales with the parent so it stays proportional on narrow screens. */
 .result-unit-md {
-  font-size: 1.4rem;
+  font-size: clamp(1.1rem, 4.5vw, 1.4rem);
   font-weight: 700;
   color: var(--green-dark);
 }
