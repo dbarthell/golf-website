@@ -97,9 +97,9 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
       const r = Math.round(parseFloat(s) * 2) / 2;
       return r > 0 ? (r % 1 === 0 ? r.toFixed(0) : r.toFixed(1)) + '"' : null;
     }
-    const vPlus  = vFmt(zblPlus);
-    const vMinus = vFmt(zblMinus);
-    const symmetric = vPlus !== null && vPlus === vMinus;
+    // Always show a single ±N line using whichever side is available.
+    // Minus is preferred (present on every row); plus is the fallback.
+    const v = vFmt(zblMinus ?? zblPlus);
 
     const stimpScale = stimp / 10;
     const uphillRate   = Math.round(1   * stimpScale * 10) / 10;
@@ -126,14 +126,8 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
             <div className="result-item">
               <div className="result-value">{zblDisplayFmt}</div>
               <div className="result-label">{slopeLabel}</div>
-              {symmetric && (
-                <div className="result-variance">&plusmn;{vPlus}</div>
-              )}
-              {!symmetric && vPlus && (
-                <div className="result-variance">+{vPlus}</div>
-              )}
-              {!symmetric && vMinus && (
-                <div className="result-variance">&minus;{vMinus}</div>
+              {v && (
+                <div className="result-variance">&plusmn;{v}</div>
               )}
             </div>
           </div>
