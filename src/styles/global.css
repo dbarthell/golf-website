@@ -2,8 +2,8 @@
    CSS Custom Properties (navy palette)
    ======================================== */
 :root {
-  --green-dark:    #1a3057;
-  --green-mid:     #25487e;
+  --green-dark:    #1b2e52;
+  --green-mid:     #1f3860;
   --green-accent:  #2558a8;
   --green-light:   #4473be;
   --green-pale:    #e7ecf7;
@@ -70,7 +70,7 @@ body {
 }
 
 .header-brand { display: flex; align-items: center; gap: 0.5rem; }
-.header-logo  { width: 3rem; height: 3rem; border-radius: 4px; }
+.header-logo  { width: 4.5rem; height: 4.5rem; border-radius: 6px; }
 
 .lookup-header h1 {
   font-size: 1.5rem;
