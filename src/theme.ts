@@ -17,8 +17,8 @@ export const theme = createTheme({
       '#4473be', // 4 – --green-light
       '#2558a8', // 5 – --green-accent
       '#1e4a8e',
-      '#1f3860', // 7 – --green-mid
-      '#1b2e52', // 8 – --green-dark
+      '#162c4e', // 7 – --green-mid
+      '#0f213b', // 8 – --green-dark
       '#080f22',
     ],
   },
