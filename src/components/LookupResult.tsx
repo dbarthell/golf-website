@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { LookupResult } from '../lib/types';
 import { fmtInches } from '../lib/zbl';
 import type { PuttOutcome } from '../hooks/usePuttLog';
-import { useUnits } from '../hooks/useUnits';
+import { useUnits, inToCm } from '../hooks/useUnits';
 
 interface PuttContext {
   distance: number;
@@ -155,10 +155,20 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
     ? 'Straight'
     : breakFactor > 0 ? 'R→L' : 'L→R';
 
-  // Format edge aim in the current unit
-  const edgeAimFmt = unit === 'm'
-    ? <>{fmtAim(edgeAim)}<span className="result-unit">out</span></>
-    : <>{fmtInches(edgeAim)}<span className="result-unit">out</span></>;
+  // Format edge aim in the current unit.
+  // In metric, "cm" is split into a separate small-unit span to avoid overflowing
+  // the result-value-with-unit container when "out" is also shown.
+  let edgeAimFmt;
+  if (unit === 'm') {
+    const cmVal = inToCm(edgeAim);
+    const cmR   = Math.round(cmVal * 2) / 2;
+    const cmStr = cmR % 1 === 0 ? cmR.toFixed(0) : cmR.toFixed(1);
+    edgeAimFmt = (
+      <>{cmStr}<span className="result-unit">cm</span><span className="result-unit">out</span></>
+    );
+  } else {
+    edgeAimFmt = <>{fmtInches(edgeAim)}<span className="result-unit">out</span></>;
+  }
 
   const zblAimFmt = unit === 'm'
     ? fmtAim(zblAimBase)
@@ -192,7 +202,7 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
       <div className="result-content">
         <div className="result-row">
           <div className="result-item">
-            <div className="result-value">{backswing}</div>
+            <div className="result-value">{backswing !== null ? fmtBackswing(backswing) : '—'}</div>
             <div className="result-label">Backswing</div>
           </div>
           <div className="result-divider" />
