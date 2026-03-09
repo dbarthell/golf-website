@@ -651,6 +651,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: var(--radius-sm);
   display: flex;
+  justify-self: start;
   align-items: center;
   gap: 0.3rem;
 }
