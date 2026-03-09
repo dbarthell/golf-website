@@ -18,18 +18,21 @@ export function DistanceInput({ value, onChange }: Props) {
     onChange(displayToFt(v as number));
   }
 
+  // Both units step by 1 whole unit per button press (1 ft or 1 m).
+  // Sub-unit precision can still be entered via the keyboard (step={0.5} for metric).
+  const step = 1;
+
   function decrement() {
     if (value === '' || (value as number) <= 0) return;
     const curDisplay = ftToDisplay(value as number);
-    const step = unit === 'm' ? 1 : 1;
     const minDisplay = unit === 'm' ? 0.3 : 1;
-    const next = Math.max(minDisplay, curDisplay - step);
+    const next = Math.max(minDisplay, Math.round(curDisplay) - step);
     onChange(displayToFt(next));
   }
 
   function increment() {
     const curDisplay = value === '' ? 0 : ftToDisplay(value as number);
-    onChange(displayToFt(curDisplay + 1));
+    onChange(displayToFt(Math.round(curDisplay) + step));
   }
 
   return (
