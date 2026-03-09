@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { LookupResult } from '../lib/types';
 import { fmtInches } from '../lib/zbl';
 import type { PuttOutcome } from '../hooks/usePuttLog';
-import { useUnits, inToCm } from '../hooks/useUnits';
+import { useUnits } from '../hooks/useUnits';
 
 interface PuttContext {
   distance: number;
@@ -26,7 +26,7 @@ const OUTCOMES: { key: PuttOutcome; label: string; emoji: string }[] = [
 ];
 
 export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
-  const { unit, fmtDist, fmtAim, fmtAimVariance, fmtBackswing } = useUnits();
+  const { unit, fmtDist, fmtAim, fmtAimVariance, fmtBackswing, fmtBackswingParts, fmtAimParts } = useUnits();
   const [picking, setPicking] = useState(false);
   const [savedLabel, setSavedLabel] = useState<string | null>(null);
 
@@ -82,8 +82,9 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
       uphillTotal, downhillTotal, uphillBS, downhillBS,
     } = result;
 
-    // Format aim value in the current unit
-    const zblDisplayFmt = fmtAim(zblRaw);
+    // Format aim and backswing as split [num, unit] pairs for the big display
+    const [bsNum, bsUnit] = backswing !== null ? fmtBackswingParts(backswing) : ['—', ''];
+    const [aimNum, aimUnit] = fmtAimParts(zblRaw);
 
     // Format a variance inches string in the current unit.
     // Returns null for missing/zero values. Keeps raw precision from the data.
@@ -108,7 +109,9 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
         <div className="result-content">
           <div className="result-row">
             <div className="result-item">
-              <div className="result-value">{backswing !== null ? fmtBackswing(backswing) : '—'}</div>
+              <div className="result-value-with-unit">
+                {bsNum}<span className="result-unit-md">{bsUnit}</span>
+              </div>
               <div className="result-label">Backswing</div>
               {slope === 0 && (
                 <div
@@ -119,7 +122,9 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
             </div>
             <div className="result-divider" />
             <div className="result-item">
-              <div className="result-value">{zblDisplayFmt}</div>
+              <div className="result-value-with-unit">
+                {aimNum}<span className="result-unit-md">{aimUnit}</span>
+              </div>
               <div className="result-label">{slopeLabel}</div>
               {(vp || vm) && (
                 <div className="result-variance">
@@ -155,20 +160,12 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
     ? 'Straight'
     : breakFactor > 0 ? 'R→L' : 'L→R';
 
-  // Format edge aim in the current unit.
-  // In metric, "cm" is split into a separate small-unit span to avoid overflowing
-  // the result-value-with-unit container when "out" is also shown.
-  let edgeAimFmt;
-  if (unit === 'm') {
-    const cmVal = inToCm(edgeAim);
-    const cmR   = Math.round(cmVal * 2) / 2;
-    const cmStr = cmR % 1 === 0 ? cmR.toFixed(0) : cmR.toFixed(1);
-    edgeAimFmt = (
-      <>{cmStr}<span className="result-unit">cm</span><span className="result-unit">out</span></>
-    );
-  } else {
-    edgeAimFmt = <>{fmtInches(edgeAim)}<span className="result-unit">out</span></>;
-  }
+  // Format backswing and edge aim as split [num, unit] pairs for the big display.
+  const [clockBsNum, clockBsUnit] = backswing !== null ? fmtBackswingParts(backswing) : ['—', ''];
+  const [edgeNum, edgeUnit] = fmtAimParts(edgeAim);
+  const edgeAimFmt = (
+    <>{edgeNum}<span className="result-unit-md">{edgeUnit}</span><span className="result-unit">out</span></>
+  );
 
   const zblAimFmt = unit === 'm'
     ? fmtAim(zblAimBase)
@@ -202,7 +199,9 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
       <div className="result-content">
         <div className="result-row">
           <div className="result-item">
-            <div className="result-value">{backswing !== null ? fmtBackswing(backswing) : '—'}</div>
+            <div className="result-value-with-unit">
+              {clockBsNum}<span className="result-unit-md">{clockBsUnit}</span>
+            </div>
             <div className="result-label">Backswing</div>
           </div>
           <div className="result-divider" />

@@ -52,9 +52,35 @@ export function useUnits() {
     return inches + '"';
   }
 
-  /** Convert a feet value to the numeric display-unit value */
+  /**
+   * Return [numericString, unitLabel] for a backswing value — used to render
+   * the number at large size and the unit at a smaller mid-weight size.
+   */
+  function fmtBackswingParts(inches: number): [string, string] {
+    if (unit === 'm') return [r05(inches * 2.54), 'cm'];
+    return [r05(inches), '"'];
+  }
+
+  /**
+   * Return [numericString, unitLabel] for an aim value — used to render
+   * the number at large size and the unit at a smaller mid-weight size.
+   */
+  function fmtAimParts(inches: number): [string, string] {
+    if (unit === 'm') return [r05(inToCm(inches)), 'cm'];
+    return [r05(inches), '"'];
+  }
+
+  /**
+   * Convert a feet value to the numeric display-unit value.
+   * In metric, snaps to the nearest 0.5 m so that the feet↔metres round-trip
+   * always yields a clean displayed number (e.g. 16 ft → 4.9 m → 5.0 m).
+   */
   function ftToDisplay(feet: number): number {
-    return unit === 'm' ? ftToM(feet) : feet;
+    if (unit === 'm') {
+      const m = ftToM(feet);
+      return Math.round(m * 2) / 2;
+    }
+    return feet;
   }
 
   /** Convert a display-unit numeric value back to feet */
@@ -72,6 +98,8 @@ export function useUnits() {
     fmtAim,
     fmtAimVariance,
     fmtBackswing,
+    fmtBackswingParts,
+    fmtAimParts,
     ftToDisplay,
     displayToFt,
     unitLabel,
