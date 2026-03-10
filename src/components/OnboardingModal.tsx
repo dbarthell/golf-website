@@ -5,17 +5,17 @@ const SLIDES = [
   {
     tag: 'The method',
     title: 'Aim above the hole',
-    body: 'Every breaking putt has a Zero Break Line — a straight path above the hole where gravity will curve the ball in. ZeroBreak finds that line for you based on distance and slope.',
+    body: "H.A. Templeton's 1984 book Vector Putting showed that every breaking putt has a Zero Break Line — a straight path that follows the slope downhill through the hole. Aim at a point on that line above the hole, and gravity curves the ball right in. ZeroBreak calculates that point for you.",
   },
   {
     tag: 'Your backswing',
     title: 'Trail foot landmarks',
-    body: 'Backswing distance is anchored to your trail foot, 12 inches right of the ball. Inside foot, middle, and outside foot map to short, mid, and longer putts.',
+    body: 'Vector Putting gives you the line. Distance control is the other half of the equation. That means having a reliable way to repeat the same backswing length every time. Your trail foot gives you three built-in landmarks — inside edge, middle, and outside edge — that map to short, mid, and longer putts. With a fixed physical anchor and consistent effort, backswing length becomes the one variable that controls how far the ball goes.',
   },
   {
     tag: 'Make it yours',
     title: 'Calibrate once',
-    body: 'Every stroke is different. A quick calibration adjusts the distances to match your actual putting speed — so the numbers work for you, not a textbook.',
+    body: 'When you apply the same acceleration profile every time — constant effort, consistent cadence — backswing length is what controls distance. Calibrate once and every distance adjusts to your natural pace.',
   },
 ];
 
