@@ -676,9 +676,24 @@ body {
    ======================================== */
 .cal-intro {
   padding: var(--space-md) var(--space-md) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  border-bottom: 1px solid var(--gray-200);
+  padding-bottom: var(--space-md);
+}
+
+.cal-intro p {
   font-size: 0.88rem;
   color: var(--text-secondary);
   line-height: 1.5;
+  margin: 0;
+}
+
+.field-hint {
+  margin-top: var(--space-xs);
+  font-size: 0.75rem;
+  color: var(--gray-600);
 }
 
 .status-card {
@@ -805,6 +820,13 @@ body {
   transition: all 0.15s;
 }
 .save-btn:active { filter: brightness(0.9); transform: scale(0.98); }
+
+.go-to-app-btn {
+  background: var(--white);
+  color: var(--green-dark);
+  border: 2px solid var(--green-dark);
+  margin-top: 0;
+}
 
 .reset-btn {
   display: block;
