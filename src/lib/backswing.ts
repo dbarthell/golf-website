@@ -75,8 +75,24 @@ export function findBackswingInches(
 }
 
 /**
- * "1 foot past the cup" backswing display string, with calibration factor
- * applied.
+ * Raw calibrated backswing inches for "1 foot past the cup".
+ * Returns null if out of range. Use with fmtBackswing() from useUnits for display.
+ */
+export function backswingRaw(
+  distFeet: number,
+  stimp: number,
+  rows: LagRow[],
+  distanceFactor: number,
+): number | null {
+  const data = findBackswingData(distFeet + 1, stimp, rows);
+  if (!data) return null;
+  const raw = parseFloat(data.inches.replace('"', ''));
+  return raw * distanceFactor;
+}
+
+/**
+ * "1 foot past the cup" backswing display string, with calibration factor applied.
+ * @deprecated Use backswingRaw() + fmtBackswing() from useUnits for unit-aware display.
  */
 export function backswingDisplay(
   distFeet: number,
@@ -84,8 +100,6 @@ export function backswingDisplay(
   rows: LagRow[],
   distanceFactor: number,
 ): string {
-  const data = findBackswingData(distFeet + 1, stimp, rows);
-  if (!data) return '—';
-  const raw = parseFloat(data.inches.replace('"', ''));
-  return fmtInches(raw * distanceFactor);
+  const raw = backswingRaw(distFeet, stimp, rows, distanceFactor);
+  return raw !== null ? fmtInches(raw) : '—';
 }
