@@ -176,7 +176,7 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
       {namedAim
         ? <div className="result-value result-value-word">{namedAim}</div>
         : (
-          <div className="result-value-with-unit">
+          <div className={edgeUnit ? 'result-value-with-unit' : 'result-value'}>
             {edgeAimFmt}
           </div>
         )
