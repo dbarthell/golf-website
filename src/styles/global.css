@@ -70,7 +70,7 @@ body {
 }
 
 .header-brand { display: flex; align-items: center; gap: 0.5rem; }
-.header-logo  { width: 2rem; height: 2rem; border-radius: 6px; }
+.header-logo  { height: 2rem; width: auto; border-radius: 0; }
 
 .lookup-header h1 {
   font-size: 1.5rem;

@@ -165,7 +165,6 @@ export function LookupPage() {
         <div className="lookup-header">
           <div className="header-brand">
             <img src="images/red-flag-logo.jpg" alt="" className="header-logo" />
-            <h1>ZeroBreak</h1>
           </div>
           <div className="header-links">
             <Link to="/calibrate" className="full-view-link">
