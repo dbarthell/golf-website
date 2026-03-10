@@ -1,12 +1,10 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IconAdjustments, IconClipboardList } from '@tabler/icons-react';
+import { IconAdjustments } from '@tabler/icons-react';
 
 import { getPuttingData } from '../hooks/usePuttingData';
 import { useCalibration } from '../hooks/useCalibration';
 import { useLookupState } from '../hooks/useLookupState';
-import { usePuttLog } from '../hooks/usePuttLog';
-import { useUnits } from '../hooks/useUnits';
 
 import { StimpToggle } from '../components/StimpToggle';
 import { DistanceInput } from '../components/DistanceInput';
@@ -18,7 +16,7 @@ import { BackswingTable } from '../components/BackswingTable';
 import { OnboardingModal } from '../components/OnboardingModal';
 
 import { calculateZBLVector, aimPoint, fmtInches } from '../lib/zbl';
-import { backswingRaw, findBackswingData } from '../lib/backswing';
+import { backswingDisplay, findBackswingData } from '../lib/backswing';
 import { getClockFactors } from '../lib/clockMath';
 import type { LookupResult, ClockAnnotations } from '../lib/types';
 
@@ -70,7 +68,7 @@ function computeResult(
     const edgeAim    = lateralAim - 2.125;
     const namedAim   = breakAbs >= 0.05 ? aimPoint(lateralAim, breakFactor) : null;
 
-    const backswing = backswingRaw(adjDist, stimp, lagRows, distanceFactor);
+    const backswing = backswingDisplay(adjDist, stimp, lagRows, distanceFactor);
 
     const annotations: ClockAnnotations = { zblAimBase, lateralAim, breakAbs, clockKey: clock };
 
@@ -100,15 +98,14 @@ function computeResult(
   const zblRaw     = parseFloat(zblData.aimInches);
   const zblDisplay = fmtInches(zblRaw);
   const slopeLabel = slope > 0 ? `ZBL Aim (${slope}%)` : 'ZBL Aim (flat)';
-  // zblRaw is exposed so LookupResultPanel can format it in the current unit
-  const backswing  = backswingRaw(distance, stimp, lagRows, distanceFactor);
+  const backswing  = backswingDisplay(distance, stimp, lagRows, distanceFactor);
 
   const uphillAdj    = distance * slope / 10 * stimpScale;
   const downhillAdj  = distance * slope * 1.5 / 10 * stimpScale;
   const uphillTotal  = Math.round(distance + uphillAdj);
   const downhillTotal = Math.max(1, Math.round(distance - downhillAdj));
-  const uphillBS     = backswingRaw(uphillTotal, stimp, lagRows, distanceFactor);
-  const downhillBS   = backswingRaw(downhillTotal, stimp, lagRows, distanceFactor);
+  const uphillBS     = backswingDisplay(uphillTotal, stimp, lagRows, distanceFactor);
+  const downhillBS   = backswingDisplay(downhillTotal, stimp, lagRows, distanceFactor);
 
   const annotations: ClockAnnotations = { zblAimBase: zblRaw, lateralAim: 0, breakAbs: 0, clockKey: null };
 
@@ -116,9 +113,6 @@ function computeResult(
     kind: 'straight',
     backswing,
     zblDisplay,
-    zblRaw,
-    zblPlus: zblData.plusInches,
-    zblMinus: zblData.minusInches,
     slopeLabel,
     slope,
     distance,
@@ -136,10 +130,8 @@ function computeResult(
 export function LookupPage() {
   const data = getPuttingData();
   const { calibration } = useCalibration();
-  const { unit, toggleUnit } = useUnits();
   const { distance, setDistance, slope, setSlope, stimp, setStimp, clock, setClock } =
     useLookupState();
-  const { addPutt } = usePuttLog();
 
   const [onboardingDone, setOnboardingDone] = useState(() => !!localStorage.getItem('zerobreak-onboarded'));
 
@@ -172,23 +164,13 @@ export function LookupPage() {
         {/* Header */}
         <div className="lookup-header">
           <div className="header-brand">
-            <img src="images/new-logo.png" alt="" className="header-logo" />
+            <img src="images/red-flag-logo.jpg" alt="" className="header-logo" />
+            <h1>ZeroBreak</h1>
           </div>
           <div className="header-links">
-            <button
-              className="unit-toggle"
-              onClick={toggleUnit}
-              aria-label={`Switch to ${unit === 'ft' ? 'metres' : 'feet'}`}
-            >
-              {unit === 'ft' ? 'ft' : 'm'}
-            </button>
-            <Link to="/log" className="full-view-link">
-              <IconClipboardList size={16} stroke={2} />
-              <span className="full-view-link-label">Log</span>
-            </Link>
             <Link to="/calibrate" className="full-view-link">
               <IconAdjustments size={16} stroke={2} />
-              <span className="full-view-link-label">Calibrate</span>
+              Calibrate
             </Link>
           </div>
         </div>
@@ -213,11 +195,7 @@ export function LookupPage() {
         />
 
         {/* Result */}
-        <LookupResultPanel
-          result={result}
-          puttContext={distance !== '' ? { distance, slope, stimp, clock } : undefined}
-          onLogPutt={addPutt}
-        />
+        <LookupResultPanel result={result} />
       </div>
 
       {/* ── Light sections ────────────────────────────────────────────────── */}

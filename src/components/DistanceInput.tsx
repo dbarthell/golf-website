@@ -1,6 +1,5 @@
 import { Group, NumberInput, ActionIcon } from '@mantine/core';
 import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
-import { useUnits } from '../hooks/useUnits';
 
 interface Props {
   value: number | '';
@@ -8,38 +7,18 @@ interface Props {
 }
 
 export function DistanceInput({ value, onChange }: Props) {
-  const { unit, ftToDisplay, displayToFt, unitLabel } = useUnits();
+  const cur = typeof value === 'number' ? value : 0;
 
-  // The displayed value is in the current unit; internally we store feet.
-  const displayValue: number | '' = value === '' ? '' : ftToDisplay(value as number);
-
-  function handleChange(v: number | '') {
-    if (v === '') { onChange(''); return; }
-    onChange(displayToFt(v as number));
-  }
-
-  // Both units step by 1 whole unit per button press (1 ft or 1 m).
-  // In metric we use floor/ceil — not round — so that any non-whole starting
-  // value (e.g. "4.9 m" from a ft↔m round-trip) always steps to the next
-  // clean whole metre rather than accumulating imprecision.
   function decrement() {
-    if (value === '' || (value as number) <= 0) return;
-    const cur = ftToDisplay(value as number);
-    const next = unit === 'm'
-      ? Math.max(1, Math.ceil(cur) - 1)
-      : Math.max(1, cur - 1);
-    onChange(displayToFt(next));
+    if (cur > 1) onChange(cur - 1);
   }
-
   function increment() {
-    const cur = value === '' ? 0 : ftToDisplay(value as number);
-    const next = unit === 'm' ? Math.floor(cur) + 1 : cur + 1;
-    onChange(displayToFt(next));
+    onChange(cur + 1);
   }
 
   return (
     <div className="lookup-input-section">
-      <label className="lookup-label">Distance ({unitLabel})</label>
+      <label className="lookup-label">Distance (ft)</label>
       <Group gap={0} wrap="nowrap" className="input-wrapper">
         <ActionIcon
           variant="subtle"
@@ -50,15 +29,14 @@ export function DistanceInput({ value, onChange }: Props) {
           <IconChevronDown size={22} stroke={2.5} />
         </ActionIcon>
         <NumberInput
-          value={displayValue}
+          value={value}
           placeholder="—"
-          min={unit === 'm' ? 0.3 : 1}
-          max={unit === 'm' ? 30.5 : 100}
-          step={unit === 'm' ? 0.5 : 1}
+          min={1}
+          max={100}
           inputMode="decimal"
           classNames={{ input: 'distance-input' }}
           hideControls
-          onChange={v => handleChange(v === '' ? '' : Number(v))}
+          onChange={v => onChange(v === '' ? '' : Number(v))}
         />
         <ActionIcon
           variant="subtle"

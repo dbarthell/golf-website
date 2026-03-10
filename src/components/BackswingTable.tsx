@@ -1,7 +1,7 @@
 import { Table } from '@mantine/core';
 import type { LagRow } from '../lib/types';
+import { fmtInches } from '../lib/zbl';
 import { getDistanceForStimp } from '../lib/backswing';
-import { useUnits } from '../hooks/useUnits';
 
 // Extended rows: 9", 12", 15" past outside trail foot (24/27/30" backswing)
 const EXTENDED_INCHES = [24, 27, 30];
@@ -13,8 +13,6 @@ interface Props {
 }
 
 export function BackswingTable({ lagRows, distanceFactor, stimp }: Props) {
-  const { fmtDist, fmtBackswing } = useUnits();
-
   const rows = lagRows.filter(r =>
     r.original || EXTENDED_INCHES.includes(parseFloat(r.inches.replace('"', ''))),
   );
@@ -34,11 +32,11 @@ export function BackswingTable({ lagRows, distanceFactor, stimp }: Props) {
           <Table.Tbody>
             {rows.map(r => {
               const rawDist = getDistanceForStimp(r, stimp);
-              const calFeet = Math.round(rawDist / distanceFactor);
+              const calDist = Math.round(rawDist / distanceFactor) + ' ft';
               return (
                 <Table.Tr key={r.landmark} className="row-original">
-                  <Table.Td>{fmtDist(calFeet)}</Table.Td>
-                  <Table.Td>{fmtBackswing(parseFloat(r.inches.replace('"', '')))}</Table.Td>
+                  <Table.Td>{calDist}</Table.Td>
+                  <Table.Td>{fmtInches(parseFloat(r.inches.replace('"', '')))}</Table.Td>
                   <Table.Td>{r.landmark}</Table.Td>
                 </Table.Tr>
               );

@@ -64,24 +64,21 @@ export type LookupResult =
   | { kind: 'empty'; message: string }
   | {
       kind: 'straight';
-      backswing: number | null;
+      backswing: string;
       zblDisplay: string;
-      zblRaw: number;
-      zblPlus: string | null;
-      zblMinus: string | null;
       slopeLabel: string;
       slope: number;
       distance: number;
       stimp: number;
       uphillTotal: number;
       downhillTotal: number;
-      uphillBS: number | null;
-      downhillBS: number | null;
+      uphillBS: string;
+      downhillBS: string;
       annotations: ClockAnnotations;
     }
   | {
       kind: 'clock';
-      backswing: number | null;
+      backswing: string;
       namedAim: string | null;
       edgeAim: number;
       zblAimBase: number;

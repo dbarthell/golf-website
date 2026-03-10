@@ -4,12 +4,15 @@ import { IconArrowLeft } from '@tabler/icons-react';
 
 import { getPuttingData } from '../hooks/usePuttingData';
 import { useCalibration } from '../hooks/useCalibration';
-import { useUnits } from '../hooks/useUnits';
 import { StimpToggle } from '../components/StimpToggle';
 import { findBackswingInches } from '../lib/backswing';
 
 const TEST_DISTANCES = [6, 10, 15, 20, 30];
 const PREVIEW_DISTANCES = [5, 10, 15, 20, 25, 30, 40, 50];
+
+function fmt(inches: number) {
+  return inches.toFixed(1) + '"';
+}
 
 // ── Calibration status ────────────────────────────────────────────────────────
 
@@ -32,7 +35,6 @@ function factorNote(df: number): string {
 export function CalibratePage() {
   const data = getPuttingData();
   const { calibration, saveCalibration, resetCalibration } = useCalibration();
-  const { unit, toggleUnit, fmtDist, fmtBackswing } = useUnits();
   const location = useLocation();
   const navigate = useNavigate();
   const fromOnboarding = new URLSearchParams(location.search).get('from') === 'onboarding';
@@ -101,13 +103,7 @@ export function CalibratePage() {
           Back
         </Link>
         <h1>Calibrate</h1>
-        <button
-          className="unit-toggle"
-          onClick={toggleUnit}
-          aria-label={`Switch to ${unit === 'ft' ? 'metres' : 'feet'}`}
-        >
-          {unit === 'ft' ? 'ft' : 'm'}
-        </button>
+        <div className="header-spacer" />
       </div>
 
       <p className="cal-intro">
@@ -151,7 +147,7 @@ export function CalibratePage() {
                 className={`dist-chip${testDist === d ? ' dist-chip-active' : ''}`}
                 onClick={() => setTestDist(d)}
               >
-                {fmtDist(d)}
+                {d} ft
               </button>
             ))}
           </div>
@@ -162,7 +158,7 @@ export function CalibratePage() {
           <div className="adjust-col">
             <div className="adjust-label">Baseline</div>
             <div className="adjust-value baseline-val">
-              {baseline !== null ? fmtBackswing(baseline) : '—'}
+              {baseline !== null ? fmt(baseline) : '—'}
             </div>
           </div>
           <div className="adjust-arrow">→</div>
@@ -171,7 +167,7 @@ export function CalibratePage() {
             <div className="adjust-my-row">
               <button className="adj-btn" onClick={() => adjustMy(-0.25)} aria-label="Decrease">−</button>
               <div className="adjust-value my-val">
-                {myInches !== null ? fmtBackswing(myInches) : '—'}
+                {myInches !== null ? fmt(myInches) : '—'}
               </div>
               <button className="adj-btn" onClick={() => adjustMy(+0.25)} aria-label="Increase">+</button>
             </div>
@@ -200,11 +196,11 @@ export function CalibratePage() {
             const isTest  = d === testDist;
             return (
               <div key={d} className={`preview-row${isTest ? ' preview-highlight' : ''}`}>
-                <div className="preview-dist">{fmtDist(d)}</div>
-                <div className="preview-baseline">{fmtBackswing(bl)}</div>
+                <div className="preview-dist">{d} ft</div>
+                <div className="preview-baseline">{fmt(bl)}</div>
                 <div className="preview-arrow">→</div>
                 <div className={`preview-mine${isSame ? ' same' : ''}`}>
-                  {isSame ? fmtBackswing(bl) : fmtBackswing(mine)}
+                  {isSame ? fmt(bl) : fmt(mine)}
                 </div>
               </div>
             );
