@@ -84,6 +84,12 @@ export function usePuttLog() {
     [],
   );
 
+  const deletePutt = useCallback((roundId: string, entryId: string) => {
+    const entries = readRound(roundId).filter(e => e.id !== entryId);
+    writeRound(roundId, entries);
+    setTick(t => t + 1);
+  }, []);
+
   // Re-read from localStorage whenever tick changes
   void tick;
 
@@ -97,5 +103,5 @@ export function usePuttLog() {
     entries: readRound(roundId),
   });
 
-  return { addPutt, allRoundIds, currentRound, getRound, todayId };
+  return { addPutt, deletePutt, allRoundIds, currentRound, getRound, todayId };
 }

@@ -393,9 +393,37 @@ body {
 
 .result-divider {
   width: 2px;
-  height: 60px;
+  align-self: stretch;
+  min-height: 60px;
   background: var(--gray-200);
   margin: 0 var(--space-md);
+}
+
+/* Inline slope info stacked under Backswing (straight mode) */
+.slope-inline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-top: var(--space-xs);
+}
+.slope-inline .slope-item {
+  font-size: 0.75rem;
+}
+
+/* Inline uphill/downhill row inside Backswing cell (clock mode) */
+.slope-inline-centered {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+/* Break direction (L→R / R→L) shown inline on the Aim label line */
+.result-break-dir {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--gray-400);
 }
 
 /* ========================================
@@ -652,7 +680,8 @@ body {
   font-size: 0.9rem;
   font-weight: 600;
   opacity: 0.85;
-  padding: var(--space-sm) var(--space-md) var(--space-sm) 0;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: var(--radius-sm);
   display: flex;
   justify-self: start;
@@ -910,70 +939,77 @@ body {
 
 .outcome-picker {
   display: flex;
-  gap: 0.3rem;
+  flex-direction: column;
   align-items: center;
-  flex-wrap: wrap;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.outcome-btns-row {
+  display: flex;
+  gap: 0.4rem;
   justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
 }
 
 .outcome-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1px;
-  padding: 0.3rem 0.4rem;
-  border-radius: var(--radius-sm);
+  padding: 0.55rem 1rem;
+  border-radius: 99px;
   border: 1.5px solid transparent;
   font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.15s;
-  min-width: 44px;
   line-height: 1;
 }
 .outcome-btn-made {
-  background: var(--green-pale);
-  border-color: var(--green-accent);
-  color: var(--green-dark);
+  background: var(--green-dark);
+  border-color: var(--green-dark);
+  color: var(--white);
 }
-.outcome-btn-made:active { background: #d0dff4; }
+.outcome-btn-made:active { filter: brightness(1.2); }
 .outcome-btn-miss {
-  background: var(--gray-100);
-  border-color: var(--gray-200);
+  background: transparent;
+  border-color: var(--gray-400);
   color: var(--gray-800);
 }
 .outcome-btn-miss:active { background: var(--gray-200); }
-
-.outcome-emoji {
-  font-size: 0.85rem;
-  font-style: normal;
-}
-.outcome-label {
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
 
 .outcome-cancel {
   background: none;
   border: none;
   color: var(--gray-400);
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 0.8rem;
+  font-weight: 600;
   cursor: pointer;
   font-family: var(--font-sans);
-  padding: 0.25rem 0.35rem;
-  line-height: 1;
-  margin-left: 0.1rem;
+  padding: 0.1rem 0.5rem;
 }
 .outcome-cancel:active { color: var(--gray-800); }
 
 .outcome-saved {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
   font-size: 0.82rem;
   font-weight: 700;
   color: var(--green-accent);
   letter-spacing: 0.01em;
 }
+.outcome-view-log {
+  color: var(--green-accent);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: 1.5px solid var(--green-accent);
+  border-radius: 99px;
+  padding: 0.2rem 0.6rem;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.outcome-view-log:active { background: var(--green-pale); }
 
 /* ========================================
    Log Page
@@ -1143,6 +1179,47 @@ body {
   color: var(--gray-400);
 }
 
+/* Individual putt entry rows */
+.log-entry-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--gray-200);
+}
+.log-entry-row:last-child { border-bottom: none; }
+
+.log-entry-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.log-entry-dist {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.log-entry-outcome {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.log-entry-delete {
+  background: none;
+  border: none;
+  color: var(--gray-400);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  padding: 0.35rem 0.5rem;
+  line-height: 1;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+}
+.log-entry-delete:active { color: var(--gray-800); background: var(--gray-200); }
+
 /* Empty state */
 .log-empty {
   display: flex;
@@ -1216,8 +1293,9 @@ body {
   border: none;
   border-radius: var(--radius-md);
   width: 100%;
-  gap: 2px;
+  gap: 0;
 }
+.stimp-sc-control-dark::before { display: none !important; }
 .stimp-sc-indicator-dark {
   background: var(--green-accent);
   border-radius: calc(var(--radius-md) - 2px);
@@ -1225,7 +1303,7 @@ body {
 }
 .stimp-sc-label-dark {
   color: rgba(255, 255, 255, 0.65);
-  font-size: 0.92rem;
+  font-size: 0.85rem;
   font-weight: 600;
   font-family: var(--font-sans);
   transition: color 0.15s;
@@ -1241,18 +1319,18 @@ body {
   gap: 2px;
 }
 .stimp-sc-indicator-light {
-  background: var(--white);
+  background: var(--green-dark);
   border-radius: calc(var(--radius-md) - 2px);
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
 }
 .stimp-sc-label-light {
-  color: var(--gray-600);
+  color: var(--gray-800);
   font-size: 0.88rem;
   font-weight: 600;
   font-family: var(--font-sans);
   transition: color 0.15s;
 }
-.stimp-sc-label-light[data-active] { color: var(--green-dark); }
+.stimp-sc-label-light[data-active] { color: var(--white); }
 
 /* ── OnboardingModal: Modal fullScreen navy background ── */
 .onboarding-modal-content {
@@ -1272,7 +1350,7 @@ body {
       inherit the existing .distance-input / .slope-input styles ── */
 .input-wrapper .mantine-NumberInput-root { flex: 1; }
 .input-wrapper .mantine-NumberInput-wrapper { height: 100%; }
-.input-wrapper .mantine-NumberInput-input { border: none; border-radius: 0; }
+.input-wrapper .mantine-NumberInput-input { border: none; border-radius: var(--radius-md); }
 
 /* ── ActionIcon: match the existing .input-btn sizing/style ── */
 .input-btn.mantine-ActionIcon-root {
