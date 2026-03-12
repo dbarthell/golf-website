@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { LookupResult } from '../lib/types';
 import { fmtInches } from '../lib/zbl';
 import type { PuttOutcome } from '../hooks/usePuttLog';
@@ -34,8 +35,8 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
     if (!puttContext || !onLogPutt) return;
     onLogPutt({ ...puttContext, outcome });
     setPicking(false);
-    setSavedLabel(`Logged: ${outcome}`);
-    setTimeout(() => setSavedLabel(null), 2000);
+    setSavedLabel(outcome.charAt(0).toUpperCase() + outcome.slice(1));
+    setTimeout(() => setSavedLabel(null), 4000);
   }
 
   const canLog = !!(puttContext && onLogPutt && result && result.kind !== 'empty');
@@ -43,20 +44,24 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
   const logSection = canLog ? (
     <div className="log-putt-section">
       {savedLabel ? (
-        <div className="outcome-saved">{savedLabel}</div>
+        <div className="outcome-saved">
+          <span>Logged: {savedLabel}</span>
+          <Link to="/log" className="outcome-view-log">View Log →</Link>
+        </div>
       ) : picking ? (
         <div className="outcome-picker">
-          {OUTCOMES.map(({ key, label, emoji }) => (
-            <button
-              key={key}
-              className={`outcome-btn${key === 'made' ? ' outcome-btn-made' : ' outcome-btn-miss'}`}
-              onClick={() => handleOutcome(key)}
-            >
-              <span className="outcome-emoji">{emoji}</span>
-              <span className="outcome-label">{label}</span>
-            </button>
-          ))}
-          <button className="outcome-cancel" onClick={() => setPicking(false)}>✕</button>
+          <div className="outcome-btns-row">
+            {OUTCOMES.map(({ key, label }) => (
+              <button
+                key={key}
+                className={`outcome-btn${key === 'made' ? ' outcome-btn-made' : ' outcome-btn-miss'}`}
+                onClick={() => handleOutcome(key)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <button className="outcome-cancel" onClick={() => setPicking(false)}>Cancel</button>
         </div>
       ) : (
         <button className="log-putt-btn" onClick={() => setPicking(true)}>
@@ -119,6 +124,12 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
                   dangerouslySetInnerHTML={{ __html: flatNote.replace('  ·  ', '<br>') }}
                 />
               )}
+              {slope > 0 && (
+                <div className="slope-inline">
+                  <span className="slope-item slope-up">↑ {fmtDist(uphillTotal)} · {uphillBS !== null ? fmtBackswing(uphillBS) : '—'}</span>
+                  <span className="slope-item slope-down">↓ {fmtDist(downhillTotal)} · {downhillBS !== null ? fmtBackswing(downhillBS) : '—'}</span>
+                </div>
+              )}
             </div>
             <div className="result-divider" />
             <div className="result-item">
@@ -138,12 +149,6 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
             </div>
           </div>
 
-          {slope > 0 && (
-            <div className="slope-row">
-              <span className="slope-item slope-up">↑ {fmtDist(uphillTotal)} · {uphillBS !== null ? fmtBackswing(uphillBS) : '—'}</span>
-              <span className="slope-item slope-down">↓ {fmtDist(downhillTotal)} · {downhillBS !== null ? fmtBackswing(downhillBS) : '—'}</span>
-            </div>
-          )}
         </div>
         {logSection}
       </div>
@@ -181,7 +186,7 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
           </div>
         )
       }
-      <div className="result-label">Aim</div>
+      <div className="result-label">Aim · <span className="result-break-dir">{breakDir}</span></div>
       <div className="result-zbl-ref">ZBL {zblAimFmt}</div>
     </div>
   ) : (
@@ -203,25 +208,18 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
               {clockBsNum}{clockBsUnit && <span className="result-unit-md">{clockBsUnit}</span>}
             </div>
             <div className="result-label">Backswing</div>
+            {showSlopeRow && (
+              <div className="slope-inline-centered">
+                <span className={`slope-dir ${isUphill ? 'slope-up' : 'slope-down'}`}>
+                  {isUphill ? '↑ Uphill' : '↓ Downhill'}
+                </span>
+                <span className="slope-dist">{fmtDist(adjDist)}</span>
+              </div>
+            )}
           </div>
           <div className="result-divider" />
           {aimCell}
         </div>
-
-        {showSlopeRow && (
-          <div className="slope-row slope-row-centered">
-            <span className={`slope-dir ${isUphill ? 'slope-up' : 'slope-down'}`}>
-              {isUphill ? '↑ Uphill' : '↓ Downhill'}
-            </span>
-            <span className="slope-dist">{fmtDist(adjDist)}</span>
-          </div>
-        )}
-
-        {breakAbs >= 0.05 && (
-          <div className="slope-row slope-row-centered" style={{ borderTop: 'none', paddingTop: 0 }}>
-            <span className="slope-dir" style={{ color: 'var(--gray-400)' }}>{breakDir}</span>
-          </div>
-        )}
       </div>
       {logSection}
     </div>

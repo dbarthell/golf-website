@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IconArrowLeft } from '@tabler/icons-react';
-import { usePuttLog, todayRoundId, type PuttRound, type PuttOutcome } from '../hooks/usePuttLog';
+import { IconArrowLeft, IconTrash } from '@tabler/icons-react';
+import { usePuttLog, todayRoundId, type PuttEntry, type PuttRound, type PuttOutcome } from '../hooks/usePuttLog';
+import { useUnits } from '../hooks/useUnits';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -64,7 +65,35 @@ function EmptyState() {
   );
 }
 
-function RoundStats({ round }: { round: PuttRound }) {
+const OUTCOME_COLORS: Record<PuttOutcome, string> = {
+  made:  'var(--green-dark)',
+  short: 'var(--gray-600)',
+  long:  'var(--gray-600)',
+  left:  'var(--gray-600)',
+  right: 'var(--gray-600)',
+};
+
+function PuttEntryRow({ entry, onDelete }: { entry: PuttEntry; onDelete: () => void }) {
+  const { fmtDist } = useUnits();
+  const label = entry.outcome.charAt(0).toUpperCase() + entry.outcome.slice(1);
+  const slopeStr = entry.slope > 0 ? ` · ${entry.slope}%` : '';
+  const clockStr = entry.clock ? ` · ${entry.clock}` : '';
+  return (
+    <div className="log-entry-row">
+      <div className="log-entry-info">
+        <span className="log-entry-dist">{fmtDist(entry.distance)}{slopeStr}{clockStr}</span>
+        <span className="log-entry-outcome" style={{ color: OUTCOME_COLORS[entry.outcome] }}>
+          {label}
+        </span>
+      </div>
+      <button className="log-entry-delete" onClick={onDelete} aria-label="Delete putt">
+        <IconTrash size={15} stroke={1.75} />
+      </button>
+    </div>
+  );
+}
+
+function RoundStats({ round, onDelete }: { round: PuttRound; onDelete: (id: string) => void }) {
   const { entries } = round;
   const total = entries.length;
 
@@ -141,6 +170,14 @@ function RoundStats({ round }: { round: PuttRound }) {
           })}
         </div>
       </div>
+
+      {/* Individual putts */}
+      <div className="log-card">
+        <div className="log-card-title">Putts</div>
+        {[...entries].reverse().map(entry => (
+          <PuttEntryRow key={entry.id} entry={entry} onDelete={() => onDelete(entry.id)} />
+        ))}
+      </div>
     </>
   );
 }
@@ -148,7 +185,7 @@ function RoundStats({ round }: { round: PuttRound }) {
 // ── Page component ────────────────────────────────────────────────────────────
 
 export function LogPage() {
-  const { allRoundIds, currentRound, getRound, todayId } = usePuttLog();
+  const { allRoundIds, currentRound, getRound, deletePutt, todayId } = usePuttLog();
   const [selectedRoundId, setSelectedRoundId] = useState(todayId);
 
   // Always show today first; then up to FREE_ROUND_LIMIT-1 most-recent past rounds
@@ -187,7 +224,10 @@ export function LogPage() {
 
       {/* Stats */}
       <div className="log-body">
-        <RoundStats round={selectedRound} />
+        <RoundStats
+          round={selectedRound}
+          onDelete={id => deletePutt(selectedRoundId, id)}
+        />
       </div>
 
       {/* Premium upsell */}
