@@ -5,17 +5,17 @@ const SLIDES = [
   {
     tag: 'The method',
     title: 'Aim above the hole',
-    body: "H.A. Templeton's 1984 book Vector Putting showed that every breaking putt has a Zero Break Line — a straight path that follows the slope downhill through the hole. Aim at a point on that line above the hole, and gravity curves the ball right in. ZeroBreak calculates that point for you.",
+    body: "H.A. Templeton's 1984 book Vector Putting showed that every breaking putt has a Zero Break Line — a straight path that follows the slope downhill through the hole. Aim at a point on that line above the hole, and gravity does the rest. ZeroBreak calculates that point for you.",
   },
   {
     tag: 'Your backswing',
-    title: 'Trail foot landmarks',
-    body: 'Vector Putting gives you the line. Distance control is the other half of the equation. That means having a reliable way to repeat the same backswing length every time. Your trail foot gives you three built-in landmarks — inside edge, middle, and outside edge — that map to short, mid, and longer putts. With a fixed physical anchor and consistent effort, backswing length becomes the one variable that controls how far the ball goes.',
+    title: 'Distance control',
+    body: "ZeroBreak gives you the line. Distance control is the other half. We've found that the best way is to dial in your backswing length for a few key distances until each one is pure feel. On the course, you're not guessing — you're matching every putt to a reference you've already trained.",
   },
   {
     tag: 'Make it yours',
     title: 'Calibrate once',
-    body: 'When you apply the same acceleration profile every time — constant effort, consistent cadence — backswing length is what controls distance. Calibrate once and every distance adjusts to your natural pace.',
+    body: 'The length of your backswing combined with your natural tempo is what determines how far the ball rolls. Calibrate your backswing to a single distance — 10 ft is a good starting point — and the app applies your acceleration profile to every other distance automatically.',
   },
 ];
 
