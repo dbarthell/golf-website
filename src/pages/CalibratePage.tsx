@@ -100,7 +100,7 @@ export function CalibratePage() {
       <div className="tool-card">
         <div className="cal-intro">
           <p>First, we need to learn your stroke. Select a green speed and test distance below, then find the backswing length that rolls the ball 1–2 feet past the cup. Hit Save Calibration and the app maps every other distance from there.</p>
-          <p className="field-hint">Tip: A ZeroBreak ruler or measuring tape takes the guesswork out of the distance.</p>
+          <p className="field-hint">Tip: A ZeroBreak ruler or measuring tape makes it easier to determine the length of your backswing.</p>
         </div>
 
         {/* Stimp toggle */}
