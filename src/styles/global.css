@@ -2,11 +2,11 @@
    CSS Custom Properties (navy palette)
    ======================================== */
 :root {
-  --green-dark:    #10223c;
-  --green-mid:     #172d50;
-  --green-accent:  #2558a8;
-  --green-light:   #4473be;
-  --green-pale:    #e7ecf7;
+  --green-dark:    #060e19;
+  --green-mid:     #0c1c35;
+  --green-accent:  #1e6bff;
+  --green-light:   #4d8fff;
+  --green-pale:    #dce8ff;
   --cream:         #f5f5f0;
   --white:         #ffffff;
   --gray-100:      #f7f7f5;
@@ -70,7 +70,7 @@ body {
 }
 
 .header-brand { display: flex; align-items: center; gap: 0.5rem; }
-.header-logo  { height: 2rem; width: auto; border-radius: 0; }
+.header-logo  { height: 2.5rem; width: auto; border-radius: 8px; box-shadow: 0 0 10px rgba(30, 107, 255, 0.5); }
 
 .lookup-header h1 {
   font-size: 1.5rem;
