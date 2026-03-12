@@ -172,7 +172,7 @@ export function LookupPage() {
         {/* Header */}
         <div className="lookup-header">
           <div className="header-brand">
-            <img src="images/red-flag-logo.png" alt="" className="header-logo" />
+            <img src="images/zb-logo.jpg" alt="" className="header-logo" />
           </div>
           <div className="header-links">
             <button
