@@ -682,7 +682,7 @@ body {
   font-size: 0.9rem;
   font-weight: 600;
   opacity: 0.85;
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--space-sm) var(--space-md) var(--space-sm) 0;
   border-radius: var(--radius-sm);
   display: flex;
   justify-self: start;
