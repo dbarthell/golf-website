@@ -683,7 +683,6 @@ body {
   font-weight: 600;
   opacity: 0.85;
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: var(--radius-sm);
   display: flex;
   justify-self: start;
