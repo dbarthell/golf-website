@@ -15,7 +15,7 @@ const SLIDES = [
   {
     tag: 'Make it yours',
     title: 'Calibrate once',
-    body: 'The length of your backswing combined with your natural tempo is what determines how far the ball rolls. Calibrate your backswing to a single distance — 10 ft is a good starting point — and the app applies your acceleration profile to every other distance automatically.',
+    body: 'The length of your backswing combined with your natural tempo is what determines how far the ball rolls. Calibrate your stroke to a single distance — 10 ft is a good starting point — and the app applies your acceleration profile to every other distance automatically.',
   },
 ];
 
