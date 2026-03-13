@@ -99,8 +99,7 @@ export function CalibratePage() {
       {/* Tool card */}
       <div className="tool-card">
         <div className="cal-intro">
-          <p>Select a green speed and test distance below, then find the backswing length that rolls the ball 1–2 feet past the cup. Hit Save Calibration and the app maps every other distance from there.</p>
-          <p className="field-hint">Tip: A ZeroBreak ruler or measuring tape makes it easier to determine the length of your backswing.</p>
+          <p>Select a green speed and distance below, then find the backswing length that rolls the ball 1–2 feet past that distance. A ZeroBreak ruler or measuring tape makes it easier to dial in your exact backswing length.</p>
         </div>
 
         {/* Stimp toggle */}
@@ -112,7 +111,7 @@ export function CalibratePage() {
 
         {/* Distance chips */}
         <div className="tool-field">
-          <label className="tool-label">Test Distance</label>
+          <label className="tool-label">Distance</label>
           <div className="dist-chips">
             {TEST_DISTANCES.map(d => (
               <button
