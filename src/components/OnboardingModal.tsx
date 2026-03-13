@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 const SLIDES = [
   {
     tag: 'The method',
-    title: 'Find a straight line',
+    title: 'Find the straight putt',
     body: "H.A. Templeton's 1984 book Vector Putting showed that every breaking putt has a Zero Break Line — a straight path that follows the slope downhill through the hole. Aim at a point on that line above the hole, and gravity does the rest. ZeroBreak calculates that point for you.",
   },
   {
     tag: 'Your backswing',
-    title: 'Distance control',
-    body: "Aim is only half the equation. ZeroBreak also maps your backswing to every distance on the course, calibrated to your own stroke. We've found it's the most reliable way to own your distance control.",
+    title: 'Master speed control',
+    body: "Aim is only half the equation. ZeroBreak also maps your backswing to every distance on the course, calibrated to your own stroke. We've found it's the most reliable way to master speed control.",
   },
   {
     tag: 'Make it yours',
