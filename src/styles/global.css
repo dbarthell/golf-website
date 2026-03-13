@@ -1373,3 +1373,13 @@ body {
   border-collapse: collapse;
   width: 100%;
 }
+
+.quick-table tbody tr,
+.quick-table tbody tr td {
+  background: var(--white) !important;
+}
+
+.quick-table tbody tr:nth-child(even),
+.quick-table tbody tr:nth-child(even) td {
+  background: var(--gray-100) !important;
+}

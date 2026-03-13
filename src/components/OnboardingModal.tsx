@@ -9,8 +9,8 @@ const SLIDES = [
   },
   {
     tag: 'Your backswing',
-    title: 'Master speed control',
-    body: "Aim is only half the equation. ZeroBreak also maps your backswing to every distance on the course, calibrated to your own stroke. We've found it's the most reliable way to master speed control.",
+    title: 'Dial in your speed',
+    body: "Aim is only half the equation. ZeroBreak also maps your backswing to every distance on the course, calibrated to your own stroke. Build a feel for a few key distances, and you'll find you can step up to any putt with confidence. We've found it's the most reliable way to nail the right speed, every single time.",
   },
   {
     tag: 'Make it yours',
