@@ -108,9 +108,11 @@ body {
 }
 .full-view-link:active { opacity: 0.5; }
 
-/* On narrow phones, collapse Log/Calibrate links to icon-only */
+/* On narrow phones, collapse Log/Calibrate links to icon-only and bump touch targets */
 @media (max-width: 430px) {
   .full-view-link-label { display: none; }
+  .full-view-link { padding: 0.4rem 0.6rem; }
+  .unit-toggle { font-size: 1rem; padding: 0.4rem 0.6rem; }
 }
 
 .lookup-input-section { margin-bottom: 0.6rem; }

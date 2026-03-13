@@ -183,11 +183,11 @@ export function LookupPage() {
               {unit === 'ft' ? 'ft' : 'm'}
             </button>
             <Link to="/log" className="full-view-link">
-              <IconClipboardList size={16} stroke={2} />
+              <IconClipboardList size={20} stroke={2} />
               <span className="full-view-link-label">Log</span>
             </Link>
             <Link to="/calibrate" className="full-view-link">
-              <IconAdjustments size={16} stroke={2} />
+              <IconAdjustments size={20} stroke={2} />
               <span className="full-view-link-label">Calibrate</span>
             </Link>
           </div>
