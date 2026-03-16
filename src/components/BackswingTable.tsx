@@ -21,14 +21,14 @@ export function BackswingTable({ lagRows, distanceFactor, stimp }: Props) {
 
   return (
     <div className="quick-table-section">
-      <h2 className="section-title">Backswing Reference (Stimp {stimp})</h2>
+      <h2 className="section-title">Backstroke Reference (Stimp {stimp})</h2>
       <p className="section-note">Assumes 12″ between ball and trail foot.</p>
       <div className="table-wrapper">
         <Table className="quick-table">
           <Table.Thead>
             <Table.Tr>
               <Table.Th>Distance</Table.Th>
-              <Table.Th>Backswing</Table.Th>
+              <Table.Th>Backstroke</Table.Th>
               <Table.Th>Landmark</Table.Th>
             </Table.Tr>
           </Table.Thead>

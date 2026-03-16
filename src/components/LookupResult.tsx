@@ -117,7 +117,7 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
               <div className={bsUnit ? 'result-value-with-unit' : 'result-value'}>
                 {bsNum}{bsUnit && <span className="result-unit-md">{bsUnit}</span>}
               </div>
-              <div className="result-label">Backswing</div>
+              <div className="result-label">Backstroke</div>
               {slope === 0 && (
                 <div
                   className="slope-note"
