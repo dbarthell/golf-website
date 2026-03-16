@@ -221,6 +221,12 @@ export function LookupPage() {
       </div>
 
       {/* ── Light sections ────────────────────────────────────────────────── */}
+      <BackswingTable
+        lagRows={data.lagPuttingTable.rows}
+        distanceFactor={calibration.distanceFactor}
+        stimp={stimp}
+      />
+
       <CommonDistances
         stimp={stimp}
         distanceFactor={calibration.distanceFactor}
@@ -229,12 +235,6 @@ export function LookupPage() {
           setDistance(dist);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
-      />
-
-      <BackswingTable
-        lagRows={data.lagPuttingTable.rows}
-        distanceFactor={calibration.distanceFactor}
-        stimp={stimp}
       />
     </>
   );

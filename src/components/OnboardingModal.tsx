@@ -5,17 +5,17 @@ const SLIDES = [
   {
     tag: 'The method',
     title: 'Find the straight putt',
-    body: "H.A. Templeton's 1984 book Vector Putting showed that every breaking putt has a Zero Break Line — a straight path that follows the slope downhill through the hole. Aim at a point on that line above the hole, and gravity does the rest. ZeroBreak calculates that point for you.",
+    body: "H.A. Templeton's 1984 book Vector Putting proved that every breaking putt has a Zero Break Line—a straight downhill path through the hole. Imagine a clock face where 6 o'clock is straight downhill; no matter your ball's position, you always aim at a point on that 12 o'clock line. ZeroBreak finds that point for you.",
   },
   {
-    tag: 'Your backswing',
+    tag: 'Your backstroke',
     title: 'Dial in your speed',
-    body: "Aim is only half the equation. ZeroBreak also maps your backswing to every distance on the course, calibrated to your own stroke. Build a feel for a few key distances, and you'll find you can step up to any putt with confidence. We've found it's the most reliable way to nail the right speed, every single time.",
+    body: "Aim is only half the equation. Traditional putting relies on instinct and athleticism to control speed — but instinct is inconsistent. ZeroBreak's approach is more scientific: it calibrates the length of your backstroke to the length of the putt, tuned to your unique tempo. Build a feel for a few key distances, and you'll find you can step up to any putt with confidence. We've found it's the most reliable way to nail the right speed, every single time.",
   },
   {
     tag: 'Make it yours',
     title: 'Calibrate once',
-    body: 'The length of your backswing combined with your natural tempo is what determines how far the ball rolls. Calibrate your stroke to a single distance — 10 ft is a good starting point — and the app applies your acceleration profile to every other distance automatically.',
+    body: 'The length of your backstroke combined with your natural tempo is what determines how far the ball rolls. Calibrate your stroke to a single distance — 10 ft is a good starting point — and the app applies your acceleration profile to every other distance automatically.',
   },
 ];
 
