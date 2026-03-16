@@ -18,7 +18,7 @@ export function CommonDistances({ stimp, distanceFactor, lagRows, onSelect }: Pr
   return (
     <div className="common-distances">
       <h2 className="section-title">
-        Common Distances <span className="section-title-sub">· Backswing</span>
+        Common Distances <span className="section-title-sub">· Backstroke</span>
       </h2>
       <SimpleGrid cols={{ base: 2, xs: 3, sm: 4 }} className="distance-grid">
         {COMMON_DISTANCES.map(feet => {
