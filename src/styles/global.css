@@ -137,6 +137,37 @@ body {
   padding: 0.3rem 0.25rem;
 }
 
+.walkoff-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.6rem;
+}
+.walkoff-tip-icon { font-size: 0.9rem; flex-shrink: 0; margin-top: 0.1rem; }
+.walkoff-tip-text {
+  flex: 1;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.7);
+  margin: 0;
+  line-height: 1.4;
+}
+.walkoff-tip-dismiss {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.65);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 0.1rem;
+}
+.walkoff-tip-dismiss:hover { color: rgba(255,255,255,0.95); }
+
 /* Stimp toggle — dark variant (main page) */
 .stimp-toggle {
   display: flex;
