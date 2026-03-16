@@ -210,6 +210,7 @@ export function LookupPage() {
           clockKey={clock}
           onClockChange={setClock}
           annotations={annotations}
+          slope={slope}
         />
 
         {/* Result */}
