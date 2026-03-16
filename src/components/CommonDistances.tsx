@@ -3,7 +3,7 @@ import type { LagRow } from '../lib/types';
 import { backswingRaw } from '../lib/backswing';
 import { useUnits } from '../hooks/useUnits';
 
-const COMMON_DISTANCES = [3, 5, 6, 10, 15, 20, 25, 30, 40, 50, 65, 80];
+const COMMON_DISTANCES = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
 
 interface Props {
   stimp: number;
