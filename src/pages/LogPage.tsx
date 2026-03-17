@@ -77,7 +77,14 @@ function PuttEntryRow({ entry, onDelete }: { entry: PuttEntry; onDelete: () => v
   const { fmtDist } = useUnits();
   const label = entry.outcome.charAt(0).toUpperCase() + entry.outcome.slice(1);
   const slopeStr = entry.slope > 0 ? ` · ${entry.slope}%` : '';
-  const clockStr = entry.clock ? ` · ${entry.clock}` : '';
+  function fmtClock(c: string): string {
+    const n = parseFloat(c);
+    if (isNaN(n)) return c;
+    const hour = Math.floor(n);
+    const min = n % 1 === 0.5 ? '30' : '00';
+    return `${hour}:${min}`;
+  }
+  const clockStr = entry.clock ? ` · ${fmtClock(entry.clock)}` : '';
   return (
     <div className="log-entry-row">
       <div className="log-entry-info">
@@ -101,11 +108,18 @@ function RoundStats({ round, onDelete }: { round: PuttRound; onDelete: (id: stri
 
   const made = countOutcome(entries, 'made');
 
+  // Derive round stimp as the most common stimp value across entries
+  const stimpCounts = entries.reduce<Record<number, number>>((acc, e) => {
+    acc[e.stimp] = (acc[e.stimp] ?? 0) + 1;
+    return acc;
+  }, {});
+  const roundStimp = Object.entries(stimpCounts).sort((a, b) => b[1] - a[1])[0]?.[0];
+
   return (
     <>
       {/* Summary */}
       <div className="log-card">
-        <div className="log-card-title">Round Summary</div>
+        <div className="log-card-title">Round Summary {roundStimp && <span className="log-card-title-sub">· Stimp {roundStimp}</span>}</div>
         <div className="log-summary-row">
           <div className="log-summary-item">
             <div className="log-summary-value">{total}</div>

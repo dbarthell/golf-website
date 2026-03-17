@@ -1099,6 +1099,12 @@ body {
   padding: var(--space-md) var(--space-md) var(--space-sm);
   border-bottom: 1px solid var(--gray-200);
 }
+.log-card-title-sub {
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--text-secondary);
+}
 
 /* Summary row */
 .log-summary-row {
