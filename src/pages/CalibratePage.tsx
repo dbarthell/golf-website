@@ -99,7 +99,7 @@ export function CalibratePage() {
       {/* Tool card */}
       <div className="tool-card">
         <div className="cal-intro">
-          <p>Select a green speed and distance below, then find the backstroke length that rolls the ball 1–2 feet past that distance. A ZeroBreak ruler or measuring tape makes it easier to dial in your exact backstroke length.</p>
+          <p>Select a green speed and distance below, then find the backstroke length that rolls the ball 1–2 feet past that distance. A ZeroBreak Yardstick makes it easier to dial in your exact backstroke length.</p>
         </div>
 
         {/* Stimp toggle */}

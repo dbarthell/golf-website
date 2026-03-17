@@ -18,7 +18,7 @@ export function WalkOffTip() {
     <div className="walkoff-tip">
       <span className="walkoff-tip-icon">💡</span>
       <p className="walkoff-tip-text">
-        Walk off your putts — 1 step ≈ 3 ft. Practice your stride with a ZeroBreak ruler or tape measure to dial it in.
+        Walk off your putts — 1 step ≈ 3 ft. Practice your stride with a ZeroBreak Yardstick to dial it in.
       </p>
       <button className="walkoff-tip-dismiss" onClick={dismiss} aria-label="Dismiss tip">✕</button>
     </div>
