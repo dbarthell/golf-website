@@ -47,7 +47,8 @@ body {
   background-color: var(--cream);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  padding-bottom: var(--space-2xl);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: calc(var(--space-2xl) + env(safe-area-inset-bottom));
   overflow-x: hidden;
   max-width: 100vw;
   position: relative;

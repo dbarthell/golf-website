@@ -3,8 +3,11 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
+const isCapacitor = process.env.CAPACITOR_BUILD === 'true';
+const base = isCapacitor ? '/' : '/golf-website/';
+
 export default defineConfig({
-  base: '/golf-website/',
+  base,
   plugins: [
     react(),
     viteStaticCopy({
@@ -15,8 +18,8 @@ export default defineConfig({
       manifest: {
         name: 'ZeroBreak',
         short_name: 'ZeroBreak',
-        start_url: '/golf-website/',
-        scope: '/golf-website/',
+        start_url: base,
+        scope: base,
         display: 'standalone',
         background_color: '#0e1b3d',
         theme_color: '#0e1b3d',
