@@ -15,6 +15,7 @@ import { ClockFace } from '../components/ClockFace';
 import { LookupResultPanel } from '../components/LookupResult';
 import { CommonDistances } from '../components/CommonDistances';
 import { BackswingTable } from '../components/BackswingTable';
+import { WalkOffTip } from '../components/WalkOffTip';
 import { OnboardingModal } from '../components/OnboardingModal';
 
 import { calculateZBLVector, aimPoint, fmtInches } from '../lib/zbl';
@@ -206,6 +207,8 @@ export function LookupPage() {
         </div>
 
       </div>
+
+      <WalkOffTip />
 
       {/* ── Clock face — full-width dark green band ────────────────────────── */}
       <div className="clock-section">

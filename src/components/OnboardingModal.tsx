@@ -5,17 +5,12 @@ const SLIDES = [
   {
     tag: 'The method',
     title: 'Find the straight putt',
-    body: "H.A. Templeton's 1984 book Vector Putting proved that every breaking putt has a Zero Break Line — a straight downhill path through the hole. Imagine a clock face where 6 o'clock is straight downhill; no matter your ball's position, you always aim at a point on that 12 o'clock line — the straight putt. ZeroBreak finds that point for you.",
+    body: "H.A. Templeton's 1984 book Vector Putting proved that every breaking putt has a Zero Break Line — a straight downhill path through the hole. Imagine a clock face where 6 o'clock is straight downhill; no matter your ball's position, you always aim at a point on that 12 o'clock line — the straight putt — and let gravity do the rest. ZeroBreak finds that point for you.",
   },
   {
     tag: 'Your backstroke',
     title: 'Dial in your speed',
     body: "Aim is only half the equation. Traditional putting relies on instinct and athleticism to control speed — but instinct alone can't account for every variation in green speed, slope, and (yes) nerves, not without the reps of a tour professional. ZeroBreak takes a scientific approach: it calibrates the length of your backstroke to the length of the putt, tuned to your unique tempo. Build a feel for a few key distances, and you'll find you can step up to any putt with confidence. We've found it's the most reliable way to nail the right speed, every single time.",
-  },
-  {
-    tag: 'Measuring distance',
-    title: 'Walk it off',
-    body: "Not sure how far you are from the hole? Walk it off — 1 normal step ≈ 3 ft. Practice your stride with a tape measure on the practice green to dial it in. The more consistent your stride, the more accurate your read.",
   },
   {
     tag: 'Make it yours',
