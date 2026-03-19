@@ -16,18 +16,16 @@ export function StimpToggle({ value, onChange, variant = 'dark' }: Props) {
       value={String(value)}
       onChange={v => onChange(parseFloat(v))}
       data={STIMPS.map(s => ({ value: String(s), label: String(s) }))}
-      size={isDark ? 'sm' : 'md'}
+      size="sm"
       classNames={{
         root:      isDark ? 'stimp-sc-dark'           : 'stimp-sc-light',
         indicator: isDark ? 'stimp-sc-indicator-dark' : 'stimp-sc-indicator-light',
         label:     isDark ? 'stimp-sc-label-dark'     : 'stimp-sc-label-light',
         control:   isDark ? 'stimp-sc-control-dark'   : '',
       }}
-      {...(isDark && {
-        styles: {
-          label: { paddingTop: '0.18rem', paddingBottom: '0.18rem' },
-        },
-      })}
+      styles={{
+        label: { paddingTop: '0.18rem', paddingBottom: '0.18rem' },
+      }}
     />
   );
 }
