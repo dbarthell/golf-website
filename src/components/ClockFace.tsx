@@ -3,8 +3,8 @@ import { HOUR_POSITIONS } from '../lib/clockMath';
 import { fmtInches } from '../lib/zbl';
 import type { ClockAnnotations } from '../lib/types';
 
-const R = 96;  // button radius from center in px
-const C = 120; // center of the 240px clock face
+const R = 116; // button radius from center in px
+const C = 137; // center of 280px clock face interior (280 - 2×3px border) / 2
 
 interface Props {
   clockKey: string | null;
@@ -147,7 +147,14 @@ export function ClockFace({ clockKey, onClockChange, annotations, slope = 0 }: P
         Clock Position
       </label>
       <div className="clock-face">
-        <div className="clock-center">○</div>
+
+        {/* Watch-style dial details: gold center pivot */}
+        <svg className="clock-svg" viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="100" cy="100" r="3.5" fill="#c9a86a" opacity="0.9" />
+          <circle cx="100" cy="100" r="1.5" fill="rgba(255,255,255,0.6)" />
+        </svg>
+
+        <div className="clock-center" />
 
         {/* Clock hand */}
         {handDeg !== null && (

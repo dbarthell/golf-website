@@ -74,10 +74,9 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
   if (!result || result.kind === 'empty') {
     return (
       <div className="lookup-result">
-        <div className="result-empty">
-          {result ? result.message : 'Enter a distance above'}
-        </div>
+        <div className="result-empty">{result ? result.message : 'Enter a distance above'}</div>
       </div>
+
     );
   }
 
@@ -110,7 +109,7 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
       : `Uphill: +${uphillRate} ft/10 ft/1%  ·  Downhill: −${downhillRate} ft/10 ft/1%`;
 
     return (
-      <div className="lookup-result">
+      <div className="lookup-result lookup-result--has-result">
         <div className="result-content">
           <div className="result-row">
             <div className="result-item">

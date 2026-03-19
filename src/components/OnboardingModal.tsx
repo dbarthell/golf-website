@@ -13,6 +13,11 @@ const SLIDES = [
     body: "Aim is only half the equation. Traditional putting relies on instinct and athleticism to control speed — but instinct alone can't account for every variation in green speed, slope, and (yes) nerves, not without the reps of a tour professional. ZeroBreak takes a scientific approach: it calibrates the length of your backstroke to the length of the putt, tuned to your unique tempo. Build a feel for a few key distances, and you'll find you can step up to any putt with confidence. We've found it's the most reliable way to nail the right speed, every single time.",
   },
   {
+    tag: 'Measuring distance',
+    title: 'Walk it off',
+    body: "Not sure how far you are from the hole? Walk it off — 1 normal step ≈ 3 ft. Practice your stride with a tape measure on the practice green to dial it in. The more consistent your stride, the more accurate your read.",
+  },
+  {
     tag: 'Make it yours',
     title: 'Calibrate once',
     body: 'No two putting strokes are alike. Some give it a good pop, others are slow and deliberate. Calibrate your stroke to a single distance (10 ft is a good starting point) and the app uses your personal acceleration profile to calculate every other distance automatically.',
