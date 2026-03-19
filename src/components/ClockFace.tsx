@@ -164,6 +164,11 @@ export function ClockFace({ clockKey, onClockChange, annotations, slope = 0 }: P
           />
         )}
 
+        {/* SVG annotation overlay — rendered before buttons so numbers appear on top */}
+        {(annotations || slope > 0) && (
+          <ClockSVG clockKey={clockKey} annotations={annotations} slope={slope} />
+        )}
+
         {/* Hour buttons */}
         {HOUR_POSITIONS.map(({ key, theta, label, half }) => {
           const x = C + R * Math.sin(theta);
@@ -181,11 +186,6 @@ export function ClockFace({ clockKey, onClockChange, annotations, slope = 0 }: P
             </button>
           );
         })}
-
-        {/* SVG annotation overlay */}
-        {(annotations || slope > 0) && (
-          <ClockSVG clockKey={clockKey} annotations={annotations} slope={slope} />
-        )}
       </div>
     </div>
   );

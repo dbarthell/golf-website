@@ -170,7 +170,9 @@ export function LookupPage() {
       {/* ── Sticky white header bar ───────────────────────────────────────── */}
       <div className="app-header">
         <div className="header-brand">
-          <img src="images/zb-logo-new.jpg" alt="" className="header-logo" />
+          <div className="header-logo-wrap">
+            <img src="images/zb-logo-new.jpg" alt="" className="header-logo" />
+          </div>
         </div>
         <div className="header-links">
           <button

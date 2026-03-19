@@ -58,7 +58,7 @@ body {
    App Header — thin white sticky bar
    ======================================== */
 .app-header {
-  background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+  background: var(--green-dark);
   padding: 0.25rem var(--space-md);
   min-height: 64px;
   display: flex;
@@ -140,11 +140,18 @@ body {
 }
 
 .header-brand { display: flex; align-items: center; gap: 0.5rem; }
-.header-logo {
+.header-logo-wrap {
   height: 3.5rem;
   width: 3.5rem;
   border-radius: 24%;
+  overflow: hidden;
   flex-shrink: 0;
+  background-color: var(--green-dark);
+}
+.header-logo {
+  height: 100%;
+  width: 100%;
+  display: block;
 }
 
 .lookup-header h1 {
@@ -182,6 +189,27 @@ body {
   gap: 0.3rem;
 }
 .full-view-link:active { opacity: 0.5; }
+
+/* On desktop, render as outlined icon-only pill buttons */
+@media (min-width: 431px) {
+  .full-view-link {
+    opacity: 1;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .full-view-link-label { display: none; }
+  .full-view-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    opacity: 1;
+  }
+  .full-view-link:active {
+    background: rgba(255, 255, 255, 0.18);
+    opacity: 1;
+  }
+}
 
 /* On narrow phones, collapse Log/Calibrate links to icon-only and bump touch targets */
 @media (max-width: 430px) {
@@ -596,7 +624,7 @@ body {
   margin: 0 auto;
   border-radius: 50%;
   border: 3px solid rgba(255, 255, 255, 0.15);
-  background: radial-gradient(ellipse at center, #0a4a42 0%, #013c36 60%, #001f1c 100%);
+  background: radial-gradient(ellipse at center, var(--green-mid) 0%, var(--green-dark) 60%, #001f1c 100%);
   box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
