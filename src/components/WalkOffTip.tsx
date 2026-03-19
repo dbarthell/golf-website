@@ -1,26 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const STORAGE_KEY = 'zerobreak-walkoff-tip-dismissed';
 
 export function WalkOffTip() {
-  const [dismissed, setDismissed] = useState(
-    () => !!localStorage.getItem(STORAGE_KEY),
-  );
+  const [dismissed] = useState(() => !!localStorage.getItem(STORAGE_KEY));
+  const [visible, setVisible] = useState(false);
 
-  if (dismissed) return null;
+  useEffect(() => {
+    if (!dismissed) {
+      const timer = setTimeout(() => setVisible(true), 800);
+      return () => clearTimeout(timer);
+    }
+  }, [dismissed]);
+
+  if (!visible || dismissed) return null;
 
   function dismiss() {
     localStorage.setItem(STORAGE_KEY, '1');
-    setDismissed(true);
+    setVisible(false);
   }
 
   return (
-    <div className="walkoff-tip">
-      <span className="walkoff-tip-icon">💡</span>
-      <p className="walkoff-tip-text">
-        Walk off your putts — 1 step ≈ 3 ft. Practice your stride with a tape measure or ZeroBreak Yardstick to dial it in.
-      </p>
-      <button className="walkoff-tip-dismiss" onClick={dismiss} aria-label="Dismiss tip">✕</button>
-    </div>
+    <>
+      <div className="walkoff-backdrop" onClick={dismiss} />
+      <div className="walkoff-sheet">
+        <div className="walkoff-sheet-handle" />
+        <div className="walkoff-sheet-icon">🚶</div>
+        <h3 className="walkoff-sheet-title">Walk it off</h3>
+        <p className="walkoff-sheet-body">
+          Not sure how far you are from the hole? Walk it off —{' '}
+          <strong>1 normal step ≈ 3 ft</strong>. Practice your stride with a
+          ZeroBreak Yardstick or tape measure to dial it in.
+        </p>
+        <button className="walkoff-sheet-btn" onClick={dismiss}>Got it</button>
+      </div>
+    </>
   );
 }
