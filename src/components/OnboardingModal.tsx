@@ -10,7 +10,7 @@ const SLIDES = [
   {
     tag: 'Your backstroke',
     title: 'Dial in your speed',
-    body: "Aim is only half the equation. Traditional putting relies on instinct and athleticism to control speed — but instinct alone can't account for every variation in green speed, slope, and (yes) nerves, not without the reps of a tour professional. ZeroBreak takes a scientific approach: it calibrates the length of your backstroke to the length of the putt, tuned to your unique tempo. Build a feel for a few key distances, and you'll find you can step up to any putt with confidence. We've found it's the most reliable way to nail the right speed, every single time.",
+    body: "Traditional putting relies on instinct and athleticism to control speed — but instinct alone can't account for every variation in green speed, slope, and (yes) nerves, not without the reps of a tour professional. ZeroBreak takes a scientific approach: it calibrates the length of your backstroke to the length of the putt, tuned to your unique tempo. Build a feel for a few key distances, and you'll find you can step up to any putt with confidence. We've found it's the most reliable way to nail the right speed, every single time.",
   },
   {
     tag: 'Make it yours',
@@ -21,23 +21,28 @@ const SLIDES = [
 
 interface Props {
   onDismiss: () => void;
+  isReplay?: boolean;
 }
 
-export function OnboardingModal({ onDismiss }: Props) {
+export function OnboardingModal({ onDismiss, isReplay = false }: Props) {
   const [current, setCurrent] = useState(0);
   const navigate = useNavigate();
   const isLast = current === SLIDES.length - 1;
   const slide = SLIDES[current];
 
   function dismiss() {
-    localStorage.setItem('zerobreak-onboarded', '1');
+    if (!isReplay) localStorage.setItem('zerobreak-onboarded', '1');
     onDismiss();
   }
 
   function handleNext() {
     if (isLast) {
-      localStorage.setItem('zerobreak-onboarded', '1');
-      navigate('/calibrate?from=onboarding');
+      if (!isReplay) localStorage.setItem('zerobreak-onboarded', '1');
+      if (isReplay) {
+        onDismiss();
+      } else {
+        navigate('/calibrate?from=onboarding');
+      }
     } else {
       setCurrent(c => c + 1);
     }
@@ -61,11 +66,11 @@ export function OnboardingModal({ onDismiss }: Props) {
 
       <div className="onboarding-actions">
         <button className="onboarding-next" onClick={handleNext}>
-          {isLast ? 'Get Started' : 'Next'}
+          {isLast ? (isReplay ? 'Done' : 'Get Started') : 'Next'}
         </button>
-        {isLast && (
+        {(isLast || isReplay) && (
           <button className="onboarding-skip" onClick={dismiss}>
-            Skip for now
+            {isReplay ? 'Close' : 'Skip for now'}
           </button>
         )}
       </div>
