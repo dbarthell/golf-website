@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.zerobreakgolf.app',
+  appId: 'com.zerobreakgolf.zerobreak',
   appName: 'ZeroBreak',
   webDir: 'dist',
 };
