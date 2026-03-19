@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IconAdjustments, IconClipboardList } from '@tabler/icons-react';
+import { IconAdjustments, IconClipboardList, IconInfoCircle } from '@tabler/icons-react';
 
 import { getPuttingData } from '../hooks/usePuttingData';
 import { useCalibration } from '../hooks/useCalibration';
@@ -143,6 +143,7 @@ export function LookupPage() {
   const { addPutt } = usePuttLog();
 
   const [onboardingDone, setOnboardingDone] = useState(() => !!localStorage.getItem('zerobreak-onboarded'));
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   const result = useMemo(
     () =>
@@ -163,8 +164,14 @@ export function LookupPage() {
 
   return (
     <>
-      {!onboardingDone && (
-        <OnboardingModal onDismiss={() => setOnboardingDone(true)} />
+      {(!onboardingDone || showOnboarding) && (
+        <OnboardingModal
+          isReplay={onboardingDone}
+          onDismiss={() => {
+            setOnboardingDone(true);
+            setShowOnboarding(false);
+          }}
+        />
       )}
 
       {/* ── Sticky white header bar ───────────────────────────────────────── */}
@@ -190,6 +197,10 @@ export function LookupPage() {
             <IconAdjustments size={20} stroke={2} />
             <span className="full-view-link-label">Calibrate</span>
           </Link>
+          <button className="full-view-link" onClick={() => setShowOnboarding(true)} aria-label="Guide">
+            <IconInfoCircle size={20} stroke={2} />
+            <span className="full-view-link-label">Guide</span>
+          </button>
         </div>
       </div>
 

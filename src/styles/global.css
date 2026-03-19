@@ -179,6 +179,9 @@ body {
 .unit-toggle:active { opacity: 0.6; }
 
 .full-view-link {
+  background: none;
+  border: none;
+  cursor: pointer;
   color: var(--white);
   text-decoration: none;
   opacity: 0.8;
