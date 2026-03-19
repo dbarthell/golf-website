@@ -3,8 +3,8 @@ import { HOUR_POSITIONS } from '../lib/clockMath';
 import { fmtInches } from '../lib/zbl';
 import type { ClockAnnotations } from '../lib/types';
 
-const R = 116; // button radius from center in px
-const C = 140; // center of the 280px clock face
+const R = 96;  // button radius from center in px
+const C = 120; // center of the 240px clock face
 
 interface Props {
   clockKey: string | null;

@@ -1,25 +1,25 @@
 import { createTheme } from '@mantine/core';
 
 /**
- * Mantine theme that mirrors the navy CSS custom properties in global.css.
+ * Mantine theme that mirrors the forest-green CSS custom properties in global.css.
  * Most visual styling is still in global.css; this theme wires up Mantine's
  * design-system primitives (color scheme, radius, font) so that any Mantine
  * components we use (Modal, etc.) inherit the same palette.
  */
 export const theme = createTheme({
-  primaryColor: 'navy',
+  primaryColor: 'forestGreen',
   colors: {
-    navy: [
-      '#e7ecf7', // 0 – --green-pale
-      '#c5d1eb',
-      '#9fb5db',
-      '#7298cb',
-      '#4473be', // 4 – --green-light
-      '#2558a8', // 5 – --green-accent
-      '#1e4a8e',
-      '#172d50', // 7 – --green-mid
-      '#10223c', // 8 – --green-dark
-      '#080f22',
+    forestGreen: [
+      '#d0e8d8', // 0 – --green-pale
+      '#aed4bc', // 1
+      '#85bb9b', // 2
+      '#5a9f7b', // 3
+      '#3a845e', // 4
+      '#2a6847', // 5
+      '#1d6b42', // 6 – --green-light
+      '#0a3322', // 7 – --green-mid
+      '#013c36', // 8 – --green-dark
+      '#001f1c', // 9
     ],
   },
   fontFamily:

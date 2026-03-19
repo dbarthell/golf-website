@@ -167,37 +167,37 @@ export function LookupPage() {
         <OnboardingModal onDismiss={() => setOnboardingDone(true)} />
       )}
 
-      {/* ── Dark hero ─────────────────────────────────────────────────────── */}
-      <div className="quick-lookup">
-
-        {/* Header */}
-        <div className="lookup-header">
-          <div className="header-brand">
-            <img src="images/zb-logo.jpg" alt="" className="header-logo" />
-          </div>
-          <div className="header-links">
-            <button
-              className="unit-toggle"
-              onClick={toggleUnit}
-              aria-label={`Switch to ${unit === 'ft' ? 'metres' : 'feet'}`}
-            >
-              {unit === 'ft' ? 'ft' : 'm'}
-            </button>
-            <Link to="/log" className="full-view-link">
-              <IconClipboardList size={20} stroke={2} />
-              <span className="full-view-link-label">Log</span>
-            </Link>
-            <Link to="/calibrate" className="full-view-link">
-              <IconAdjustments size={20} stroke={2} />
-              <span className="full-view-link-label">Calibrate</span>
-            </Link>
-          </div>
+      {/* ── Sticky white header bar ───────────────────────────────────────── */}
+      <div className="app-header">
+        <div className="header-brand">
+          <img src="images/zb-logo-new.jpg" alt="" className="header-logo" />
         </div>
+        <div className="header-links">
+          <button
+            className="unit-toggle"
+            onClick={toggleUnit}
+            aria-label={`Switch to ${unit === 'ft' ? 'metres' : 'feet'}`}
+          >
+            {unit === 'ft' ? 'ft' : 'm'}
+          </button>
+          <Link to="/log" className="full-view-link">
+            <IconClipboardList size={20} stroke={2} />
+            <span className="full-view-link-label">Log</span>
+          </Link>
+          <Link to="/calibrate" className="full-view-link">
+            <IconAdjustments size={20} stroke={2} />
+            <span className="full-view-link-label">Calibrate</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* ── Inputs ────────────────────────────────────────────────────────── */}
+      <div className="lookup-body">
 
         {/* Green speed */}
         <div className="lookup-input-section">
           <label className="lookup-label">Green Speed (Stimp)</label>
-          <StimpToggle value={stimp} onChange={setStimp} />
+          <StimpToggle value={stimp} onChange={setStimp} variant="light" />
         </div>
 
         {/* Distance + Slope side by side */}
@@ -207,16 +207,20 @@ export function LookupPage() {
         </div>
 
         <WalkOffTip />
+      </div>
 
-        {/* Clock face */}
+      {/* ── Clock face — full-width dark green band ────────────────────────── */}
+      <div className="clock-section">
         <ClockFace
           clockKey={clock}
           onClockChange={setClock}
           annotations={annotations}
           slope={slope}
         />
+      </div>
 
-        {/* Result */}
+      {/* ── Result ────────────────────────────────────────────────────────── */}
+      <div className="lookup-result-body">
         <LookupResultPanel
           result={result}
           puttContext={distance !== '' ? { distance, slope, stimp, clock } : undefined}

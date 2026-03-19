@@ -1,12 +1,12 @@
 /* ========================================
-   CSS Custom Properties (navy palette)
+   CSS Custom Properties (forest green palette)
    ======================================== */
 :root {
-  --green-dark:    #060e19;
-  --green-mid:     #0c1c35;
-  --green-accent:  #1e6bff;
-  --green-light:   #4d8fff;
-  --green-pale:    #dce8ff;
+  --green-dark:    #013c36;
+  --green-mid:     #0a4a42;
+  --green-accent:  #c9a86a;
+  --green-light:   #1d6b42;
+  --green-pale:    #f0f7f3;
   --cream:         #f5f5f0;
   --white:         #ffffff;
   --gray-100:      #f7f7f5;
@@ -44,7 +44,7 @@ html { scroll-behavior: smooth; overscroll-behavior-x: none; }
 body {
   font-family: var(--font-sans);
   color: var(--text-primary);
-  background-color: var(--cream);
+  background-color: var(--gray-100);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   padding-top: env(safe-area-inset-top);
@@ -55,8 +55,84 @@ body {
 }
 
 /* ========================================
-   Quick Lookup Section (dark hero)
+   App Header — thin white sticky bar
    ======================================== */
+.app-header {
+  background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+  padding: 0.5rem var(--space-md);
+  min-height: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* ========================================
+   Lookup Body — light input + result panel
+   ======================================== */
+.lookup-body {
+  background: var(--white);
+  padding: 0.75rem var(--space-md) var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* Inputs restyled for white background */
+.lookup-body .distance-input,
+.lookup-body .slope-input {
+  background: var(--gray-100);
+  border-color: var(--gray-200);
+  color: var(--text-primary);
+  backdrop-filter: none;
+}
+.lookup-body .distance-input::placeholder,
+.lookup-body .slope-input::placeholder { color: var(--gray-400); font-size: 1.25rem; }
+.lookup-body .distance-input:focus,
+.lookup-body .slope-input:focus {
+  border-color: var(--gray-400);
+  background: var(--white);
+}
+.lookup-body .input-btn {
+  background: var(--gray-100);
+  border-color: var(--gray-200);
+  color: var(--text-primary);
+  backdrop-filter: none;
+}
+.lookup-body .input-btn:active { background: var(--gray-200); transform: scale(0.95); }
+.lookup-body .lookup-label { color: var(--text-secondary); opacity: 1; }
+
+/* Walkoff tip on white */
+.lookup-body .walkoff-tip {
+  background: var(--gray-100);
+  border-color: var(--gray-200);
+}
+.lookup-body .walkoff-tip-text { color: var(--text-secondary); }
+.lookup-body .walkoff-tip-dismiss { color: var(--gray-400); }
+
+/* ── Clock section — full-width dark green band ── */
+.clock-section {
+  background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+  padding: var(--space-sm) var(--space-md) var(--space-md);
+}
+.clock-section .lookup-label {
+  color: rgba(255, 255, 255, 0.7);
+  opacity: 1;
+}
+.clock-section .lookup-input-section {
+  margin-bottom: var(--space-xs);
+}
+
+/* ── Result body — white panel below clock ── */
+.lookup-result-body {
+  background: var(--white);
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+/* Keep quick-lookup for any legacy reference */
 .quick-lookup {
   background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
   padding: 0.5rem var(--space-md) var(--space-md);
@@ -71,7 +147,12 @@ body {
 }
 
 .header-brand { display: flex; align-items: center; gap: 0.5rem; }
-.header-logo  { height: 2.5rem; width: auto; border-radius: 8px; box-shadow: 0 0 10px rgba(30, 107, 255, 0.5); }
+.header-logo {
+  height: 3rem;
+  width: 3rem;
+  border-radius: 24%;
+  flex-shrink: 0;
+}
 
 .lookup-header h1 {
   font-size: 1.5rem;
@@ -116,26 +197,26 @@ body {
   .unit-toggle { font-size: 1rem; padding: 0.4rem 0.6rem; }
 }
 
-.lookup-input-section { margin-bottom: 0.6rem; }
+.lookup-input-section { margin-bottom: var(--space-sm); }
 
 .inputs-row {
   display: flex;
   gap: var(--space-sm);
-  margin-bottom: 0.6rem;
+  margin-bottom: 0;
 }
 .inputs-row .lookup-input-section {
   flex: 1;
   margin-bottom: 0;
 }
 .inputs-row .input-btn {
-  width: 2.25rem;
-  height: 2.25rem;
-  font-size: 1.5rem;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.3rem;
 }
 .inputs-row .distance-input,
 .inputs-row .slope-input {
-  font-size: 1.75rem;
-  padding: 0.3rem 0.25rem;
+  font-size: 1.5rem;
+  padding: 0.2rem 0.25rem;
 }
 
 .walkoff-tip {
@@ -208,7 +289,7 @@ body {
   border-right: 1px solid var(--gray-200);
 }
 .stimp-toggle-light .stimp-btn.stimp-btn-active {
-  background: var(--green-dark);
+  background: var(--gray-800);
   color: var(--white);
   font-weight: 800;
 }
@@ -216,9 +297,9 @@ body {
 
 .lookup-label {
   display: block;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.2rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   opacity: 0.85;
@@ -296,6 +377,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  border-top: 3px solid var(--green-accent);
 }
 
 .result-empty { color: var(--gray-400); font-size: 0.95rem; text-align: center; }
@@ -323,7 +405,7 @@ body {
 .result-value {
   font-size: 2.5rem;
   font-weight: 800;
-  color: var(--green-dark);
+  color: var(--text-primary);
   line-height: 1.15;
 }
 
@@ -335,7 +417,7 @@ body {
      so multi-part values like "75.5 cm out" don't overflow their cell. */
   font-size: clamp(1.8rem, 7.5vw, 2.5rem);
   font-weight: 800;
-  color: var(--green-dark);
+  color: var(--text-primary);
   line-height: 1.15;
   white-space: nowrap;
 }
@@ -347,12 +429,12 @@ body {
 }
 
 /* Mid-size unit label (e.g. "cm") — smaller than the big number but larger
-   than the tiny direction/qualifier label, same green as the number itself.
+   than the tiny direction/qualifier label, same as the number itself.
    Scales with the parent so it stays proportional on narrow screens. */
 .result-unit-md {
   font-size: clamp(1.1rem, 4.5vw, 1.4rem);
   font-weight: 700;
-  color: var(--green-dark);
+  color: var(--text-primary);
 }
 
 .result-value-word { font-size: 2rem; }
@@ -415,7 +497,7 @@ body {
 .slope-dist {
   font-size: 0.9rem;
   font-weight: 800;
-  color: var(--green-dark);
+  color: var(--text-primary);
   white-space: nowrap;
 }
 
@@ -465,8 +547,8 @@ body {
    ======================================== */
 .clock-face {
   position: relative;
-  width: 280px;
-  height: 280px;
+  width: 240px;
+  height: 240px;
   margin: 0 auto;
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.3);
@@ -489,7 +571,7 @@ body {
   bottom: 50%;
   left: 50%;
   width: 2px;
-  height: 116px;
+  height: 96px;
   background: rgba(255, 255, 255, 0.75);
   transform-origin: bottom center;
   transform: translateX(-50%) rotate(0deg);
@@ -539,12 +621,12 @@ body {
 /* ========================================
    Common Distances
    ======================================== */
-.common-distances { padding: var(--space-xl) var(--space-md); }
+.common-distances { padding: var(--space-xl) var(--space-md); background: var(--gray-100); }
 
 .section-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--green-dark);
+  color: var(--text-primary);
   margin-bottom: var(--space-lg);
   letter-spacing: -0.01em;
 }
@@ -564,23 +646,23 @@ body {
   background: var(--white);
   border-radius: var(--radius-md);
   padding: var(--space-sm) var(--space-xs);
-  box-shadow: var(--shadow-sm);
   text-align: center;
   cursor: pointer;
-  transition: all 0.2s;
-  border: 2px solid transparent;
+  transition: all 0.15s;
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-sm);
 }
-.distance-card:active { transform: scale(0.98); box-shadow: var(--shadow-md); border-color: var(--green-accent); }
+.distance-card:active { transform: scale(0.97); background: var(--green-pale); }
 
-.distance-card-feet { font-size: 1rem; font-weight: 800; color: var(--green-dark); line-height: 1; margin-bottom: 0.2rem; }
-.distance-card-bs   { font-size: 1rem; font-weight: 700; color: var(--green-accent); }
+.distance-card-feet { font-size: 1rem; font-weight: 800; color: var(--text-primary); line-height: 1; margin-bottom: 0.2rem; }
+.distance-card-bs   { font-size: 0.9rem; font-weight: 700; color: var(--green-light); }
 
 /* ========================================
    Quick Reference Table
    ======================================== */
-.quick-table-section { padding: var(--space-xl) var(--space-md); background: var(--white); }
+.quick-table-section { padding: var(--space-xl) var(--space-md); background: var(--gray-100); }
 
-.table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
+.table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); box-shadow: var(--shadow-md); border: 1px solid var(--gray-200); }
 
 .quick-table { width: 100%; border-collapse: collapse; background: var(--white); }
 
@@ -593,8 +675,8 @@ body {
 }
 
 .quick-table th {
-  background: var(--green-dark);
-  color: var(--white);
+  background: var(--gray-200);
+  color: var(--gray-600);
   font-weight: 700;
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -602,15 +684,16 @@ body {
   position: sticky;
   top: 0;
   z-index: 10;
+  border-bottom: 2px solid var(--gray-400);
 }
 
 .quick-table th:first-child { text-align: left; padding-left: var(--space-lg); }
 .quick-table td             { color: var(--text-primary); }
-.quick-table td:first-child { font-weight: 700; color: var(--green-dark); text-align: left; padding-left: var(--space-lg); white-space: nowrap; }
+.quick-table td:first-child { font-weight: 700; color: var(--text-primary); text-align: left; padding-left: var(--space-lg); white-space: nowrap; }
 .quick-table tr:last-child td   { border-bottom: none; }
 .quick-table tr:hover td        { background: var(--green-pale); }
-.quick-table .row-original td   { background: var(--green-pale); font-weight: 600; }
-.quick-table .row-original:hover td { background: #d9e4f4; }
+.quick-table .row-original td        { background: #d8ede0; font-weight: 700; }
+.quick-table .row-original:hover td  { background: #c8e3d4; }
 
 /* ========================================
    Onboarding Overlay
@@ -700,7 +783,8 @@ body {
    ======================================== */
 .log-header {
   background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
-  padding: var(--space-md);
+  padding: 0.5rem var(--space-md);
+  min-height: 64px;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -715,7 +799,7 @@ body {
   font-size: 0.9rem;
   font-weight: 600;
   opacity: 0.85;
-  padding: var(--space-sm) var(--space-md) var(--space-sm) 0;
+  padding: 0.5rem var(--space-md) 0.5rem 0;
   border-radius: var(--radius-sm);
   display: flex;
   justify-self: start;
@@ -769,7 +853,7 @@ body {
 
 .status-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); }
 .status-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); }
-.status-value { font-size: 1.25rem; font-weight: 800; color: var(--green-dark); }
+.status-value { font-size: 1.25rem; font-weight: 800; color: var(--text-primary); }
 .status-note  { margin-top: var(--space-sm); font-size: 0.8rem; color: var(--text-secondary); }
 
 .status-bar-wrap {
@@ -848,7 +932,7 @@ body {
 .adjust-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); }
 .adjust-value { font-size: 2.2rem; font-weight: 800; line-height: 1; }
 .baseline-val { color: var(--gray-400); }
-.my-val       { color: var(--green-dark); }
+.my-val       { color: var(--text-primary); }
 .adjust-arrow { font-size: 1.4rem; color: var(--gray-400); flex-shrink: 0; }
 .adjust-my-row { display: flex; align-items: center; gap: var(--space-sm); }
 
@@ -933,10 +1017,10 @@ body {
 .preview-row:last-child { border-bottom: none; }
 .preview-row.preview-highlight { background: var(--green-pale); }
 
-.preview-dist     { width: 48px; font-size: 0.88rem; font-weight: 700; color: var(--green-dark); }
+.preview-dist     { width: 48px; font-size: 0.88rem; font-weight: 700; color: var(--text-primary); }
 .preview-baseline { flex: 1; font-size: 0.88rem; color: var(--gray-400); text-align: center; }
 .preview-arrow    { font-size: 0.75rem; color: var(--gray-400); }
-.preview-mine     { flex: 1; font-size: 0.95rem; font-weight: 700; color: var(--green-dark); text-align: center; }
+.preview-mine     { flex: 1; font-size: 0.95rem; font-weight: 700; color: var(--text-primary); text-align: center; }
 .preview-mine.same { color: var(--gray-400); }
 
 .preview-header { display: flex; padding: var(--space-xs) var(--space-md); border-bottom: 1px solid var(--gray-200); background: var(--gray-100); }
@@ -1071,9 +1155,9 @@ body {
   white-space: nowrap;
 }
 .log-round-chip-active {
-  background: var(--green-dark);
+  background: var(--gray-800);
   color: var(--white);
-  border-color: var(--green-dark);
+  border-color: var(--gray-800);
 }
 .log-round-chip:active { opacity: 0.8; }
 
@@ -1124,7 +1208,7 @@ body {
 .log-summary-value {
   font-size: 2rem;
   font-weight: 800;
-  color: var(--green-dark);
+  color: var(--text-primary);
   line-height: 1;
 }
 .log-summary-label {
@@ -1155,7 +1239,7 @@ body {
   flex-shrink: 0;
   font-size: 0.82rem;
   font-weight: 700;
-  color: var(--green-dark);
+  color: var(--text-primary);
 }
 .log-bucket-bar-wrap {
   flex: 1;
@@ -1203,7 +1287,7 @@ body {
 .log-outcome-pct {
   font-size: 1.1rem;
   font-weight: 800;
-  color: var(--green-dark);
+  color: var(--text-primary);
   line-height: 1;
 }
 .log-outcome-label {
@@ -1350,7 +1434,7 @@ body {
 }
 .stimp-sc-label-dark[data-active] { color: var(--white); }
 
-/* ── StimpToggle: SegmentedControl light variant (calibrate page) ── */
+/* ── StimpToggle: SegmentedControl light variant (lookup + calibrate page) ── */
 .stimp-sc-light {
   background: var(--gray-100);
   border: 1px solid var(--gray-200);
@@ -1364,7 +1448,7 @@ body {
   box-shadow: none;
 }
 .stimp-sc-label-light {
-  color: var(--gray-800);
+  color: var(--text-secondary);
   font-size: 0.88rem;
   font-weight: 600;
   font-family: var(--font-sans);
