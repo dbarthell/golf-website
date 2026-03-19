@@ -14,7 +14,6 @@ import { SlopeInput } from '../components/SlopeInput';
 import { ClockFace } from '../components/ClockFace';
 import { LookupResultPanel } from '../components/LookupResult';
 import { CommonDistances } from '../components/CommonDistances';
-import { WalkOffTip } from '../components/WalkOffTip';
 import { BackswingTable } from '../components/BackswingTable';
 import { OnboardingModal } from '../components/OnboardingModal';
 
@@ -206,7 +205,6 @@ export function LookupPage() {
           <SlopeInput value={slope} onChange={setSlope} />
         </div>
 
-        <WalkOffTip />
       </div>
 
       {/* ── Clock face — full-width dark green band ────────────────────────── */}
