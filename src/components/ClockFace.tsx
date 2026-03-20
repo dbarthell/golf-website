@@ -148,8 +148,52 @@ export function ClockFace({ clockKey, onClockChange, annotations, slope = 0 }: P
       </label>
       <div className="clock-face">
 
-        {/* Watch-style dial details: gold center pivot */}
+        {/* Golf green grain texture + gold center pivot */}
         <svg className="clock-svg" viewBox="0 0 200 200" aria-hidden="true">
+          <defs>
+            {/*
+              Grass grain: feTurbulence fractalNoise → feColorMatrix maps the
+              noise B-channel to alpha (0–28% opacity) over a soft grass-green
+              fill, producing a short-cut velvet turf texture.
+            */}
+            <filter id="grass-grain" color-interpolation-filters="sRGB">
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.78 0.82"
+                numOctaves="4"
+                seed="3"
+                result="noise"
+              />
+              <feColorMatrix
+                in="noise"
+                type="matrix"
+                values="0 0 0 0 0.18
+                        0 0 0 0 0.48
+                        0 0 0 0 0.18
+                        0 0 1 0 -0.38"
+              />
+            </filter>
+            <clipPath id="grain-clip">
+              <circle cx="100" cy="100" r="96" />
+            </clipPath>
+          </defs>
+          {/* Fuzzy grass grain — behind hand, buttons, and annotations */}
+          <rect
+            x="0" y="0" width="200" height="200"
+            filter="url(#grass-grain)"
+            clipPath="url(#grain-clip)"
+          />
+
+          {/* Cardinal tick marks (12/3/6/9) — gold, in the outer ring */}
+          <line x1="100" y1="5"   x2="100" y2="15"  stroke="rgba(201,168,106,0.55)" strokeWidth="2" strokeLinecap="round" />
+          <line x1="195" y1="100" x2="185" y2="100"  stroke="rgba(201,168,106,0.55)" strokeWidth="2" strokeLinecap="round" />
+          <line x1="100" y1="195" x2="100" y2="185"  stroke="rgba(201,168,106,0.55)" strokeWidth="2" strokeLinecap="round" />
+          <line x1="5"   y1="100" x2="15"  y2="100"  stroke="rgba(201,168,106,0.55)" strokeWidth="2" strokeLinecap="round" />
+
+          {/* Cup ring — subtle halo around the hole/pivot */}
+          <circle cx="100" cy="100" r="9" fill="none" stroke="rgba(201,168,106,0.30)" strokeWidth="1" />
+
+          {/* Gold center pivot */}
           <circle cx="100" cy="100" r="3.5" fill="#c9a86a" opacity="0.9" />
           <circle cx="100" cy="100" r="1.5" fill="rgba(255,255,255,0.6)" />
         </svg>
