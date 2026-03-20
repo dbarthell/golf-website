@@ -41,6 +41,7 @@ export interface PuttingData {
 
 export interface Calibration {
   distanceFactor: number;
+  stanceWidth: number; // inches from ball to middle of trail foot, default 12
 }
 
 // ── Parsed cell value ─────────────────────────────────────────────────────────

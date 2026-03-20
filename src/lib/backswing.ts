@@ -91,6 +91,45 @@ export function backswingRaw(
 }
 
 /**
+ * Distance in feet for a given physical backstroke length (inches) at a given stimp,
+ * adjusted for the user's distanceFactor. Interpolates between data rows.
+ * Returns null if backstroke is out of the data range.
+ */
+export function getDistanceForBackswingInches(
+  backswingInches: number,
+  stimp: number,
+  rows: LagRow[],
+  distanceFactor: number,
+): number | null {
+  // The physical backstroke B = raw_backstroke * distanceFactor, so:
+  // effective raw backstroke = B / distanceFactor
+  const effectiveInches = backswingInches / distanceFactor;
+
+  let lower: LagRow | null = null;
+  let upper: LagRow | null = null;
+
+  for (const row of rows) {
+    const rowIn = parseFloat(row.inches.replace('"', ''));
+    if (rowIn <= effectiveInches) lower = row;
+    else { upper = row; break; }
+  }
+
+  if (!lower && !upper) return null;
+  if (!lower) return getDistanceForStimp(upper!, stimp);
+  if (!upper) return getDistanceForStimp(lower, stimp);
+
+  const lIn = parseFloat(lower.inches.replace('"', ''));
+  const uIn = parseFloat(upper.inches.replace('"', ''));
+  const t = (effectiveInches - lIn) / (uIn - lIn);
+
+  return lerp(
+    getDistanceForStimp(lower, stimp),
+    getDistanceForStimp(upper, stimp),
+    t,
+  );
+}
+
+/**
  * "1 foot past the cup" backswing display string, with calibration factor applied.
  * @deprecated Use backswingRaw() + fmtBackswing() from useUnits for unit-aware display.
  */

@@ -754,42 +754,47 @@ body {
 .distance-card-bs   { font-size: 0.9rem; font-weight: 700; color: var(--green-light); }
 
 /* ========================================
-   Quick Reference Table
+   Backstroke Reference Table
    ======================================== */
 .quick-table-section { padding: var(--space-xl) var(--space-md); background: var(--gray-100); }
 
-.table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); box-shadow: var(--shadow-md); border: 1px solid var(--gray-200); }
-
-.quick-table { width: 100%; border-collapse: collapse; background: var(--white); }
-
-.quick-table th,
-.quick-table td {
-  padding: var(--space-md);
-  text-align: center;
-  font-size: 0.9rem;
-  border-bottom: 1px solid var(--gray-200);
+.bs-table {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
 }
 
-.quick-table th {
-  background: var(--gray-200);
-  color: var(--gray-600);
-  font-weight: 700;
+.bs-row {
+  display: flex;
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--gray-200);
+  transition: background 0.12s;
+}
+.bs-row:last-child { border-bottom: none; }
+.bs-row:hover      { background: var(--green-pale); }
+
+.bs-table-header {
+  display: flex;
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--white);
+  border-bottom: 2px solid var(--green-dark);
+  color: var(--text-secondary);
   font-size: 0.75rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  border-bottom: 2px solid var(--gray-400);
 }
+.bs-table-header span:first-child  { flex: 0 0 22%; }
+.bs-table-header span:nth-child(2) { flex: 0 0 28%; text-align: center; }
+.bs-table-header span:last-child   { flex: 1; text-align: right; }
 
-.quick-table th:first-child { text-align: left; padding-left: var(--space-lg); }
-.quick-table td             { color: var(--text-primary); }
-.quick-table td:first-child { font-weight: 700; color: var(--text-primary); text-align: left; padding-left: var(--space-lg); white-space: nowrap; }
-.quick-table tr:last-child td   { border-bottom: none; }
-.quick-table tr:hover td        { background: var(--green-pale); }
-.quick-table .row-original td        { background: #d8ede0; font-weight: 700; }
-.quick-table .row-original:hover td  { background: #c8e3d4; }
+.bs-dist     { flex: 0 0 22%; font-size: 0.95rem; font-weight: 800; color: var(--text-primary); }
+.bs-value    { flex: 0 0 28%; text-align: center; font-size: 1.05rem; font-weight: 800; color: var(--green-light); }
+.bs-landmark { flex: 1; text-align: right; font-size: 0.82rem; color: var(--gray-600); font-weight: 500; }
 
 /* ========================================
    Onboarding Overlay
@@ -939,6 +944,11 @@ body {
   color: var(--gray-600);
 }
 
+.cal-stance-hint {
+  padding: 0 var(--space-md) var(--space-sm);
+  text-align: center;
+}
+
 .status-card {
   margin: var(--space-md);
   background: var(--white);
@@ -1024,9 +1034,9 @@ body {
   border-bottom: 1px solid var(--gray-200);
 }
 
-.adjust-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-xs); }
+.adjust-col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: var(--space-xs); }
 .adjust-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); }
-.adjust-value { font-size: 2.2rem; font-weight: 800; line-height: 1; }
+.adjust-value { font-size: 1.8rem; font-weight: 800; line-height: 1; white-space: nowrap; }
 .baseline-val { color: var(--gray-400); }
 .my-val       { color: var(--text-primary); }
 .adjust-arrow { font-size: 1.4rem; color: var(--gray-400); flex-shrink: 0; }
@@ -1586,18 +1596,3 @@ body {
   border-radius: 0;
 }
 
-/* ── Table: align Mantine table with .quick-table styles ── */
-.quick-table.mantine-Table-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.quick-table tbody tr,
-.quick-table tbody tr td {
-  background: var(--white) !important;
-}
-
-.quick-table tbody tr:nth-child(even),
-.quick-table tbody tr:nth-child(even) td {
-  background: var(--gray-100) !important;
-}
