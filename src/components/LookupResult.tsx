@@ -206,7 +206,7 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
             <div className={clockBsUnit ? 'result-value-with-unit' : 'result-value'}>
               {clockBsNum}{clockBsUnit && <span className="result-unit-md">{clockBsUnit}</span>}
             </div>
-            <div className="result-label">Backswing</div>
+            <div className="result-label">Backstroke</div>
             {showSlopeRow && (
               <div className="slope-inline-centered">
                 <span className={`slope-dir ${isUphill ? 'slope-up' : 'slope-down'}`}>
