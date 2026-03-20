@@ -34,9 +34,10 @@ export function CalibratePage() {
     setTestStimpRaw(val);
     localStorage.setItem('putt-stimp', String(val));
   }
-  const [testDist, setTestDist]   = useState(10);
-  const [myInches, setMyInches]   = useState<number>(DEFAULT_BACKSWING);
-  const [saved, setSaved]         = useState(false);
+  const [testDist, setTestDist]     = useState(10);
+  const [myInches, setMyInches]     = useState<number>(DEFAULT_BACKSWING);
+  const [stanceWidth, setStanceWidth] = useState<number>(() => calibration.stanceWidth ?? 12);
+  const [saved, setSaved]           = useState(false);
 
   const lagRows = data.lagPuttingTable.rows;
 
@@ -60,10 +61,14 @@ export function CalibratePage() {
     setMyInches(Math.round(next * 4) / 4);
   }
 
+  function adjustStance(delta: number) {
+    setStanceWidth(w => Math.round(Math.max(6, Math.min(20, w + delta)) * 2) / 2);
+  }
+
   function handleSave() {
     if (baseline === null) return;
     const distanceFactor = Math.round((myInches / baseline) * 1000) / 1000;
-    saveCalibration({ distanceFactor });
+    saveCalibration({ distanceFactor, stanceWidth });
     setSaved(true);
   }
 
@@ -99,7 +104,8 @@ export function CalibratePage() {
       {/* Tool card */}
       <div className="tool-card">
         <div className="cal-intro">
-          <p>Select a green speed and distance below, then find the backstroke length that rolls the ball 1–2 feet past that distance. A ZeroBreak Yardstick makes it easier to dial in your exact backstroke length.</p>
+          <p>Dial in two things: your <strong>backstroke length</strong> and your <strong>trail foot distance</strong>. Together they personalize your Backstroke Reference table.</p>
+          <p>For backstroke: pick a distance, then adjust until the ball rolls 1–2 feet past it. For trail foot: measure from the ball to the middle of your trail foot at address.</p>
         </div>
 
         {/* Stimp toggle */}
@@ -125,19 +131,26 @@ export function CalibratePage() {
           </div>
         </div>
 
-        {/* My Backswing */}
+        {/* My Backstroke + Stance Width */}
         <div className="adjust-area">
           <div className="adjust-col">
             <div className="adjust-label">My Backstroke</div>
             <div className="adjust-my-row">
               <button className="adj-btn" onClick={() => adjustMy(-0.25)} aria-label="Decrease">−</button>
-              <div className="adjust-value my-val">
-                {fmtBackswing(myInches)}
-              </div>
+              <div className="adjust-value my-val">{fmtBackswing(myInches)}</div>
               <button className="adj-btn" onClick={() => adjustMy(+0.25)} aria-label="Increase">+</button>
             </div>
           </div>
+          <div className="adjust-col">
+            <div className="adjust-label">Trail Foot Distance</div>
+            <div className="adjust-my-row">
+              <button className="adj-btn" onClick={() => adjustStance(-0.5)} aria-label="Decrease">−</button>
+              <div className="adjust-value my-val">{stanceWidth}"</div>
+              <button className="adj-btn" onClick={() => adjustStance(+0.5)} aria-label="Increase">+</button>
+            </div>
+          </div>
         </div>
+        <p className="field-hint cal-stance-hint">Measure from the ball to the middle of your trail foot. Default is 12″.</p>
 
         <button className="save-btn" onClick={handleSave}>
           {saved ? 'Saved!' : 'Save Calibration'}

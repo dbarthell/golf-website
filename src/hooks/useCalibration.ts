@@ -2,14 +2,17 @@ import { useState, useCallback } from 'react';
 import type { Calibration } from '../lib/types';
 
 const CAL_KEY = 'putt-cal';
-const DEFAULT_CAL: Calibration = { distanceFactor: 1.0 };
+const DEFAULT_CAL: Calibration = { distanceFactor: 1.0, stanceWidth: 12 };
 
 function readCalibration(): Calibration {
   try {
     const saved = localStorage.getItem(CAL_KEY);
     if (saved) {
       const parsed = JSON.parse(saved) as Partial<Calibration>;
-      return { distanceFactor: parsed.distanceFactor ?? 1.0 };
+      return {
+        distanceFactor: parsed.distanceFactor ?? 1.0,
+        stanceWidth: parsed.stanceWidth ?? 12,
+      };
     }
   } catch (_) {
     // ignore parse errors
