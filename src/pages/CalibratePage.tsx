@@ -117,7 +117,7 @@ export function CalibratePage() {
 
         {/* Distance chips */}
         <div className="tool-field">
-          <label className="tool-label">Distance</label>
+          <label className="tool-label">Test distance</label>
           <div className="dist-chips">
             {TEST_DISTANCES.map(d => (
               <button
