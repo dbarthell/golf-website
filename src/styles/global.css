@@ -694,7 +694,7 @@ body {
   touch-action: manipulation;
 }
 
-.clock-pos-half { font-size: 0.6rem; width: 34px; height: 34px; opacity: 0.85; }
+.clock-pos-half { font-size: 0.6rem; }
 
 .clock-pos.clock-pos-active {
   background: var(--green-accent);
