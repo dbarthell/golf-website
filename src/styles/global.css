@@ -66,39 +66,33 @@ body {
 }
 
 /* ========================================
-   Lookup Body — light input + result panel
+   Lookup Body — green input panel (matches header + clock section)
    ======================================== */
 .lookup-body {
-  background: var(--white);
-  padding: 0.75rem var(--space-md) var(--space-sm);
+  background: var(--green-dark);
+  padding: 0.25rem var(--space-md) var(--space-sm);
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
 }
 
-/* Inputs restyled for white background */
+.lookup-body .lookup-label { color: rgba(255, 255, 255, 0.7); opacity: 1; }
+
+/* Force Mantine NumberInput fields to render clearly on dark green */
 .lookup-body .distance-input,
 .lookup-body .slope-input {
-  background: var(--gray-100);
-  border-color: var(--gray-200);
-  color: var(--text-primary);
-  backdrop-filter: none;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: none !important;
+  color: white !important;
 }
 .lookup-body .distance-input::placeholder,
-.lookup-body .slope-input::placeholder { color: var(--gray-400); font-size: 1.25rem; }
-.lookup-body .distance-input:focus,
-.lookup-body .slope-input:focus {
-  border-color: var(--gray-400);
-  background: var(--white);
+.lookup-body .slope-input::placeholder { color: rgba(255, 255, 255, 0.55) !important; }
+
+/* Force ActionIcon arrows white — Mantine overrides color prop */
+.input-btn,
+.input-btn svg {
+  color: white !important;
 }
-.lookup-body .input-btn {
-  background: var(--gray-100);
-  border-color: var(--gray-200);
-  color: var(--text-primary);
-  backdrop-filter: none;
-}
-.lookup-body .input-btn:active { background: var(--gray-200); transform: scale(0.95); }
-.lookup-body .lookup-label { color: var(--text-secondary); opacity: 1; }
 
 
 /* ── Clock section — full-width dark green band ── */
@@ -385,9 +379,9 @@ body {
   flex-shrink: 0;
   width: 2.75rem;
   height: 2.75rem;
-  border: 3px solid rgba(255, 255, 255, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
   color: var(--white);
   font-size: 1.75rem;
   font-weight: 700;
@@ -407,9 +401,9 @@ body {
   font-size: 2.2rem;
   font-weight: 700;
   padding: 0.35rem var(--space-md);
-  border: 3px solid rgba(255, 255, 255, 0.3);
+  border: 3px solid rgba(255, 255, 255, 0.55);
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.18);
   color: var(--white);
   text-align: center;
   font-family: var(--font-sans);
@@ -424,7 +418,7 @@ body {
 .slope-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
 .distance-input::placeholder,
-.slope-input::placeholder { color: rgba(255, 255, 255, 0.5); font-size: 1.25rem; }
+.slope-input::placeholder { color: rgba(255, 255, 255, 0.6); font-size: 1.25rem; }
 
 .distance-input:focus,
 .slope-input:focus {
@@ -446,9 +440,6 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-.lookup-result--has-result {
-  border-top: 3px solid var(--green-accent);
 }
 
 .result-empty { color: var(--gray-400); font-size: 0.95rem; text-align: center; }
@@ -631,7 +622,7 @@ body {
     repeating-linear-gradient(
       15deg,
       var(--green-dark) 0px,   var(--green-dark) 14px,
-      #0f5038           14px,  #0f5038           28px
+      rgba(255, 255, 255, 0.15)           14px,  rgba(255, 255, 255, 0.15)           28px
     );
   box-shadow:
     inset 0 0 55px rgba(0, 0, 0, 0.58),
@@ -670,15 +661,15 @@ body {
 
 .clock-pos {
   position: absolute;
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: rgba(1, 60, 54, 0.45);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border: 1.5px solid rgba(255, 255, 255, 0.22);
   color: rgba(255, 255, 255, 0.82);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
   font-family: var(--font-sans);
@@ -1367,6 +1358,32 @@ body {
   white-space: nowrap;
 }
 
+/* Miss tendency by break direction */
+.log-break-section {
+  padding: var(--space-sm) 0;
+  border-top: 1px solid var(--gray-200);
+}
+.log-break-section:first-of-type { border-top: none; }
+.log-break-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0 var(--space-sm) var(--space-xs);
+}
+.log-break-count {
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.log-outcome-grid--compact .log-outcome-item {
+  padding: var(--space-xs) 0;
+}
+.log-outcome-grid--compact .log-outcome-pct {
+  font-size: 0.95rem;
+}
+
 /* Miss tendency */
 .log-outcome-grid {
   display: flex;
@@ -1515,7 +1532,7 @@ body {
 
 /* ── StimpToggle: SegmentedControl dark variant (hero panel) ── */
 .stimp-sc-dark {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.15);
   border: none;
   border-radius: var(--radius-md);
   width: 100%;
@@ -1528,7 +1545,7 @@ body {
   box-shadow: none;
 }
 .stimp-sc-label-dark {
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.85);
   font-size: 0.85rem;
   font-weight: 600;
   font-family: var(--font-sans);

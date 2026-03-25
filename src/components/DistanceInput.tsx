@@ -42,7 +42,8 @@ export function DistanceInput({ value, onChange }: Props) {
       <label className="lookup-label">Distance ({unitLabel})</label>
       <Group gap={0} wrap="nowrap" className="input-wrapper">
         <ActionIcon
-          variant="subtle"
+          variant="transparent"
+          color="white"
           className="input-btn input-minus"
           onClick={decrement}
           aria-label="Decrease distance"
@@ -61,7 +62,8 @@ export function DistanceInput({ value, onChange }: Props) {
           onChange={v => handleChange(v === '' ? '' : Number(v))}
         />
         <ActionIcon
-          variant="subtle"
+          variant="transparent"
+          color="white"
           className="input-btn input-plus"
           onClick={increment}
           aria-label="Increase distance"
