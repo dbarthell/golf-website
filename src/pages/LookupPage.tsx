@@ -210,7 +210,7 @@ export function LookupPage() {
         {/* Green speed */}
         <div className="lookup-input-section">
           <label className="lookup-label">Green Speed (Stimp)</label>
-          <StimpToggle value={stimp} onChange={setStimp} variant="light" />
+          <StimpToggle value={stimp} onChange={setStimp} />
         </div>
 
         {/* Distance + Slope side by side */}

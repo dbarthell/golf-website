@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { IconArrowLeft, IconTrash } from '@tabler/icons-react';
 import { usePuttLog, todayRoundId, type PuttEntry, type PuttRound, type PuttOutcome } from '../hooks/usePuttLog';
 import { useUnits } from '../hooks/useUnits';
+import { getClockFactors } from '../lib/clockMath';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -49,6 +50,57 @@ function pct(n: number, total: number): string {
 
 function countOutcome(entries: PuttRound['entries'], key: PuttOutcome): number {
   return entries.filter(e => e.outcome === key).length;
+}
+
+type BreakDir = 'r2l' | 'l2r' | 'straight';
+
+function breakDir(entry: PuttEntry): BreakDir {
+  if (!entry.clock) return 'straight';
+  const factors = getClockFactors(entry.clock);
+  if (!factors) return 'straight';
+  if (Math.abs(factors.breakFactor) < 0.1) return 'straight';
+  return factors.breakFactor > 0 ? 'r2l' : 'l2r';
+}
+
+function MissByBreak({ entries }: { entries: PuttEntry[] }) {
+  const groups: Record<BreakDir, PuttEntry[]> = { r2l: [], l2r: [], straight: [] };
+  for (const e of entries) groups[breakDir(e)].push(e);
+
+  const sections: { dir: BreakDir; label: string; entries: PuttEntry[] }[] = (
+    [
+      { dir: 'r2l' as BreakDir, label: 'Right-to-left break', entries: groups.r2l },
+      { dir: 'l2r' as BreakDir, label: 'Left-to-right break', entries: groups.l2r },
+      { dir: 'straight' as BreakDir, label: 'Straight', entries: groups.straight },
+    ] as { dir: BreakDir; label: string; entries: PuttEntry[] }[]
+  ).filter(s => s.entries.length > 0);
+
+  if (sections.length === 0) return null;
+
+  return (
+    <div className="log-card">
+      <div className="log-card-title">Miss Tendency by Break</div>
+      {sections.map(({ dir, label, entries: es }) => {
+        const total = es.length;
+        return (
+          <div key={dir} className="log-break-section">
+            <div className="log-break-label">{label} <span className="log-break-count">({total} putt{total !== 1 ? 's' : ''})</span></div>
+            <div className="log-outcome-grid log-outcome-grid--compact">
+              {OUTCOMES.map(({ key, label: ol }) => {
+                const n = countOutcome(es, key);
+                return (
+                  <div key={key} className={`log-outcome-item${key === 'made' ? ' log-outcome-made' : ''}`}>
+                    <div className="log-outcome-pct">{pct(n, total)}</div>
+                    <div className="log-outcome-label">{ol}</div>
+                    <div className="log-outcome-count">{n}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
@@ -101,12 +153,14 @@ function PuttEntryRow({ entry, onDelete }: { entry: PuttEntry; onDelete: () => v
 }
 
 function RoundStats({ round, onDelete }: { round: PuttRound; onDelete: (id: string) => void }) {
+  const { fmtDist } = useUnits();
   const { entries } = round;
   const total = entries.length;
 
   if (total === 0) return <EmptyState />;
 
   const made = countOutcome(entries, 'made');
+  const avgDist = entries.reduce((sum, e) => sum + e.distance, 0) / total;
 
   // Derive round stimp as the most common stimp value across entries
   const stimpCounts = entries.reduce<Record<number, number>>((acc, e) => {
@@ -132,8 +186,8 @@ function RoundStats({ round, onDelete }: { round: PuttRound; onDelete: (id: stri
           </div>
           <div className="log-summary-divider" />
           <div className="log-summary-item">
-            <div className="log-summary-value">{made}</div>
-            <div className="log-summary-label">Made</div>
+            <div className="log-summary-value">{fmtDist(Math.round(avgDist))}</div>
+            <div className="log-summary-label">Avg Dist</div>
           </div>
         </div>
       </div>
@@ -184,6 +238,9 @@ function RoundStats({ round, onDelete }: { round: PuttRound; onDelete: (id: stri
           })}
         </div>
       </div>
+
+      {/* Miss tendency by break direction */}
+      <MissByBreak entries={entries} />
 
       {/* Individual putts */}
       <div className="log-card">

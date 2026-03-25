@@ -23,7 +23,8 @@ export function SlopeInput({ value, onChange }: Props) {
       <label className="lookup-label">Slope (%)</label>
       <Group gap={0} wrap="nowrap" className="input-wrapper">
         <ActionIcon
-          variant="subtle"
+          variant="transparent"
+          color="white"
           className="input-btn input-minus"
           onClick={decrement}
           aria-label="Decrease slope"
@@ -45,7 +46,8 @@ export function SlopeInput({ value, onChange }: Props) {
           }}
         />
         <ActionIcon
-          variant="subtle"
+          variant="transparent"
+          color="white"
           className="input-btn input-plus"
           onClick={increment}
           aria-label="Increase slope"
