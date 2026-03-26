@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IconAdjustments, IconClipboardList, IconInfoCircle } from '@tabler/icons-react';
 
@@ -144,6 +144,10 @@ export function LookupPage() {
 
   const [onboardingDone, setOnboardingDone] = useState(() => !!localStorage.getItem('zerobreak-onboarded'));
   const [showOnboarding, setShowOnboarding] = useState(false);
+
+  // Scroll to top on mount so the header is always visible when navigating
+  // here from another page (e.g. Calibrate after first-launch onboarding).
+  useEffect(() => { window.scrollTo(0, 0); }, []);
 
   const result = useMemo(
     () =>
