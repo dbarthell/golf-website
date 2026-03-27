@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const SLIDES = [
@@ -27,6 +27,7 @@ interface Props {
 export function OnboardingModal({ onDismiss, isReplay = false }: Props) {
   const [current, setCurrent] = useState(0);
   const navigate = useNavigate();
+  const touchStartX = useRef<number | null>(null);
   const isLast = current === SLIDES.length - 1;
   const slide = SLIDES[current];
 
@@ -48,9 +49,31 @@ export function OnboardingModal({ onDismiss, isReplay = false }: Props) {
     }
   }
 
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX;
+  }
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(delta) < 40) return;
+    if (delta < 0 && !isLast) {
+      // swipe left → next slide
+      setCurrent(c => c + 1);
+    } else if (delta > 0 && current > 0) {
+      // swipe right → previous slide
+      setCurrent(c => c - 1);
+    }
+  }
+
   return (
     <div className="onboarding-overlay">
-      <div className="onboarding-slides">
+      <div
+        className="onboarding-slides"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <div className="onboarding-slide">
           <div className="onboarding-tag">{slide.tag}</div>
           <h2 className="onboarding-title">{slide.title}</h2>

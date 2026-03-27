@@ -880,6 +880,22 @@ function initOnboarding() {
     localStorage.setItem('zerobreak-onboarded', '1');
     overlay.classList.remove('onboarding-visible');
   });
+
+  let swipeTouchStartX = null;
+  overlay.addEventListener('touchstart', (e) => {
+    swipeTouchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  overlay.addEventListener('touchend', (e) => {
+    if (swipeTouchStartX === null) return;
+    const delta = e.changedTouches[0].clientX - swipeTouchStartX;
+    swipeTouchStartX = null;
+    if (Math.abs(delta) < 40) return;
+    if (delta < 0 && current < slides.length - 1) {
+      goTo(current + 1);
+    } else if (delta > 0 && current > 0) {
+      goTo(current - 1);
+    }
+  }, { passive: true });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
