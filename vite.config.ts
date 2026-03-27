@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 const isCapacitor = process.env.CAPACITOR_BUILD === 'true';
-const base = isCapacitor ? '/' : '/golf-website/';
+const base = isCapacitor ? './' : '/golf-website/';
 
 export default defineConfig({
   base,
