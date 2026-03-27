@@ -58,6 +58,7 @@ export interface ClockAnnotations {
   zblAimBase: number;
   lateralAim: number;
   breakAbs: number;
+  breakFactor: number;  // signed: positive = R→L break, negative = L→R break, 0 = straight
   clockKey: string | null;
 }
 
