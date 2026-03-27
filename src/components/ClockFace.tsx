@@ -28,9 +28,10 @@ function ClockSVG({
   const SVG_R = 83;  // ball-position radius (83 * 1.4px ≈ 116.2px — matches R above)
 
   const zblAimBase = annotations?.zblAimBase ?? 0;
+  const lateralAim = annotations?.lateralAim ?? 0;
   const breakAbs   = annotations?.breakAbs   ?? 0;
   const hasZBL     = zblAimBase > 0;
-  const hasSlope   = slope > 0;
+  const hasSlope    = slope > 0;
 
   if (!hasZBL && !hasSlope) return null;
 
@@ -44,11 +45,35 @@ function ClockSVG({
   const pos = clockKey ? HOUR_POSITIONS.find(p => p.key === clockKey) : null;
   const theta = hasBreak && pos ? pos.theta : null;
 
-  // breakSign: which side the inch-label sits on (opposite the break direction)
-  const breakSign = hasBreak && theta !== null ? (Math.sin(theta) >= 0 ? 1 : -1) : 1;
-
   const ballX = hasBreak && theta !== null ? SVG_C + SVG_R * Math.sin(theta) : null;
   const ballY = hasBreak && theta !== null ? SVG_C - SVG_R * Math.cos(theta) : null;
+
+  // ── Lateral aim indicator ──────────────────────────────────────────────────
+  // Find where the 90°-from-hole ray (perpendicular to ball→hole direction)
+  // intersects the dotted line.  Solving the two-line system reduces to:
+  //   t = SVG_R / (SVG_R − zblPx · cos θ)
+  // where θ is the clock-position angle.
+  //
+  // Key property: cos(π/2) = cos(3π/2) = 0, so t = 1 for 3 o'clock and
+  // 9 o'clock — the ring lands exactly on the ZBL dot, as expected.
+  // For lower positions (4–8 o'clock, cos θ < 0) t < 1 and the ring sits
+  // visibly between ball and ZBL.  For upper positions t > 1 and the ring
+  // clamps to the ZBL dot.
+  const hasAim = hasBreak && lateralAim > 0 && ballX !== null && ballY !== null && theta !== null;
+
+  let aimX = SVG_C;
+  let aimY = SVG_C;
+  let aimT = 0;
+
+  if (hasAim && ballX !== null && ballY !== null && theta !== null) {
+    // No clamping — aimT > 1 when ring is past ZBL (upper positions 1–2, 10–11 o'clock)
+    aimT = SVG_R / (SVG_R - zblPx * Math.cos(theta));
+    aimX = ballX + aimT * (zblX - ballX);
+    aimY = ballY + aimT * (zblY - ballY);
+  }
+
+  // Dotted line end: extend past ZBL to the ring when aimT > 1
+  const dotLineT = hasAim ? Math.max(1, aimT) : 1;
 
   const textProps = {
     textAnchor: 'middle' as const,
@@ -102,10 +127,12 @@ function ClockSVG({
             strokeLinecap="round"
           />
 
-          {/* 2. Dashed line: ball → ZBL (only when break is present) */}
+          {/* 2. Dashed line: ball → ZBL, extended to ring when ring is past ZBL */}
           {hasBreak && ballX !== null && ballY !== null && (
             <line
-              x1={ballX} y1={ballY} x2={zblX} y2={zblY}
+              x1={ballX} y1={ballY}
+              x2={ballX + dotLineT * (zblX - ballX)}
+              y2={ballY + dotLineT * (zblY - ballY)}
               stroke="rgba(255,255,255,0.90)"
               strokeWidth="2"
               strokeDasharray="4 3"
@@ -116,16 +143,16 @@ function ClockSVG({
           {/* 3. ZBL dot */}
           <circle cx={zblX} cy={zblY} r="5" fill="white" opacity="0.95" />
 
-          {/* 4. Labels */}
-          <text {...textProps} x={SVG_C} y={zblY - 12} fontSize="8">ZBL</text>
-          <text
-            {...textProps}
-            x={SVG_C + (-breakSign) * 15}
-            y={(SVG_C + zblY) / 2}
-            fontSize="10"
-          >
-            {fmtInches(zblAimBase)}
-          </text>
+          {/* 4. ZBL label */}
+          <text {...textProps} x={SVG_C} y={zblY - 12} fontSize="8">ZBL {fmtInches(zblAimBase)}</text>
+
+          {/* 5. Lateral aim indicator — gold target ring at the 90° point */}
+          {hasAim && (
+            <>
+              <circle cx={aimX} cy={aimY} r="7" fill="none" stroke="#c9a86a" strokeWidth="1.5" opacity="0.95" />
+              <circle cx={aimX} cy={aimY} r="2.5" fill="#c9a86a" opacity="0.95" />
+            </>
+          )}
         </>
       )}
     </svg>
@@ -140,13 +167,21 @@ export function ClockFace({ clockKey, onClockChange, annotations, slope = 0 }: P
   const activePos = clockKey ? HOUR_POSITIONS.find(p => p.key === clockKey) : null;
   const handDeg = activePos ? activePos.theta * (180 / Math.PI) : null;
 
+  // Tilt the clock face to mimic a real sloped green.
+  // rotateX(+deg) tilts the top away from the viewer (the 12-o'clock / uphill
+  // side recedes), giving the impression of looking across a slope.
+  const tiltDeg = slope * 5; // 1% → 5°, 6% → 30°
+
   return (
     <div className="lookup-input-section">
       <label className="lookup-label" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
         <IconClock size={14} stroke={2} style={{ opacity: 0.85 }} />
         Clock Position
       </label>
-      <div className="clock-face">
+      <div
+        className="clock-face"
+        style={tiltDeg > 0 ? { transform: `perspective(500px) rotateX(${tiltDeg}deg)` } : undefined}
+      >
 
         {/* Golf green grain texture + gold center pivot */}
         <svg className="clock-svg" viewBox="0 0 200 200" aria-hidden="true">

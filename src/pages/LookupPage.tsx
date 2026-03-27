@@ -73,7 +73,7 @@ function computeResult(
 
     const backswing = backswingRaw(adjDist, stimp, lagRows, distanceFactor);
 
-    const annotations: ClockAnnotations = { zblAimBase, lateralAim, breakAbs, clockKey: clock };
+    const annotations: ClockAnnotations = { zblAimBase, lateralAim, breakAbs, breakFactor, clockKey: clock };
 
     return {
       kind: 'clock',
@@ -111,7 +111,7 @@ function computeResult(
   const uphillBS     = backswingRaw(uphillTotal, stimp, lagRows, distanceFactor);
   const downhillBS   = backswingRaw(downhillTotal, stimp, lagRows, distanceFactor);
 
-  const annotations: ClockAnnotations = { zblAimBase: zblRaw, lateralAim: 0, breakAbs: 0, clockKey: null };
+  const annotations: ClockAnnotations = { zblAimBase: zblRaw, lateralAim: 0, breakAbs: 0, breakFactor: 0, clockKey: null };
 
   return {
     kind: 'straight',
@@ -164,7 +164,7 @@ export function LookupPage() {
   );
 
   const annotations: ClockAnnotations =
-    result.kind !== 'empty' ? result.annotations : { zblAimBase: 0, lateralAim: 0, breakAbs: 0, clockKey: null };
+    result.kind !== 'empty' ? result.annotations : { zblAimBase: 0, lateralAim: 0, breakAbs: 0, breakFactor: 0, clockKey: null };
 
   return (
     <>

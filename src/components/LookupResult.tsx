@@ -185,7 +185,13 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
           </div>
         )
       }
-      <div className="result-label">Aim · <span className="result-break-dir">{breakDir}</span></div>
+      <div className="result-label">
+        <svg width="11" height="11" viewBox="0 0 11 11" style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} aria-hidden="true">
+          <circle cx="5.5" cy="5.5" r="4" fill="none" stroke="#c9a86a" strokeWidth="1.5" />
+          <circle cx="5.5" cy="5.5" r="1.5" fill="#c9a86a" />
+        </svg>
+        Aim · <span className="result-break-dir">{breakDir}</span>
+      </div>
       <div className="result-zbl-ref">ZBL {zblAimFmt}</div>
     </div>
   ) : (
