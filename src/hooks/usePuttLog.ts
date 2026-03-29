@@ -67,6 +67,21 @@ function upsertIndex(roundId: string): void {
   }
 }
 
+// ── Streak helper ─────────────────────────────────────────────────────────────
+
+const STREAK_MIN_DISTANCE = 5; // only count putts ≥ 5 ft toward a streak
+
+function computeStreak(entries: PuttEntry[]): number {
+  let streak = 0;
+  for (let i = entries.length - 1; i >= 0; i--) {
+    const e = entries[i];
+    if (e.distance < STREAK_MIN_DISTANCE) continue; // skip short putts
+    if (e.outcome === 'made') streak++;
+    else break;
+  }
+  return streak;
+}
+
 // ── Hook ──────────────────────────────────────────────────────────────────────
 
 export function usePuttLog() {
@@ -96,12 +111,14 @@ export function usePuttLog() {
   const todayId = todayRoundId();
   // Newest-first list of all round IDs that have been logged
   const allRoundIds = readIndex().slice().sort().reverse();
-  const currentRound: PuttRound = { roundId: todayId, entries: readRound(todayId) };
+  const todayEntries = readRound(todayId);
+  const currentRound: PuttRound = { roundId: todayId, entries: todayEntries };
+  const currentStreak = computeStreak(todayEntries);
 
   const getRound = (roundId: string): PuttRound => ({
     roundId,
     entries: readRound(roundId),
   });
 
-  return { addPutt, deletePutt, allRoundIds, currentRound, getRound, todayId };
+  return { addPutt, deletePutt, allRoundIds, currentRound, getRound, todayId, currentStreak };
 }

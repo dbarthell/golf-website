@@ -16,6 +16,8 @@ interface Props {
   result: LookupResult | null;
   puttContext?: PuttContext;
   onLogPutt?: (entry: Omit<import('../hooks/usePuttLog').PuttEntry, 'id' | 'timestamp'>) => void;
+  /** Current consecutive-makes streak (from usePuttLog) */
+  streak?: number;
 }
 
 const OUTCOMES: { key: PuttOutcome; label: string; emoji: string }[] = [
@@ -26,16 +28,23 @@ const OUTCOMES: { key: PuttOutcome; label: string; emoji: string }[] = [
   { key: 'right', label: 'Right', emoji: '→' },
 ];
 
-export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
+export function LookupResultPanel({ result, puttContext, onLogPutt, streak = 0 }: Props) {
   const { unit, fmtDist, fmtAim, fmtAimVariance, fmtBackswing, fmtBackswingParts, fmtAimParts } = useUnits();
   const [picking, setPicking] = useState(false);
   const [savedLabel, setSavedLabel] = useState<string | null>(null);
+  const [savedStreak, setSavedStreak] = useState(0);
+  const [madeFlash, setMadeFlash] = useState(false);
 
   function handleOutcome(outcome: PuttOutcome) {
     if (!puttContext || !onLogPutt) return;
     onLogPutt({ ...puttContext, outcome });
     setPicking(false);
     setSavedLabel(outcome.charAt(0).toUpperCase() + outcome.slice(1));
+    setSavedStreak(outcome === 'made' ? streak + 1 : 0);
+    if (outcome === 'made') {
+      setMadeFlash(true);
+      setTimeout(() => setMadeFlash(false), 600);
+    }
     setTimeout(() => setSavedLabel(null), 4000);
   }
 
@@ -45,8 +54,13 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
     <div className="log-putt-section">
       {savedLabel ? (
         <div className="outcome-saved">
-          <span>Logged: {savedLabel}</span>
-          <Link to="/log" className="outcome-view-log">View Log →</Link>
+          <div className="outcome-saved-main">
+            <span>Logged: {savedLabel}</span>
+            <Link to="/log" className="outcome-view-log">View Log →</Link>
+          </div>
+          {savedLabel === 'Made' && savedStreak >= 2 && (
+            <div className="streak-badge">🔥 {savedStreak} in a row!</div>
+          )}
         </div>
       ) : picking ? (
         <div className="outcome-picker">
@@ -71,12 +85,12 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
     </div>
   ) : null;
 
+
   if (!result || result.kind === 'empty') {
     return (
       <div className="lookup-result">
         <div className="result-empty">{result ? result.message : 'Enter a distance above'}</div>
       </div>
-
     );
   }
 
@@ -86,20 +100,17 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
       uphillTotal, downhillTotal, uphillBS, downhillBS,
     } = result;
 
-    // Format aim and backswing as split [num, unit] pairs for the big display
     const [bsNum, bsUnit] = backswing !== null ? fmtBackswingParts(backswing) : ['—', ''];
     const [aimNum, aimUnit] = fmtAimParts(zblRaw);
 
-    // Format a variance inches string in the current unit.
-    // Returns null for missing/zero values. Keeps raw precision from the data.
     function fmtV(s: string | null): string | null {
       if (!s) return null;
       const n = parseFloat(s);
       if (!n || n <= 0) return null;
-      return fmtAimVariance(s); // "1.2"" imperial  |  "3.0 cm" metric
+      return fmtAimVariance(s);
     }
-    const vp = fmtV(zblPlus);   // e.g. "1.2"" or null
-    const vm = fmtV(zblMinus);  // e.g. "1.5"" or null
+    const vp = fmtV(zblPlus);
+    const vm = fmtV(zblMinus);
 
     const stimpScale = stimp / 10;
     const uphillRate   = Math.round(1   * stimpScale * 10) / 10;
@@ -109,7 +120,7 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
       : `Uphill: +${uphillRate} ft/10 ft/1%  ·  Downhill: −${downhillRate} ft/10 ft/1%`;
 
     return (
-      <div className="lookup-result lookup-result--has-result">
+      <div className={`lookup-result lookup-result--has-result${madeFlash ? ' lookup-result--made-flash' : ''}`}>
         <div className="result-content">
           <div className="result-row">
             <div className="result-item">
@@ -147,7 +158,6 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
               )}
             </div>
           </div>
-
         </div>
         {logSection}
       </div>
@@ -164,7 +174,6 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
     ? 'Straight'
     : breakFactor > 0 ? 'R→L' : 'L→R';
 
-  // Format backswing and edge aim as split [num, unit] pairs for the big display.
   const [clockBsNum, clockBsUnit] = backswing !== null ? fmtBackswingParts(backswing) : ['—', ''];
   const [edgeNum, edgeUnit] = fmtAimParts(edgeAim);
   const edgeAimFmt = edgeUnit
@@ -205,7 +214,7 @@ export function LookupResultPanel({ result, puttContext, onLogPutt }: Props) {
   const isUphill = uphillFactor > 0;
 
   return (
-    <div className="lookup-result">
+    <div className={`lookup-result${madeFlash ? ' lookup-result--made-flash' : ''}`}>
       <div className="result-content">
         <div className="result-row">
           <div className="result-item">
