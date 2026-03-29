@@ -31,7 +31,6 @@ export function OnboardingModal({ onDismiss, isReplay = false }: Props) {
   const navigate = useNavigate();
   const touchStartX = useRef<number | null>(null);
   const isLast = current === SLIDES.length - 1;
-  const slide = SLIDES[current];
 
   function dismiss() {
     if (!isReplay) localStorage.setItem('zerobreak-onboarded', '1');
@@ -76,8 +75,8 @@ export function OnboardingModal({ onDismiss, isReplay = false }: Props) {
     }
   }
 
-  const slideStyle = {
-    transform: `translateX(${dragOffset}px)`,
+  const trackStyle = {
+    transform: `translateX(calc(${-current * 100}% + ${dragOffset}px))`,
     transition: dragging ? 'none' : 'transform 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
   };
 
@@ -89,10 +88,14 @@ export function OnboardingModal({ onDismiss, isReplay = false }: Props) {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="onboarding-slide" style={slideStyle}>
-          <div className="onboarding-tag">{slide.tag}</div>
-          <h2 className="onboarding-title">{slide.title}</h2>
-          <p className="onboarding-body">{slide.body}</p>
+        <div className="onboarding-track" style={trackStyle}>
+          {SLIDES.map((slide, i) => (
+            <div key={i} className="onboarding-slide">
+              <div className="onboarding-tag">{slide.tag}</div>
+              <h2 className="onboarding-title">{slide.title}</h2>
+              <p className="onboarding-body">{slide.body}</p>
+            </div>
+          ))}
         </div>
       </div>
 

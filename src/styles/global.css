@@ -802,18 +802,24 @@ body {
 
 .onboarding-slides {
   flex: 1;
+  overflow: hidden;
   display: flex;
   align-items: center;
-  justify-content: center;
   max-width: 340px;
   width: 100%;
 }
 
+.onboarding-track {
+  display: flex;
+  width: 100%;
+  will-change: transform;
+}
+
 .onboarding-slide {
+  min-width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  will-change: transform;
 }
 
 .onboarding-tag {
