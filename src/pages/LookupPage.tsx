@@ -140,7 +140,7 @@ export function LookupPage() {
   const { unit, toggleUnit } = useUnits();
   const { distance, setDistance, slope, setSlope, stimp, setStimp, clock, setClock } =
     useLookupState();
-  const { addPutt } = usePuttLog();
+  const { addPutt, currentStreak } = usePuttLog();
 
   const [onboardingDone, setOnboardingDone] = useState(() => !!localStorage.getItem('zerobreak-onboarded'));
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -243,6 +243,7 @@ export function LookupPage() {
           result={result}
           puttContext={distance !== '' ? { distance, slope, stimp, clock } : undefined}
           onLogPutt={addPutt}
+          streak={currentStreak}
         />
       </div>
 
