@@ -802,7 +802,7 @@ body {
 
 .onboarding-slides {
   flex: 1;
-  overflow: hidden;
+  overflow-x: clip;
   display: flex;
   align-items: center;
   max-width: 340px;
@@ -820,6 +820,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .onboarding-tag {
