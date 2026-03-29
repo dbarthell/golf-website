@@ -802,11 +802,10 @@ body {
 
 .onboarding-slides {
   flex: 1;
-  overflow: hidden;
+  clip-path: inset(0);
   width: 100%;
   display: flex;
-  align-items: flex-start;
-  padding-top: 1rem;
+  align-items: center;
 }
 
 .onboarding-track {
