@@ -26,10 +26,11 @@ interface Props {
 
 export function OnboardingModal({ onDismiss, isReplay = false }: Props) {
   const [current, setCurrent] = useState(0);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [dragging, setDragging] = useState(false);
   const navigate = useNavigate();
   const touchStartX = useRef<number | null>(null);
   const isLast = current === SLIDES.length - 1;
-  const slide = SLIDES[current];
 
   function dismiss() {
     if (!isReplay) localStorage.setItem('zerobreak-onboarded', '1');
@@ -39,11 +40,7 @@ export function OnboardingModal({ onDismiss, isReplay = false }: Props) {
   function handleNext() {
     if (isLast) {
       if (!isReplay) localStorage.setItem('zerobreak-onboarded', '1');
-      if (isReplay) {
-        onDismiss();
-      } else {
-        navigate('/calibrate?from=onboarding');
-      }
+      isReplay ? onDismiss() : navigate('/calibrate?from=onboarding');
     } else {
       setCurrent(c => c + 1);
     }
@@ -51,33 +48,54 @@ export function OnboardingModal({ onDismiss, isReplay = false }: Props) {
 
   function handleTouchStart(e: React.TouchEvent) {
     touchStartX.current = e.touches[0].clientX;
+    setDragging(true);
+  }
+
+  function handleTouchMove(e: React.TouchEvent) {
+    if (touchStartX.current === null) return;
+    const delta = e.touches[0].clientX - touchStartX.current;
+    if ((delta > 0 && current === 0) || (delta < 0 && isLast)) {
+      setDragOffset(delta * 0.2);
+    } else {
+      setDragOffset(delta);
+    }
   }
 
   function handleTouchEnd(e: React.TouchEvent) {
     if (touchStartX.current === null) return;
     const delta = e.changedTouches[0].clientX - touchStartX.current;
     touchStartX.current = null;
+    setDragging(false);
+    setDragOffset(0);
     if (Math.abs(delta) < 40) return;
     if (delta < 0 && !isLast) {
-      // swipe left → next slide
       setCurrent(c => c + 1);
     } else if (delta > 0 && current > 0) {
-      // swipe right → previous slide
       setCurrent(c => c - 1);
     }
   }
+
+  const trackStyle = {
+    transform: `translateX(calc(${-current * 100}% + ${dragOffset}px))`,
+    transition: dragging ? 'none' : 'transform 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
+  };
 
   return (
     <div className="onboarding-overlay">
       <div
         className="onboarding-slides"
         onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="onboarding-slide">
-          <div className="onboarding-tag">{slide.tag}</div>
-          <h2 className="onboarding-title">{slide.title}</h2>
-          <p className="onboarding-body">{slide.body}</p>
+        <div className="onboarding-track" style={trackStyle}>
+          {SLIDES.map((slide, i) => (
+            <div key={i} className="onboarding-slide">
+              <div className="onboarding-tag">{slide.tag}</div>
+              <h2 className="onboarding-title">{slide.title}</h2>
+              <p className="onboarding-body">{slide.body}</p>
+            </div>
+          ))}
         </div>
       </div>
 

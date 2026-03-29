@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { IconWalk } from '@tabler/icons-react';
 
 const STORAGE_KEY = 'zerobreak-walkoff-tip-dismissed';
 
@@ -26,7 +25,7 @@ export function WalkOffTip() {
       <div className="walkoff-backdrop" onClick={dismiss} />
       <div className="walkoff-sheet">
         <div className="walkoff-sheet-handle" />
-        <div className="walkoff-sheet-icon"><IconWalk size={40} /></div>
+        <div className="walkoff-sheet-icon">🚶</div>
         <h3 className="walkoff-sheet-title">Walk it off</h3>
         <p className="walkoff-sheet-body">
           Not sure how far you are from the hole? Walk it off —{' '}
