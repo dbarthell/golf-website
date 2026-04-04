@@ -11,14 +11,11 @@ import type { WedgeClubId, WedgePosition } from '../lib/wedge';
 interface ClubCalCardProps {
   clubId: WedgeClubId;
   label: string;
-  calibration: ReturnType<typeof useWedgeCalibration>['calibration'];
-  setAnchor: ReturnType<typeof useWedgeCalibration>['setAnchor'];
-  overrideEntry: ReturnType<typeof useWedgeCalibration>['overrideEntry'];
-  resetClub: ReturnType<typeof useWedgeCalibration>['resetClub'];
-  getClubEntries: ReturnType<typeof useWedgeCalibration>['getClubEntries'];
 }
 
-function ClubCalCard({ clubId, label, calibration, setAnchor, overrideEntry, resetClub, getClubEntries }: ClubCalCardProps) {
+function ClubCalCard({ clubId, label }: ClubCalCardProps) {
+  const { calibration, setAnchor, overrideEntry, resetClub, getClubEntries } =
+    useWedgeCalibration();
 
   const anchorPositions = calibration.anchors[clubId] ?? [];
   const anchorPos  = anchorPositions[0] ?? null;
@@ -262,8 +259,6 @@ function ClubCalCard({ clubId, label, calibration, setAnchor, overrideEntry, res
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export function WedgeCalibratePage() {
-  const { calibration, setAnchor, overrideEntry, resetClub, getClubEntries } = useWedgeCalibration();
-
   return (
     <>
       {/* Header */}
@@ -281,16 +276,7 @@ export function WedgeCalibratePage() {
         </p>
 
         {WEDGE_CLUBS.map(club => (
-          <ClubCalCard
-            key={club.id}
-            clubId={club.id}
-            label={club.label}
-            calibration={calibration}
-            setAnchor={setAnchor}
-            overrideEntry={overrideEntry}
-            resetClub={resetClub}
-            getClubEntries={getClubEntries}
-          />
+          <ClubCalCard key={club.id} clubId={club.id} label={club.label} />
         ))}
 
         <div className="wedge-cal-tip">

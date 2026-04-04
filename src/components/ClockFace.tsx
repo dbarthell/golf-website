@@ -28,7 +28,6 @@ function ClockSVG({
   const SVG_R = 83;  // ball-position radius (83 * 1.4px ≈ 116.2px — matches R above)
 
   const zblAimBase = annotations?.zblAimBase ?? 0;
-  const lateralAim = annotations?.lateralAim ?? 0;
   const breakAbs   = annotations?.breakAbs   ?? 0;
   const hasZBL     = zblAimBase > 0;
   const hasSlope    = slope > 0;
@@ -59,32 +58,8 @@ function ClockSVG({
   // For lower positions (4–8 o'clock, cos θ < 0) t < 1 and the ring sits
   // visibly between ball and ZBL.  For upper positions t > 1 and the ring
   // clamps to the ZBL dot.
-  const hasAim = hasBreak && lateralAim > 0 && ballX !== null && ballY !== null && theta !== null;
-
-  let aimX = SVG_C;
-  let aimY = SVG_C;
-  let aimT = 0;
-
-  if (hasAim && ballX !== null && ballY !== null && theta !== null) {
-    // No clamping — aimT > 1 when ring is past ZBL (upper positions 1–2, 10–11 o'clock)
-    aimT = SVG_R / (SVG_R - zblPx * Math.cos(theta));
-    aimX = ballX + aimT * (zblX - ballX);
-    aimY = ballY + aimT * (zblY - ballY);
-  }
-
-  // Dotted line end: extend past ZBL to the ring when aimT > 1
-  const dotLineT = hasAim ? Math.max(1, aimT) : 1;
-
-  const textProps = {
-    textAnchor: 'middle' as const,
-    dominantBaseline: 'central' as const,
-    fontWeight: 700,
-    fontFamily: 'system-ui,-apple-system,sans-serif',
-    fill: 'white',
-    stroke: 'rgba(14,27,61,0.85)',
-    strokeWidth: 3,
-    paintOrder: 'stroke' as const,
-  };
+  // Dotted line end: always ends at ZBL dot
+  const dotLineT = 1;
 
   return (
     <svg
@@ -143,16 +118,40 @@ function ClockSVG({
           {/* 3. ZBL dot */}
           <circle cx={zblX} cy={zblY} r="5" fill="white" opacity="0.95" />
 
-          {/* 4. ZBL label */}
-          <text {...textProps} x={SVG_C} y={zblY - 12} fontSize="8">ZBL {fmtInches(zblAimBase)}</text>
+          {/* 4a. "ZBL" label — centred above the dot */}
+          <text
+            x={SVG_C}
+            y={zblY - 12}
+            fontSize="8"
+            textAnchor="middle"
+            dominantBaseline="central"
+            fontWeight={700}
+            fontFamily="system-ui,-apple-system,sans-serif"
+            fill="white"
+            stroke="rgba(14,27,61,0.85)"
+            strokeWidth={3}
+            paintOrder="stroke"
+          >ZBL</text>
 
-          {/* 5. Lateral aim indicator — gold target ring at the 90° point */}
-          {hasAim && (
-            <>
-              <circle cx={aimX} cy={aimY} r="7" fill="none" stroke="#c9a86a" strokeWidth="1.5" opacity="0.95" />
-              <circle cx={aimX} cy={aimY} r="2.5" fill="#c9a86a" opacity="0.95" />
-            </>
-          )}
+          {/* 4b. Inches value — beside vertical line, flips left when ball is on the right */}
+          {(() => {
+            const onRight = theta !== null && Math.sin(theta) > 0;
+            return (
+              <text
+                x={onRight ? SVG_C - 7 : SVG_C + 7}
+                y={(SVG_C + zblY) / 2}
+                fontSize="8"
+                textAnchor={onRight ? 'end' : 'start'}
+                dominantBaseline="central"
+                fontWeight={700}
+                fontFamily="system-ui,-apple-system,sans-serif"
+                fill="white"
+                stroke="rgba(14,27,61,0.85)"
+                strokeWidth={3}
+                paintOrder="stroke"
+              >{fmtInches(zblAimBase)}</text>
+            );
+          })()}
         </>
       )}
     </svg>
@@ -170,7 +169,7 @@ export function ClockFace({ clockKey, onClockChange, annotations, slope = 0 }: P
   // Tilt the clock face to mimic a real sloped green.
   // rotateX(+deg) tilts the top away from the viewer (the 12-o'clock / uphill
   // side recedes), giving the impression of looking across a slope.
-  const tiltDeg = slope * 5; // 1% → 5°, 6% → 30°
+  const tiltDeg = slope * 2; // 1% → 2°, 6% → 12°
 
   return (
     <div className="lookup-input-section">
