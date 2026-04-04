@@ -134,10 +134,12 @@ export function WedgeClockFace({
   const ticks = useMemo(() => Array.from({ length: 24 }, (_, i) => {
     const a = i * 15;
     const isActive = a === 0 || a >= ARC_S;
+    // Gap zone: between golf ball (180°) and 7:30 (225°) — slightly visible
+    const isGap    = a > 180 && a < ARC_S;
     const cwAngle  = a === 0 ? 360 : a;
     const isMajor  = CLOCK_POSITIONS.some(p => cw(p.angleDeg) === cwAngle);
     const isCalib  = CLOCK_POSITIONS.some(p => cw(p.angleDeg) === cwAngle && p.calibrate);
-    return { a, isActive, isMajor, isCalib };
+    return { a, isActive, isGap, isMajor, isCalib };
   }), []);
 
   const clubLabel = WEDGE_CLUBS.find(c => c.id === clubId)?.label ?? '';
@@ -199,9 +201,9 @@ export function WedgeClockFace({
         <path d={arcStr(ARC_S, ARC_E, BEZEL_MID)} fill="none"
           stroke="rgba(201,168,106,0.18)" strokeWidth="14" />
 
-        {/* Progress arc — only when a position is actually selected */}
+        {/* Progress arc — sweeps clockwise from the golf ball (6 o'clock) up to selected position */}
         {handCW !== null && (
-          <path d={arcStr(ARC_S, handCW, BEZEL_MID)} fill="none"
+          <path d={arcStr(180, handCW, BEZEL_MID)} fill="none"
             stroke={gold} strokeWidth="14" strokeLinecap="butt" opacity="0.82" />
         )}
 
@@ -216,11 +218,12 @@ export function WedgeClockFace({
           stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
 
         {/* Tick marks */}
-        {ticks.map(({ a, isActive, isMajor, isCalib }) => {
+        {ticks.map(({ a, isActive, isGap, isMajor, isCalib }) => {
           const inner = pt(a, FACE_R);
           const outer = pt(a, FACE_R + (isMajor ? 13 : 7));
           const opacity = isActive
             ? (isCalib ? 0.90 : isMajor ? 0.70 : 0.50)
+            : isGap ? 0.28
             : (isMajor ? 0.13 : 0.07);
           const color = isActive && isCalib ? gold : 'white';
           return (

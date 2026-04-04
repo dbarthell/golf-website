@@ -1,3 +1,4 @@
+import { IconClock } from '@tabler/icons-react';
 import { CLOCK_POSITIONS, WEDGE_CLUBS } from '../lib/wedge';
 import type { WedgeEntry, WedgeClubId, WedgePosition, WedgeCalibrationData } from '../lib/wedge';
 
@@ -37,7 +38,9 @@ export function WedgeMatrix({
       <table className="wedge-matrix">
         <thead>
           <tr>
-            <th className="wedge-matrix-pos-col"></th>
+            <th className="wedge-matrix-pos-col">
+              <IconClock size={14} stroke={2} style={{ opacity: 0.60, display: 'block', margin: '0 auto' }} />
+            </th>
             {WEDGE_CLUBS.map(club => (
               <th
                 key={club.id}
