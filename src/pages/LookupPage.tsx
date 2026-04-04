@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IconAdjustments, IconClipboardList, IconInfoCircle } from '@tabler/icons-react';
+import { IconAdjustments, IconClipboardList, IconInfoCircle, IconGauge } from '@tabler/icons-react';
+
 
 import { getPuttingData } from '../hooks/usePuttingData';
 import { useCalibration } from '../hooks/useCalibration';
@@ -31,6 +32,7 @@ function computeResult(
   stimp: number,
   clock: string | null,
   distanceFactor: number,
+  distanceOffset: number,
   lagRows: ReturnType<typeof getPuttingData>['lagPuttingTable']['rows'],
   brysonRows: ReturnType<typeof getPuttingData>['brysonTable']['rows'],
 ): LookupResult {
@@ -71,7 +73,7 @@ function computeResult(
     const edgeAim    = lateralAim - 2.125;
     const namedAim   = breakAbs >= 0.05 ? aimPoint(lateralAim, breakFactor) : null;
 
-    const backswing = backswingRaw(adjDist, stimp, lagRows, distanceFactor);
+    const backswing = backswingRaw(adjDist, stimp, lagRows, distanceFactor, distanceOffset);
 
     const annotations: ClockAnnotations = { zblAimBase, lateralAim, breakAbs, breakFactor, clockKey: clock };
 
@@ -102,14 +104,14 @@ function computeResult(
   const zblDisplay = fmtInches(zblRaw);
   const slopeLabel = slope > 0 ? `ZBL Aim (${slope}%)` : 'ZBL Aim (flat)';
   // zblRaw is exposed so LookupResultPanel can format it in the current unit
-  const backswing  = backswingRaw(distance, stimp, lagRows, distanceFactor);
+  const backswing  = backswingRaw(distance, stimp, lagRows, distanceFactor, distanceOffset);
 
   const uphillAdj    = distance * slope / 10 * stimpScale;
   const downhillAdj  = distance * slope * 1.5 / 10 * stimpScale;
   const uphillTotal  = Math.round(distance + uphillAdj);
   const downhillTotal = Math.max(1, Math.round(distance - downhillAdj));
-  const uphillBS     = backswingRaw(uphillTotal, stimp, lagRows, distanceFactor);
-  const downhillBS   = backswingRaw(downhillTotal, stimp, lagRows, distanceFactor);
+  const uphillBS     = backswingRaw(uphillTotal, stimp, lagRows, distanceFactor, distanceOffset);
+  const downhillBS   = backswingRaw(downhillTotal, stimp, lagRows, distanceFactor, distanceOffset);
 
   const annotations: ClockAnnotations = { zblAimBase: zblRaw, lateralAim: 0, breakAbs: 0, breakFactor: 0, clockKey: null };
 
@@ -157,10 +159,11 @@ export function LookupPage() {
         stimp,
         clock,
         calibration.distanceFactor,
+        calibration.distanceOffset,
         data.lagPuttingTable.rows,
         data.brysonTable.rows,
       ),
-    [distance, slope, stimp, clock, calibration.distanceFactor, data],
+    [distance, slope, stimp, clock, calibration.distanceFactor, calibration.distanceOffset, data],
   );
 
   const annotations: ClockAnnotations =
@@ -193,6 +196,10 @@ export function LookupPage() {
           >
             {unit === 'ft' ? 'ft' : 'm'}
           </button>
+          <Link to="/wedges" className="full-view-link">
+            <IconGauge size={20} stroke={2} />
+            <span className="full-view-link-label">Wedges</span>
+          </Link>
           <Link to="/log" className="full-view-link">
             <IconClipboardList size={20} stroke={2} />
             <span className="full-view-link-label">Log</span>
@@ -251,6 +258,7 @@ export function LookupPage() {
       <BackswingTable
         lagRows={data.lagPuttingTable.rows}
         distanceFactor={calibration.distanceFactor}
+        distanceOffset={calibration.distanceOffset}
         stanceWidth={calibration.stanceWidth}
         stimp={stimp}
       />
@@ -258,6 +266,7 @@ export function LookupPage() {
       <CommonDistances
         stimp={stimp}
         distanceFactor={calibration.distanceFactor}
+        distanceOffset={calibration.distanceOffset}
         lagRows={data.lagPuttingTable.rows}
         onSelect={dist => {
           setDistance(dist);

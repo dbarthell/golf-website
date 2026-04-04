@@ -273,8 +273,7 @@ export function LogPage() {
       {/* Header */}
       <div className="log-header">
         <Link to="/" className="back-link">
-          <IconArrowLeft size={16} stroke={2} />
-          Back
+          <IconArrowLeft size={20} stroke={2} />
         </Link>
         <h1>Putt Log</h1>
         <div className="header-spacer" />

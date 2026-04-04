@@ -60,6 +60,7 @@ export function DistanceInput({ value, onChange }: Props) {
           classNames={{ input: 'distance-input' }}
           hideControls
           onChange={v => handleChange(v === '' ? '' : Number(v))}
+          onFocus={e => e.target.select()}
         />
         <ActionIcon
           variant="transparent"
