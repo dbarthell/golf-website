@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 66">
+  <!-- Z — solid green, three overlapping shapes form the letterform -->
+  <polygon points="0,0 65,0 65,20 0,20"        fill="#3d9e70"/>
+  <polygon points="37,20 65,20 28,46 0,46"      fill="#3d9e70"/>
+  <polygon points="0,46 100,46 100,66 0,66"     fill="#3d9e70"/>
+  <!-- B — solid gold, spine + two right-bulging arcs -->
+  <path d="M58,0 L66,0 A25,17,0,0,1,66,33 A27,17,0,0,1,66,66 L58,66 Z" fill="#c9a86a"/>
+  <!-- Golf ball — white circle at Z/B intersection -->
+  <circle cx="61" cy="33" r="8" fill="white"/>
+</svg>

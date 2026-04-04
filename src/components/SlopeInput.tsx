@@ -44,6 +44,7 @@ export function SlopeInput({ value, onChange }: Props) {
             const n = Number(v);
             if (!isNaN(n)) onChange(Math.min(6, Math.max(0, n)));
           }}
+          onFocus={e => e.target.select()}
         />
         <ActionIcon
           variant="transparent"

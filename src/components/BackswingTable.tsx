@@ -18,11 +18,12 @@ const LANDMARKS = [
 interface Props {
   lagRows: LagRow[];
   distanceFactor: number;
+  distanceOffset?: number;
   stanceWidth: number;
   stimp: number;
 }
 
-export function BackswingTable({ lagRows, distanceFactor, stanceWidth, stimp }: Props) {
+export function BackswingTable({ lagRows, distanceFactor, distanceOffset = 0, stanceWidth, stimp }: Props) {
   const { fmtDist, fmtBackswing } = useUnits();
 
   return (
@@ -37,7 +38,7 @@ export function BackswingTable({ lagRows, distanceFactor, stanceWidth, stimp }: 
         {LANDMARKS.map(({ name, offset }) => {
           const physicalBackswing = stanceWidth + offset;
           if (physicalBackswing <= 0) return null;
-          const rawDist = getDistanceForBackswingInches(physicalBackswing, stimp, lagRows, distanceFactor);
+          const rawDist = getDistanceForBackswingInches(physicalBackswing, stimp, lagRows, distanceFactor, distanceOffset);
           if (rawDist === null) return null;
           return (
             <div key={name} className="bs-row">

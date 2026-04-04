@@ -83,11 +83,12 @@ export function backswingRaw(
   stimp: number,
   rows: LagRow[],
   distanceFactor: number,
+  distanceOffset = 0,
 ): number | null {
   const data = findBackswingData(distFeet + 1, stimp, rows);
   if (!data) return null;
   const raw = parseFloat(data.inches.replace('"', ''));
-  return raw * distanceFactor;
+  return Math.max(0.25, raw * distanceFactor + distanceOffset);
 }
 
 /**
@@ -100,10 +101,10 @@ export function getDistanceForBackswingInches(
   stimp: number,
   rows: LagRow[],
   distanceFactor: number,
+  distanceOffset = 0,
 ): number | null {
-  // The physical backstroke B = raw_backstroke * distanceFactor, so:
-  // effective raw backstroke = B / distanceFactor
-  const effectiveInches = backswingInches / distanceFactor;
+  // B = raw * distanceFactor + distanceOffset  →  raw = (B - distanceOffset) / distanceFactor
+  const effectiveInches = (backswingInches - distanceOffset) / distanceFactor;
 
   let lower: LagRow | null = null;
   let upper: LagRow | null = null;

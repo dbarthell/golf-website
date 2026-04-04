@@ -949,6 +949,32 @@ body {
   text-align: center;
 }
 
+.cal-point2-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(100% - 2 * var(--space-md));
+  margin: 0.85rem var(--space-md) 0;
+  padding: 0.6rem 0.9rem;
+  background: var(--white);
+  border: 1.5px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.cal-point2-toggle:hover {
+  border-color: var(--green-dark);
+  background: var(--green-pale);
+}
+
+.cal-point2-body {
+  padding: 0.75rem var(--space-md) 0;
+}
+
 .status-card {
   margin: var(--space-md);
   background: var(--white);
@@ -1023,7 +1049,15 @@ body {
   transition: all 0.15s;
 }
 .dist-chip.dist-chip-active { background: #2d1508; color: var(--white); border-color: #2d1508; }
+.dist-chip.dist-chip-used  { opacity: 0.35; cursor: not-allowed; }
 .dist-chip:active { opacity: 0.8; }
+
+.cal-optional-tag {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-left: 0.3rem;
+}
 
 .adjust-area {
   display: flex;
@@ -1661,5 +1695,671 @@ body {
 }
 .lookup-result--made-flash {
   animation: made-flash 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ========================================
+   Wedge Module
+   ======================================== */
+
+/* ── Shared header ── */
+.wedge-header-title {
+  color: var(--white);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* Centered-title header variant: left icon | centered title | right icon */
+.app-header--centered-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.app-header--centered-title .wedge-header-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.wedge-back-link {
+  color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  z-index: 1;
+}
+
+/* ── Lookup body ── */
+.wedge-lookup-body {
+  background: var(--green-dark);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.wedge-target-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.wedge-target-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.wedge-target-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.wedge-target-input {
+  width: 80px;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--white);
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.35rem 0.5rem;
+  text-align: center;
+  font-family: var(--font-sans);
+  -moz-appearance: textfield;
+}
+.wedge-target-input::-webkit-outer-spin-button,
+.wedge-target-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.wedge-target-input::placeholder { color: rgba(255, 255, 255, 0.45); }
+.wedge-target-input:focus { outline: none; background: rgba(255, 255, 255, 0.22); }
+
+.wedge-target-unit {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+}
+
+/* ── Club tabs ── */
+/* Ferrari instrument cluster — circular sub-dial selectors */
+.wedge-club-tabs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.4rem;
+  padding: 0.75rem 1rem 0.8rem;
+  background: transparent;
+}
+
+.wedge-club-tab {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  flex: none;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.22);
+  color: rgba(255, 255, 255, 0.40);
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  letter-spacing: 0.10em;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.18s;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.30),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+/* SW (middle) is slightly larger — visual centrepiece of the cluster */
+.wedge-club-tabs .wedge-club-tab:nth-child(2) {
+  width: 76px;
+  height: 76px;
+  font-size: 1rem;
+}
+
+.wedge-club-tab:not(.wedge-club-tab--active):active {
+  background: rgba(255,255,255,0.08);
+}
+
+.wedge-club-tab--active {
+  border-color: rgba(201, 168, 106, 0.80);
+  border-width: 2px;
+  color: #c9a86a;
+  background: rgba(201, 168, 106, 0.12);
+  box-shadow:
+    0 0 16px rgba(201, 168, 106, 0.30),
+    0 2px 6px rgba(0,0,0,0.30),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+.wedge-club-tab--uncal {
+  opacity: 0.45;
+}
+
+.wedge-uncal-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 200, 80, 0.8);
+  position: absolute;
+  top: 4px;
+  right: 6px;
+}
+
+/* ── Clock section ── */
+.wedge-clock-section {
+  background: var(--green-dark);
+  padding: var(--space-sm) var(--space-md) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.wedge-uncalibrated-msg {
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  padding: var(--space-xl) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.wedge-calibrate-cta {
+  color: #c9a86a;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.wedge-flight-hint {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.78rem;
+  text-align: center;
+  margin-top: -0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+/* ── Clock face ── */
+.wedge-clock-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+
+.wedge-clock-svg {
+  width: min(300px, 90vw);
+  height: auto;
+  display: block;
+}
+
+.wedge-clock-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  min-height: 2.5rem;
+}
+
+.wedge-clock-yards {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+
+.wedge-clock-yards--empty {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.wedge-clock-sublabel {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── Matrix section — matches BackswingTable style ── */
+.wedge-matrix-section {
+  background: var(--gray-100);
+  padding: var(--space-xl) var(--space-md);
+}
+
+.wedge-matrix-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+}
+
+.wedge-matrix-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.wedge-flight-toggle {
+  display: flex;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.wedge-flight-btn {
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--gray-600);
+  transition: all 0.15s;
+}
+
+.wedge-flight-btn--active {
+  background: var(--green-dark);
+  color: var(--white);
+}
+
+.wedge-flight-explain {
+  font-size: 0.78rem;
+  color: var(--gray-500);
+  margin-top: calc(-1 * var(--space-md));
+  margin-bottom: var(--space-lg);
+  line-height: 1.4;
+}
+
+/* ── Matrix table — white card matching bs-table ── */
+.wedge-matrix-wrap {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.wedge-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.wedge-matrix th {
+  padding: 0.6rem 0.5rem;
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--white);
+  border-bottom: 2px solid var(--green-dark);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.wedge-matrix-pos-col { text-align: left !important; width: 56px; }
+
+.wedge-matrix-club-col { min-width: 52px; }
+
+.wedge-matrix-club-highlighted {
+  background: rgba(1, 60, 54, 0.04);
+}
+
+.wedge-matrix td {
+  padding: 0.65rem 0.5rem;
+  text-align: center;
+  color: var(--text-primary);
+  font-weight: 700;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.wedge-matrix tr:last-child td {
+  border-bottom: none;
+}
+
+.wedge-matrix tbody tr:hover td {
+  background: var(--green-pale);
+}
+
+.wedge-matrix-pos {
+  text-align: left !important;
+  padding-left: 0.75rem !important;
+}
+
+.wedge-pos-label {
+  font-weight: 600;
+  color: var(--gray-600);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.wedge-matrix-row--highlight td {
+  background: rgba(201, 168, 106, 0.15);
+}
+
+.wedge-matrix-row--highlight .wedge-pos-label {
+  color: var(--green-dark);
+}
+
+.wedge-matrix-row--interp td {
+  background: rgba(201, 168, 106, 0.08);
+  font-style: italic;
+}
+
+/* Intermediate rows (8:00, 10:00, 11:00) — same weight as calibrate rows */
+.wedge-matrix-row--intermed td {
+  background: transparent;
+}
+.wedge-pos-label--intermed {
+  color: var(--gray-600);
+  font-weight: 600;
+}
+
+.wedge-matrix-cell {
+  position: relative;
+}
+
+.wedge-matrix-val {
+  display: block;
+  text-align: center;
+}
+
+.wedge-matrix-cell--highlight {
+  font-weight: 700;
+  color: var(--green-dark) !important;
+}
+
+.wedge-cell-inner {
+  display: inline-block;
+}
+
+.wedge-cell-inner--anchor {
+  border-bottom: 2px solid #c9a86a;
+  padding-bottom: 1px;
+}
+
+.wedge-est-dot {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(201, 168, 106, 0.55);
+  pointer-events: none;
+}
+
+/* ── Calibration page ── */
+.wedge-cal-body {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.wedge-cal-intro {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.wedge-cal-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.wedge-cal-card-header {
+  background: var(--green-dark);
+  color: var(--white);
+  padding: 0.6rem var(--space-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wedge-cal-club-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.wedge-cal-reset-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--radius-sm);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.55rem;
+  cursor: pointer;
+  font-family: var(--font-sans);
+}
+
+.wedge-cal-anchor {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.wedge-cal-anchor-hint {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Position picker row */
+.wedge-cal-pos-row {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.wedge-cal-pos-btn {
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--gray-200);
+  background: var(--gray-100);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.wedge-cal-pos-btn--active {
+  background: var(--green-dark);
+  border-color: var(--green-dark);
+  color: var(--white);
+}
+
+.wedge-cal-pos-btn--used {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.wedge-cal-anchor-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0.75rem 0 0.35rem;
+}
+
+.wedge-cal-anchor-label--optional {
+  color: var(--text-secondary);
+}
+
+.wedge-cal-optional-tag {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* Yardage input */
+.wedge-cal-yardage-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.wedge-cal-label {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  min-width: 140px;
+}
+
+.wedge-cal-input {
+  width: 80px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: var(--gray-100);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.3rem 0.5rem;
+  text-align: center;
+  font-family: var(--font-sans);
+  -moz-appearance: textfield;
+}
+.wedge-cal-input::-webkit-outer-spin-button,
+.wedge-cal-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.wedge-cal-input:focus { outline: none; border-color: var(--green-dark); }
+
+/* Derive button */
+.wedge-cal-derive-btn {
+  align-self: flex-start;
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-md);
+  background: var(--green-dark);
+  color: var(--white);
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.wedge-cal-derive-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.wedge-cal-derive-btn--saved {
+  background: var(--green-light);
+}
+
+/* Overrides section */
+.wedge-cal-overrides {
+  border-top: 1px solid var(--gray-200);
+}
+
+.wedge-cal-overrides-toggle {
+  width: 100%;
+  padding: 0.65rem var(--space-md);
+  background: transparent;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+}
+
+.wedge-cal-override-grid {
+  padding: 0 var(--space-md) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.wedge-cal-override-header {
+  display: grid;
+  grid-template-columns: 56px 1fr 1fr 56px;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--gray-200);
+  margin-bottom: 0.1rem;
+}
+
+.wedge-cal-override-row {
+  display: grid;
+  grid-template-columns: 56px 1fr 1fr 56px;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.wedge-cal-override-row--anchor {
+  background: rgba(201, 168, 106, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 0.1rem 0.25rem;
+  margin: 0 -0.25rem;
+}
+
+.wedge-cal-override-pos {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gray-600);
+}
+
+.wedge-cal-override-input {
+  width: 100%;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: var(--gray-100);
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.25rem 0.35rem;
+  text-align: center;
+  font-family: var(--font-sans);
+  -moz-appearance: textfield;
+}
+.wedge-cal-override-input::-webkit-outer-spin-button,
+.wedge-cal-override-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.wedge-cal-override-input:focus { outline: none; border-color: var(--green-dark); }
+
+.wedge-cal-source {
+  font-size: 0.72rem;
+  color: var(--gray-400);
+  text-align: center;
+}
+
+.wedge-cal-source--est {
+  color: var(--green-accent);
+  font-style: italic;
+}
+
+.wedge-cal-tip {
+  background: var(--green-pale);
+  border-left: 3px solid var(--green-accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.65rem var(--space-md);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
 }
 

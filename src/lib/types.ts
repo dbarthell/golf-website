@@ -40,8 +40,9 @@ export interface PuttingData {
 // ── Application state ─────────────────────────────────────────────────────────
 
 export interface Calibration {
-  distanceFactor: number;
-  stanceWidth: number; // inches from ball to middle of trail foot, default 12
+  distanceFactor: number;   // slope:  calibrated = raw * distanceFactor + distanceOffset
+  distanceOffset: number;   // intercept, default 0 (single-anchor backwards-compat)
+  stanceWidth: number;      // inches from ball to middle of trail foot, default 12
 }
 
 // ── Parsed cell value ─────────────────────────────────────────────────────────
