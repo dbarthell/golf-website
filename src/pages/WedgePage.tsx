@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IconAdjustments, IconArrowLeft } from '@tabler/icons-react';
+import { IconAdjustments } from '@tabler/icons-react';
 
 import { useWedgeCalibration } from '../hooks/useWedgeCalibration';
 import { WedgeClockFace } from '../components/WedgeClockFace';
@@ -46,11 +46,8 @@ export function WedgePage() {
   return (
     <>
       {/* ── Header ────────────────────────────────────────────────────────── */}
-      <div className="app-header app-header--centered-title">
-        <Link to="/" className="wedge-back-link" aria-label="Back to Putting">
-          <IconArrowLeft size={20} stroke={2} />
-        </Link>
-        <span className="wedge-header-title">Wedges</span>
+      <div className="app-header bag-header">
+        <span className="bag-module-title">Wedges</span>
         <Link to="/wedges/calibrate" className="full-view-link">
           <IconAdjustments size={20} stroke={2} />
           <span className="full-view-link-label">Calibrate</span>

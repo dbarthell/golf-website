@@ -47,7 +47,7 @@ body {
   background-color: var(--gray-100);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  padding-bottom: calc(var(--space-2xl) + env(safe-area-inset-bottom));
+  padding-bottom: calc(56px + var(--space-2xl) + env(safe-area-inset-bottom));
   overflow-x: hidden;
   max-width: 100vw;
   position: relative;
@@ -2363,4 +2363,528 @@ body {
   color: var(--text-secondary);
   line-height: 1.5;
 }
+
+/* ========================================
+   Bottom Nav — icon-only fixed tab bar
+   ======================================== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(56px + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--green-dark);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 100;
+}
+
+.bottom-nav-tab {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 56px;
+  padding: 0;
+  transition: color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bottom-nav-tab--active {
+  color: var(--green-accent);
+}
+
+.bottom-nav-tab:active {
+  opacity: 0.7;
+}
+
+.bottom-nav-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 22%;
+  object-fit: cover;
+  opacity: 0.5;
+  transition: opacity 0.15s;
+}
+
+.bottom-nav-tab--active .bottom-nav-logo {
+  opacity: 1;
+}
+
+/* ========================================
+   My Clubs — shared header style
+   ======================================== */
+.bag-header {
+  justify-content: space-between;
+}
+
+.bag-module-title {
+  color: var(--white);
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* ========================================
+   BagPage — reference view
+   ======================================== */
+
+.bag-empty-state {
+  padding: var(--space-xl) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-xl);
+}
+
+.bag-empty-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.bag-empty-body {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  max-width: 280px;
+}
+
+.bag-empty-cta {
+  display: inline-block;
+  margin-top: var(--space-sm);
+  background: var(--green-dark);
+  color: var(--white);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  padding: 0.55rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* ── Card grid ── */
+.bag-grid-wrap {
+  background: var(--green-dark);
+  min-height: calc(100vh - 64px - env(safe-area-inset-top));
+  padding-bottom: calc(56px + env(safe-area-inset-bottom));
+}
+
+.bag-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+  padding: var(--space-sm);
+  align-content: start;
+}
+
+.bag-card {
+  background: #f7f3ec;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.65rem 0.45rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  cursor: pointer;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+}
+
+
+
+.bag-card-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.3rem;
+}
+
+.bag-card-row-nums {
+  display: flex;
+  align-items: baseline;
+  gap: 0.2rem;
+}
+
+.bag-card-tag {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--green-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.bag-card-tag--sub {
+  font-size: 0.62rem;
+  font-weight: 600;
+  opacity: 0.4;
+  letter-spacing: 0.03em;
+}
+
+.bag-card-full {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--green-dark);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.bag-card-pelz {
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.bag-card-pelz--cal { color: var(--green-dark); opacity: 0.65; }
+.bag-card-pelz--est { color: var(--green-dark); opacity: 0.25; }
+
+.bag-card-carry {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--green-dark);
+  opacity: 0.35;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ========================================
+   BagEditPage
+   ======================================== */
+.bag-edit-body {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* Pelz offset card */
+.bag-edit-offset-card {
+  background: var(--green-pale);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--space-xs);
+}
+
+.bag-edit-offset-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-bottom: 0.4rem;
+}
+
+.bag-edit-offset-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--green-dark);
+}
+
+.bag-edit-offset-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.bag-edit-offset-input {
+  width: 52px;
+  text-align: center;
+}
+
+.bag-edit-offset-unit {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.bag-edit-offset-hint {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+/* Pelz philosophy note */
+.bag-edit-pelz-note {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  background: var(--gray-100);
+  border-left: 3px solid var(--green-accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.5rem var(--space-sm);
+  line-height: 1.45;
+}
+
+/* Per-club card */
+.bag-edit-row {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.bag-edit-row-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.2rem;
+}
+
+.bag-edit-club-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  letter-spacing: 0.02em;
+}
+
+.bag-edit-remove-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--gray-400);
+  padding: 0.25rem;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s;
+  display: flex;
+  align-items: center;
+}
+.bag-edit-remove-btn:hover { color: #c0392b; }
+
+
+/* Fields layout */
+.bag-edit-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.bag-edit-field-group {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+.bag-edit-field-group--pelz {
+  border-top: 1px solid var(--gray-200);
+  padding-top: var(--space-xs);
+  margin-top: 0.15rem;
+}
+
+.bag-edit-swing-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--gray-600);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  min-width: 38px;
+  padding-top: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bag-edit-calibrated-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green-accent);
+}
+
+.bag-edit-field-pair {
+  display: flex;
+  gap: var(--space-xs);
+  flex: 1;
+}
+
+.bag-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+}
+
+.bag-edit-field-label {
+  font-size: 0.7rem;
+  color: var(--gray-600);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.bag-edit-check {
+  color: var(--green-accent);
+}
+
+.bag-edit-input {
+  width: 100%;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: var(--gray-100);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.3rem 0.4rem;
+  text-align: center;
+  font-family: var(--font-sans);
+  -moz-appearance: textfield;
+  transition: border-color 0.15s;
+}
+.bag-edit-input::-webkit-outer-spin-button,
+.bag-edit-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.bag-edit-input:focus { outline: none; border-color: var(--green-dark); }
+.bag-edit-input--optional { opacity: 0.75; }
+.bag-edit-input--optional:focus { opacity: 1; }
+
+/* Estimated 10:30 button */
+.bag-edit-pelz-estimate {
+  background: none;
+  border: 1px dashed var(--gray-200);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.65rem;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  text-align: left;
+  flex: 1;
+  line-height: 1.4;
+  transition: border-color 0.15s;
+}
+.bag-edit-pelz-estimate:hover:not(:disabled) { border-color: var(--green-dark); }
+.bag-edit-pelz-estimate:disabled { cursor: default; opacity: 0.5; }
+
+.bag-edit-est-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gray-600);
+}
+.bag-edit-est-carry {
+  font-size: 0.85rem;
+  color: var(--gray-400);
+}
+.bag-edit-est-label {
+  font-size: 0.72rem;
+  color: var(--gray-400);
+  font-style: italic;
+}
+
+/* Add club button */
+.bag-edit-add-btn {
+  background: none;
+  border: 1.5px dashed var(--gray-400);
+  border-radius: var(--radius-md);
+  color: var(--gray-600);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.65rem var(--space-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  transition: border-color 0.15s, color 0.15s;
+  margin-top: var(--space-xs);
+}
+.bag-edit-add-btn:hover {
+  border-color: var(--green-dark);
+  color: var(--green-dark);
+}
+
+/* ── Add club bottom sheet ── */
+.bag-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 200;
+  animation: woBdFadeIn 0.2s ease;
+  display: flex;
+  align-items: flex-end;
+}
+
+.bag-sheet {
+  background: var(--white);
+  border-radius: 1.25rem 1.25rem 0 0;
+  padding: 0.75rem var(--space-lg) calc(var(--space-xl) + env(safe-area-inset-bottom));
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  animation: woSheetUp 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.bag-sheet-handle {
+  width: 2.5rem;
+  height: 4px;
+  background: var(--gray-200);
+  border-radius: 2px;
+  margin: 0 auto var(--space-sm);
+}
+
+.bag-sheet-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin-bottom: var(--space-xs);
+}
+
+.bag-sheet-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.bag-sheet-option {
+  background: var(--green-pale);
+  border: 1px solid var(--gray-200);
+  border-radius: 999px;
+  color: var(--green-dark);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.35rem 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.bag-sheet-option:hover { background: var(--green-accent); color: var(--white); border-color: var(--green-accent); }
+
+.bag-sheet-custom { margin-top: var(--space-xs); }
+
+.bag-sheet-custom-row {
+  display: flex;
+  gap: var(--space-xs);
+  margin-top: 0.3rem;
+}
+
+.bag-sheet-custom-input { flex: 1; text-align: left; }
+
+.bag-sheet-custom-add {
+  background: var(--green-dark);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--white);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.3rem 0.9rem;
+  cursor: pointer;
+}
+.bag-sheet-custom-add:disabled { opacity: 0.4; cursor: default; }
 

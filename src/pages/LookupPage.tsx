@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IconAdjustments, IconClipboardList, IconInfoCircle, IconGauge } from '@tabler/icons-react';
+import { IconAdjustments, IconClipboardList, IconInfoCircle } from '@tabler/icons-react';
 
 
 import { getPuttingData } from '../hooks/usePuttingData';
@@ -196,10 +196,6 @@ export function LookupPage() {
           >
             {unit === 'ft' ? 'ft' : 'm'}
           </button>
-          <Link to="/wedges" className="full-view-link">
-            <IconGauge size={20} stroke={2} />
-            <span className="full-view-link-label">Wedges</span>
-          </Link>
           <Link to="/log" className="full-view-link">
             <IconClipboardList size={20} stroke={2} />
             <span className="full-view-link-label">Log</span>
