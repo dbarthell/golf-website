@@ -4,19 +4,29 @@ import { IconArrowLeft, IconChevronDown, IconChevronUp } from '@tabler/icons-rea
 
 import { useWedgeCalibration } from '../hooks/useWedgeCalibration';
 import { WEDGE_CLUBS, CLOCK_POSITIONS } from '../lib/wedge';
-import type { WedgeClubId, WedgePosition } from '../lib/wedge';
+import type { WedgeCalibrationData, WedgeClubId, WedgePosition } from '../lib/wedge';
 
 // ── Single-club calibration card ──────────────────────────────────────────────
 
 interface ClubCalCardProps {
   clubId: WedgeClubId;
   label: string;
+  calibration: WedgeCalibrationData;
+  setAnchor: ReturnType<typeof useWedgeCalibration>['setAnchor'];
+  overrideEntry: ReturnType<typeof useWedgeCalibration>['overrideEntry'];
+  resetClub: ReturnType<typeof useWedgeCalibration>['resetClub'];
+  getClubEntries: ReturnType<typeof useWedgeCalibration>['getClubEntries'];
 }
 
-function ClubCalCard({ clubId, label }: ClubCalCardProps) {
-  const { calibration, setAnchor, overrideEntry, resetClub, getClubEntries } =
-    useWedgeCalibration();
-
+function ClubCalCard({
+  clubId,
+  label,
+  calibration,
+  setAnchor,
+  overrideEntry,
+  resetClub,
+  getClubEntries,
+}: ClubCalCardProps) {
   const anchorPositions = calibration.anchors[clubId] ?? [];
   const anchorPos  = anchorPositions[0] ?? null;
   const anchorPos2 = anchorPositions[1] ?? null;
@@ -259,6 +269,9 @@ function ClubCalCard({ clubId, label }: ClubCalCardProps) {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export function WedgeCalibratePage() {
+  const { calibration, setAnchor, overrideEntry, resetClub, getClubEntries } =
+    useWedgeCalibration();
+
   return (
     <>
       {/* Header */}
@@ -276,7 +289,16 @@ export function WedgeCalibratePage() {
         </p>
 
         {WEDGE_CLUBS.map(club => (
-          <ClubCalCard key={club.id} clubId={club.id} label={club.label} />
+          <ClubCalCard
+            key={club.id}
+            clubId={club.id}
+            label={club.label}
+            calibration={calibration}
+            setAnchor={setAnchor}
+            overrideEntry={overrideEntry}
+            resetClub={resetClub}
+            getClubEntries={getClubEntries}
+          />
         ))}
 
         <div className="wedge-cal-tip">

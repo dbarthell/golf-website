@@ -21,7 +21,6 @@ struct BagWidgetProvider: TimelineProvider {
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<BagWidgetEntry>) -> Void) {
         let entry   = BagWidgetEntry(date: Date(), rows: loadBagRows())
-        // Refresh once an hour in case data changed while the app ran
         let refresh = Calendar.current.date(byAdding: .hour, value: 1, to: Date()) ?? Date()
         completion(Timeline(entries: [entry], policy: .after(refresh)))
     }
@@ -43,53 +42,116 @@ private let previewRows: [BagWidgetRow] = [
     BagWidgetRow(id: "dr",  label: "DR",  fullTotal: 260, flightedTotal: nil, isEstimated: false),
 ]
 
-// ── Single club row view ──────────────────────────────────────────────────────
+// ── Shared row view (size-aware) ──────────────────────────────────────────────
 
 struct ClubRowView: View {
     let row: BagWidgetRow
+    var fontSize: CGFloat = 13
+    var labelWidth: CGFloat = 28
 
     var body: some View {
-        HStack(spacing: 3) {
+        HStack(spacing: 4) {
             Text(row.label)
-                .font(.system(size: 10, weight: .bold))
+                .font(.system(size: fontSize * 0.82, weight: .semibold))
                 .foregroundStyle(.secondary)
-                .frame(width: 24, alignment: .leading)
+                .frame(width: labelWidth, alignment: .leading)
 
             Text("\(row.fullTotal)")
-                .font(.system(size: 11, weight: .bold).monospacedDigit())
+                .font(.system(size: fontSize, weight: .bold).monospacedDigit())
                 .foregroundStyle(.primary)
 
             if let f = row.flightedTotal {
                 Text(row.isEstimated ? "~\(f)" : "\(f)")
-                    .font(.system(size: 10, weight: .medium).monospacedDigit())
+                    .font(.system(size: fontSize * 0.88, weight: .medium).monospacedDigit())
                     .foregroundStyle(row.isEstimated ? .tertiary : .secondary)
             }
         }
     }
 }
 
-// ── Main widget view ──────────────────────────────────────────────────────────
+// ── Two-column layout (used by all sizes) ─────────────────────────────────────
 
-struct BagWidgetEntryView: View {
-    var entry: BagWidgetEntry
+struct TwoColumnRows: View {
+    let rows: [BagWidgetRow]
+    var fontSize: CGFloat = 13
+    var spacing: CGFloat = 3
 
     var body: some View {
-        let rows  = entry.rows
         let half  = Int(ceil(Double(rows.count) / 2))
         let left  = Array(rows.prefix(half))
         let right = Array(rows.dropFirst(half))
 
-        HStack(alignment: .top, spacing: 8) {
-            VStack(alignment: .leading, spacing: 2) {
-                ForEach(left) { ClubRowView(row: $0) }
+        HStack(alignment: .top, spacing: 12) {
+            VStack(alignment: .leading, spacing: spacing) {
+                ForEach(left) { ClubRowView(row: $0, fontSize: fontSize) }
             }
             Spacer(minLength: 0)
-            VStack(alignment: .leading, spacing: 2) {
-                ForEach(right) { ClubRowView(row: $0) }
+            VStack(alignment: .leading, spacing: spacing) {
+                ForEach(right) { ClubRowView(row: $0, fontSize: fontSize) }
             }
         }
-        .padding(.horizontal, 4)
-        .padding(.vertical, 2)
+    }
+}
+
+// ── Lock screen (accessoryRectangular) ────────────────────────────────────────
+
+struct LockScreenView: View {
+    let rows: [BagWidgetRow]
+
+    var body: some View {
+        TwoColumnRows(rows: rows, fontSize: 11, spacing: 1)
+            .padding(.horizontal, 4)
+            .padding(.vertical, 2)
+            .containerBackground(.fill.tertiary, for: .widget)
+    }
+}
+
+// ── Small home screen ─────────────────────────────────────────────────────────
+
+struct SmallView: View {
+    let rows: [BagWidgetRow]
+
+    var body: some View {
+        // Show top 8 clubs (most-used: wedges + mid irons)
+        let displayed = Array(rows.prefix(8))
+        TwoColumnRows(rows: displayed, fontSize: 13, spacing: 3)
+            .padding(10)
+            .containerBackground(.fill.tertiary, for: .widget)
+    }
+}
+
+// ── Medium home screen ────────────────────────────────────────────────────────
+
+struct MediumView: View {
+    let rows: [BagWidgetRow]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text("My Clubs")
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundStyle(.secondary)
+                .padding(.bottom, 1)
+            TwoColumnRows(rows: rows, fontSize: 13, spacing: 3)
+        }
+        .padding(12)
+        .containerBackground(.fill.tertiary, for: .widget)
+    }
+}
+
+// ── Large home screen ─────────────────────────────────────────────────────────
+
+struct LargeView: View {
+    let rows: [BagWidgetRow]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("My Clubs")
+                .font(.system(size: 14, weight: .bold))
+                .foregroundStyle(.secondary)
+                .padding(.bottom, 2)
+            TwoColumnRows(rows: rows, fontSize: 16, spacing: 6)
+        }
+        .padding(16)
         .containerBackground(.fill.tertiary, for: .widget)
     }
 }
@@ -110,6 +172,28 @@ struct BagWidgetEmptyView: View {
     }
 }
 
+// ── Entry view (dispatches by family) ─────────────────────────────────────────
+
+struct BagWidgetEntryView: View {
+    @Environment(\.widgetFamily) var family
+    var entry: BagWidgetEntry
+
+    var body: some View {
+        switch family {
+        case .accessoryRectangular:
+            LockScreenView(rows: entry.rows)
+        case .systemSmall:
+            SmallView(rows: entry.rows)
+        case .systemMedium:
+            MediumView(rows: entry.rows)
+        case .systemLarge:
+            LargeView(rows: entry.rows)
+        default:
+            MediumView(rows: entry.rows)
+        }
+    }
+}
+
 // ── Widget ────────────────────────────────────────────────────────────────────
 
 struct BagWidget: Widget {
@@ -125,14 +209,26 @@ struct BagWidget: Widget {
         }
         .configurationDisplayName("My Clubs")
         .description("Your full bag yardage reference.")
-        .supportedFamilies([.accessoryRectangular])
+        .supportedFamilies([.accessoryRectangular, .systemSmall, .systemMedium, .systemLarge])
     }
 }
 
-// ── Preview ───────────────────────────────────────────────────────────────────
+// ── Widget bundle (app entry point) ──────────────────────────────────────────
 
-#Preview(as: .accessoryRectangular) {
+@main
+struct BagWidgetBundle: WidgetBundle {
+    var body: some Widget {
+        BagWidget()
+    }
+}
+
+// ── Previews ──────────────────────────────────────────────────────────────────
+
+#if compiler(>=5.9)
+@available(iOS 17.0, *)
+#Preview(as: .systemLarge) {
     BagWidget()
 } timeline: {
     BagWidgetEntry(date: Date(), rows: previewRows)
 }
+#endif
