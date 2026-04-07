@@ -101,6 +101,7 @@ struct TwoColumnRows: View {
     var fontSize: CGFloat = 13
     var spacing: CGFloat = 3
     var showCarry: Bool = false
+    var labelWidth: CGFloat = 28
 
     var body: some View {
         let half  = Int(ceil(Double(rows.count) / 2))
@@ -109,11 +110,11 @@ struct TwoColumnRows: View {
 
         HStack(alignment: .top, spacing: 8) {
             VStack(alignment: .leading, spacing: spacing) {
-                ForEach(left) { ClubRowView(row: $0, fontSize: fontSize, showCarry: showCarry) }
+                ForEach(left) { ClubRowView(row: $0, fontSize: fontSize, labelWidth: labelWidth, showCarry: showCarry) }
             }
             Spacer(minLength: 0)
             VStack(alignment: .leading, spacing: spacing) {
-                ForEach(right) { ClubRowView(row: $0, fontSize: fontSize, showCarry: showCarry) }
+                ForEach(right) { ClubRowView(row: $0, fontSize: fontSize, labelWidth: labelWidth, showCarry: showCarry) }
             }
         }
     }
@@ -125,9 +126,9 @@ struct LockScreenView: View {
     let rows: [BagWidgetRow]
 
     var body: some View {
-        TwoColumnRows(rows: rows, fontSize: 10, spacing: 1, showCarry: false)
-            .padding(.horizontal, 4)
-            .padding(.vertical, 2)
+        TwoColumnRows(rows: rows, fontSize: 8, spacing: 0, showCarry: false, labelWidth: 20)
+            .padding(.horizontal, 2)
+            .padding(.vertical, 1)
             .containerBackground(.fill.tertiary, for: .widget)
     }
 }
@@ -152,14 +153,16 @@ struct MediumView: View {
     let rows: [BagWidgetRow]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 4) {
             Text("My Clubs")
-                .font(.system(size: 11, weight: .semibold))
+                .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(.secondary)
                 .padding(.bottom, 1)
-            TwoColumnRows(rows: rows, fontSize: 13, spacing: 3)
+            TwoColumnRows(rows: rows, fontSize: 15, spacing: 5)
+            Spacer(minLength: 0)
         }
-        .padding(12)
+        .padding(14)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .containerBackground(.fill.tertiary, for: .widget)
     }
 }
@@ -172,12 +175,14 @@ struct LargeView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text("My Clubs")
-                .font(.system(size: 14, weight: .bold))
+                .font(.system(size: 13, weight: .bold))
                 .foregroundStyle(.secondary)
                 .padding(.bottom, 2)
-            TwoColumnRows(rows: rows, fontSize: 14, spacing: 6, showCarry: true)
+            TwoColumnRows(rows: rows, fontSize: 13, spacing: 5, showCarry: true)
+            Spacer(minLength: 0)
         }
         .padding(16)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .containerBackground(.fill.tertiary, for: .widget)
     }
 }
