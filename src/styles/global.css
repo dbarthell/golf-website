@@ -2425,6 +2425,11 @@ body {
   justify-content: space-between;
 }
 
+/* Match body overscroll background to the green header/grid on the bag page */
+body.page-bag {
+  background-color: var(--green-dark);
+}
+
 .bag-module-title {
   color: var(--white);
   font-size: 1.6rem;

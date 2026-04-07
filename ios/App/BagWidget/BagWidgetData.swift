@@ -36,7 +36,9 @@ struct BagWidgetRow: Identifiable {
     let id: String
     let label: String
     let fullTotal: Int
-    let flightedTotal: Int?   // nil = no flighted (woods/driver) or not enough data
+    let fullCarry: Int?       // nil = not entered by user
+    let flightedTotal: Int?   // nil = not applicable (woods/driver)
+    let flightedCarry: Int?   // nil = not applicable or carry not entered
     let isEstimated: Bool
 }
 
@@ -65,25 +67,31 @@ func loadBagRows() -> [BagWidgetRow] {
             guard let entry = bag.entries.first(where: { $0.clubId == club.id }) else { return nil }
 
             let flighted: Int?
+            let flightedCarry: Int?
             let estimated: Bool
             if club.hasPelz {
                 if entry.pelzOverride, let pt = entry.pelzTotal {
-                    flighted  = pt
-                    estimated = false
+                    flighted      = pt
+                    flightedCarry = entry.pelzCarry
+                    estimated     = false
                 } else {
-                    flighted  = Int((Double(entry.fullTotal) * (1 - offset / 100)).rounded())
-                    estimated = true
+                    flighted      = Int((Double(entry.fullTotal) * (1 - offset / 100)).rounded())
+                    flightedCarry = entry.fullCarry.map { Int((Double($0) * (1 - offset / 100)).rounded()) }
+                    estimated     = true
                 }
             } else {
-                flighted  = nil
-                estimated = false
+                flighted      = nil
+                flightedCarry = nil
+                estimated     = false
             }
 
             return BagWidgetRow(
                 id:             club.id,
                 label:          club.label,
                 fullTotal:      entry.fullTotal,
+                fullCarry:      entry.fullCarry,
                 flightedTotal:  flighted,
+                flightedCarry:  flightedCarry,
                 isEstimated:    estimated
             )
         }
