@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { IconPencil } from '@tabler/icons-react';
 
@@ -9,6 +10,11 @@ import {
 } from '../lib/bag';
 
 export function BagPage() {
+  useEffect(() => {
+    document.body.classList.add('page-bag');
+    return () => document.body.classList.remove('page-bag');
+  }, []);
+
   const { calibratedClubs, bagData, getEntry } = useBagData();
   const { settings } = bagData;
   const offset = settings.pelzOffset;

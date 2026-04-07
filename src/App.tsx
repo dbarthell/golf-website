@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { LookupPage } from './pages/LookupPage';
 import { CalibratePage } from './pages/CalibratePage';
@@ -9,8 +10,18 @@ import { BagEditPage } from './pages/BagEditPage';
 import { BottomNav } from './components/BottomNav';
 import { UnitsProvider } from './context/UnitsContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { syncBagToWidget } from './lib/bagBridge';
 
 export function App() {
+  // Sync bag data to widget on startup. Delay 1 s to let the Capacitor
+  // bridge finish initializing before the native plugin call.
+  useEffect(() => {
+    const raw = localStorage.getItem('bag-data');
+    if (!raw) return;
+    const timer = setTimeout(() => syncBagToWidget(raw), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <ErrorBoundary>
       <UnitsProvider>

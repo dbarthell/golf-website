@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { BagData, BagClub, BagEntry, BagSettings } from '../lib/bag';
 import { emptyBagData, DEFAULT_CLUBS } from '../lib/bag';
 import { syncBagToWidget } from '../lib/bagBridge';
@@ -11,9 +11,9 @@ function readBagData(): BagData {
     if (raw) {
       const parsed = JSON.parse(raw) as BagData;
       // Ensure settings exist (migration for older saves)
-      if (!parsed.settings) parsed.settings = { pelzOffset: 5 };
+      if (!parsed.settings) parsed.settings = { pelzOffset: 7 };
       // Migrate old fixed-yard offset (was ≤50 yds) to percentage default
-      if (parsed.settings.pelzOffset > 30) parsed.settings.pelzOffset = 5;
+      if (parsed.settings.pelzOffset > 30) parsed.settings.pelzOffset = 7;
       // Always honour hasPelz from DEFAULT_CLUBS for known clubs —
       // stale localStorage data can have the wrong value after a code change.
       const migratedClubs = parsed.clubs.map(club => {
@@ -39,6 +39,14 @@ function writeBagData(data: BagData) {
 
 export function useBagData() {
   const [bagData, setBagData] = useState<BagData>(readBagData);
+
+  // Re-sync on mount — the Capacitor bridge isn't ready during the initial
+  // render, so the syncBagToWidget call inside readBagData silently no-ops.
+  // This effect runs after mount when the bridge is available.
+  useEffect(() => {
+    syncBagToWidget(JSON.stringify(bagData));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /** Update (or insert) the entry for a given club. Saves on blur pattern — call on each field change. */
   const setEntry = useCallback((entry: BagEntry) => {

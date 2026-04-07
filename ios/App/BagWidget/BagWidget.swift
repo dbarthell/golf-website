@@ -29,17 +29,17 @@ struct BagWidgetProvider: TimelineProvider {
 // ── Preview data ──────────────────────────────────────────────────────────────
 
 private let previewRows: [BagWidgetRow] = [
-    BagWidgetRow(id: "lw",  label: "LW",  fullTotal: 85,  flightedTotal: 81,  isEstimated: true),
-    BagWidgetRow(id: "sw",  label: "SW",  fullTotal: 98,  flightedTotal: 93,  isEstimated: true),
-    BagWidgetRow(id: "gw",  label: "GW",  fullTotal: 113, flightedTotal: 107, isEstimated: true),
-    BagWidgetRow(id: "pw",  label: "PW",  fullTotal: 125, flightedTotal: 119, isEstimated: true),
-    BagWidgetRow(id: "9i",  label: "9i",  fullTotal: 140, flightedTotal: 133, isEstimated: true),
-    BagWidgetRow(id: "8i",  label: "8i",  fullTotal: 152, flightedTotal: 144, isEstimated: true),
-    BagWidgetRow(id: "7i",  label: "7i",  fullTotal: 165, flightedTotal: 157, isEstimated: true),
-    BagWidgetRow(id: "6i",  label: "6i",  fullTotal: 178, flightedTotal: nil, isEstimated: false),
-    BagWidgetRow(id: "5i",  label: "5i",  fullTotal: 193, flightedTotal: nil, isEstimated: false),
-    BagWidgetRow(id: "3w",  label: "3W",  fullTotal: 235, flightedTotal: nil, isEstimated: false),
-    BagWidgetRow(id: "dr",  label: "DR",  fullTotal: 260, flightedTotal: nil, isEstimated: false),
+    BagWidgetRow(id: "lw",  label: "LW",  fullTotal: 85,  fullCarry: 80,  flightedTotal: 81,  flightedCarry: 76,  isEstimated: true),
+    BagWidgetRow(id: "sw",  label: "SW",  fullTotal: 98,  fullCarry: 92,  flightedTotal: 93,  flightedCarry: 87,  isEstimated: true),
+    BagWidgetRow(id: "gw",  label: "GW",  fullTotal: 113, fullCarry: 107, flightedTotal: 107, flightedCarry: 102, isEstimated: true),
+    BagWidgetRow(id: "pw",  label: "PW",  fullTotal: 125, fullCarry: 118, flightedTotal: 119, flightedCarry: 112, isEstimated: true),
+    BagWidgetRow(id: "9i",  label: "9i",  fullTotal: 140, fullCarry: 132, flightedTotal: 133, flightedCarry: 125, isEstimated: true),
+    BagWidgetRow(id: "8i",  label: "8i",  fullTotal: 152, fullCarry: 144, flightedTotal: 144, flightedCarry: 137, isEstimated: true),
+    BagWidgetRow(id: "7i",  label: "7i",  fullTotal: 165, fullCarry: 156, flightedTotal: 157, flightedCarry: 148, isEstimated: true),
+    BagWidgetRow(id: "6i",  label: "6i",  fullTotal: 178, fullCarry: nil, flightedTotal: 169, flightedCarry: nil, isEstimated: true),
+    BagWidgetRow(id: "5i",  label: "5i",  fullTotal: 193, fullCarry: nil, flightedTotal: 183, flightedCarry: nil, isEstimated: true),
+    BagWidgetRow(id: "3w",  label: "3W",  fullTotal: 235, fullCarry: nil, flightedTotal: nil, flightedCarry: nil, isEstimated: false),
+    BagWidgetRow(id: "dr",  label: "DR",  fullTotal: 260, fullCarry: nil, flightedTotal: nil, flightedCarry: nil, isEstimated: false),
 ]
 
 // ── Shared row view (size-aware) ──────────────────────────────────────────────
@@ -48,22 +48,47 @@ struct ClubRowView: View {
     let row: BagWidgetRow
     var fontSize: CGFloat = 13
     var labelWidth: CGFloat = 28
+    var showCarry: Bool = false   // show all 4 yardages; false = total + flighted only
 
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 3) {
+            // Club label
             Text(row.label)
                 .font(.system(size: fontSize * 0.82, weight: .semibold))
                 .foregroundStyle(.secondary)
                 .frame(width: labelWidth, alignment: .leading)
+                .lineLimit(1)
 
-            Text("\(row.fullTotal)")
-                .font(.system(size: fontSize, weight: .bold).monospacedDigit())
-                .foregroundStyle(.primary)
+            // Full-swing block: total + optional carry
+            HStack(spacing: 1) {
+                Text("\(row.fullTotal)")
+                    .font(.system(size: fontSize, weight: .bold).monospacedDigit())
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+                if showCarry, let c = row.fullCarry {
+                    Text("/\(c)")
+                        .font(.system(size: fontSize * 0.78, weight: .regular).monospacedDigit())
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+            }
+            .fixedSize()
 
+            // Flighted block: total + optional carry
             if let f = row.flightedTotal {
-                Text(row.isEstimated ? "~\(f)" : "\(f)")
-                    .font(.system(size: fontSize * 0.88, weight: .medium).monospacedDigit())
-                    .foregroundStyle(row.isEstimated ? .tertiary : .secondary)
+                HStack(spacing: 1) {
+                    Text(row.isEstimated ? "~\(f)" : "\(f)")
+                        .font(.system(size: fontSize * 0.88, weight: .medium).monospacedDigit())
+                        .foregroundStyle(row.isEstimated ? .tertiary : .secondary)
+                        .lineLimit(1)
+                    if showCarry, let fc = row.flightedCarry {
+                        Text("/\(fc)")
+                            .font(.system(size: fontSize * 0.78, weight: .regular).monospacedDigit())
+                            .foregroundStyle(.quaternary)
+                            .lineLimit(1)
+                    }
+                }
+                .fixedSize()
             }
         }
     }
@@ -75,19 +100,20 @@ struct TwoColumnRows: View {
     let rows: [BagWidgetRow]
     var fontSize: CGFloat = 13
     var spacing: CGFloat = 3
+    var showCarry: Bool = false
 
     var body: some View {
         let half  = Int(ceil(Double(rows.count) / 2))
         let left  = Array(rows.prefix(half))
         let right = Array(rows.dropFirst(half))
 
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .top, spacing: 8) {
             VStack(alignment: .leading, spacing: spacing) {
-                ForEach(left) { ClubRowView(row: $0, fontSize: fontSize) }
+                ForEach(left) { ClubRowView(row: $0, fontSize: fontSize, showCarry: showCarry) }
             }
             Spacer(minLength: 0)
             VStack(alignment: .leading, spacing: spacing) {
-                ForEach(right) { ClubRowView(row: $0, fontSize: fontSize) }
+                ForEach(right) { ClubRowView(row: $0, fontSize: fontSize, showCarry: showCarry) }
             }
         }
     }
@@ -99,7 +125,7 @@ struct LockScreenView: View {
     let rows: [BagWidgetRow]
 
     var body: some View {
-        TwoColumnRows(rows: rows, fontSize: 11, spacing: 1)
+        TwoColumnRows(rows: rows, fontSize: 10, spacing: 1, showCarry: false)
             .padding(.horizontal, 4)
             .padding(.vertical, 2)
             .containerBackground(.fill.tertiary, for: .widget)
@@ -149,7 +175,7 @@ struct LargeView: View {
                 .font(.system(size: 14, weight: .bold))
                 .foregroundStyle(.secondary)
                 .padding(.bottom, 2)
-            TwoColumnRows(rows: rows, fontSize: 16, spacing: 6)
+            TwoColumnRows(rows: rows, fontSize: 14, spacing: 6, showCarry: true)
         }
         .padding(16)
         .containerBackground(.fill.tertiary, for: .widget)

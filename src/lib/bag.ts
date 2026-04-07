@@ -20,7 +20,7 @@ export interface BagEntry {
 }
 
 export interface BagSettings {
-  pelzOffset: number;        // default 5 — percentage less than full to estimate flighted yardage
+  pelzOffset: number;        // default 7 — percentage less than full to estimate flighted yardage
 }
 
 export interface BagData {
@@ -58,7 +58,7 @@ export const EXTRA_CLUBS: BagClub[] = [
 ];
 
 export const DEFAULT_SETTINGS: BagSettings = {
-  pelzOffset: 5,
+  pelzOffset: 7,
 };
 
 // ── Pelz computation helpers ──────────────────────────────────────────────────
