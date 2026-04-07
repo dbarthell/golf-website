@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Give the Capacitor WebView a moment to finish loading before we
         // evaluate JavaScript to pull bag data from localStorage.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             self.syncBagDataToWidget()
         }
     }
