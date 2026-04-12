@@ -1,5 +1,5 @@
 import { useRef, useCallback, useEffect, useState } from 'react';
-import { IconRefresh } from '@tabler/icons-react';
+import { IconMapPin, IconRefresh } from '@tabler/icons-react';
 import { useCourseSelector } from '../hooks/useCourseSelector';
 import { inferPuttFromImage } from '../lib/slopeColor';
 
