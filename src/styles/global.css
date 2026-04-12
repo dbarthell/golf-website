@@ -100,6 +100,26 @@ body {
   background: var(--green-dark);
   padding: var(--space-sm) var(--space-md) var(--space-md);
 }
+
+.course-context-label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0 0 0.35rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.course-context-label:active { color: rgba(255, 255, 255, 0.7); }
 .clock-section .lookup-label {
   color: rgba(255, 255, 255, 0.7);
   opacity: 1;

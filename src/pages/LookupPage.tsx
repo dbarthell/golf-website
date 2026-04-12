@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IconAdjustments, IconClipboardList, IconInfoCircle } from '@tabler/icons-react';
+import { IconAdjustments, IconClipboardList, IconInfoCircle, IconMapPin } from '@tabler/icons-react';
 
 
 import { getPuttingData } from '../hooks/usePuttingData';
@@ -312,6 +312,12 @@ export function LookupPage() {
             <WalkOffTip />
 
             <div className="clock-section">
+              {GREEN_MAP_ENABLED && mapLabel && (
+                <button className="course-context-label" onClick={() => goToSlide(1)}>
+                  <IconMapPin size={11} stroke={2} />
+                  {mapLabel}
+                </button>
+              )}
               <ClockFace
                 clockKey={clock}
                 onClockChange={setClock}
