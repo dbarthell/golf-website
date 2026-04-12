@@ -37,6 +37,7 @@ export function SlopeInput({ value, onChange }: Props) {
           min={0}
           max={6}
           step={0.5}
+          decimalScale={1}
           inputMode="decimal"
           classNames={{ input: 'slope-input' }}
           hideControls

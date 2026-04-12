@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IconAdjustments, IconClipboardList, IconInfoCircle } from '@tabler/icons-react';
 
@@ -18,6 +18,7 @@ import { CommonDistances } from '../components/CommonDistances';
 import { BackswingTable } from '../components/BackswingTable';
 import { WalkOffTip } from '../components/WalkOffTip';
 import { OnboardingModal } from '../components/OnboardingModal';
+import { GreenSlopePanel } from '../components/GreenSlopePanel';
 
 import { calculateZBLVector, aimPoint, fmtInches } from '../lib/zbl';
 import { backswingRaw, findBackswingData } from '../lib/backswing';
@@ -146,10 +147,84 @@ export function LookupPage() {
 
   const [onboardingDone, setOnboardingDone] = useState(() => !!localStorage.getItem('zerobreak-onboarded'));
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [mapLabel, setMapLabel] = useState<string | null>(() => {
+    try {
+      const course = localStorage.getItem('gi-selected-course');
+      const hole   = localStorage.getItem('gi-selected-hole');
+      if (course) {
+        const parsed = JSON.parse(course) as { name: string };
+        return `${parsed.name} — Hole ${hole ?? '1'}`;
+      }
+    } catch { /* */ }
+    return null;
+  });
 
-  // Scroll to top on mount so the header is always visible when navigating
-  // here from another page (e.g. Calibrate after first-launch onboarding).
-  useEffect(() => { window.scrollTo(0, 0); }, []);
+  // ── Page carousel ──────────────────────────────────────────────────────────
+  const [pageSlide, setPageSlide] = useState(0);
+  const pageSlideRef  = useRef(0);
+  const trackRef      = useRef<HTMLDivElement>(null);
+  const mainSlideRef  = useRef<HTMLDivElement>(null);
+  const swipeStartX   = useRef<number | null>(null);
+  const swipeStartY   = useRef<number | null>(null);
+  const isDragging    = useRef(false);
+
+  // Animate to new slide (used by button taps + snap-on-release)
+  const goToSlide = (slide: number) => {
+    pageSlideRef.current = slide;
+    const el = trackRef.current;
+    if (el) {
+      el.style.transition = 'transform 0.32s cubic-bezier(0.4,0,0.2,1)';
+      el.style.transform  = `translateX(${-slide * 50}%)`;
+    }
+    setPageSlide(slide);
+  };
+
+  function handleSwipeStart(e: React.TouchEvent) {
+    swipeStartX.current = e.touches[0].clientX;
+    swipeStartY.current = e.touches[0].clientY;
+    isDragging.current  = false;
+  }
+
+  function handleSwipeMove(e: React.TouchEvent) {
+    if (swipeStartX.current === null || swipeStartY.current === null) return;
+    const dx = e.touches[0].clientX - swipeStartX.current;
+    const dy = e.touches[0].clientY - swipeStartY.current;
+    if (!isDragging.current) {
+      if (Math.abs(dy) > Math.abs(dx)) return; // vertical scroll — ignore
+      isDragging.current = true;
+    }
+    const slide  = pageSlideRef.current;
+    const offset = slide === 0 && dx > 0 ? dx * 0.25
+                 : slide === 1 && dx < 0 ? dx * 0.25
+                 : dx;
+    const el = trackRef.current;
+    if (el) {
+      el.style.transition = 'none';
+      el.style.transform  = `translateX(calc(${-slide * 50}% + ${offset}px))`;
+    }
+  }
+
+  function handleSwipeEnd(e: React.TouchEvent) {
+    if (swipeStartX.current === null) return;
+    const dx   = e.changedTouches[0].clientX - swipeStartX.current;
+    const dy   = Math.abs(e.changedTouches[0].clientY - (swipeStartY.current ?? 0));
+    const dragged = isDragging.current;
+    swipeStartX.current = null;
+    swipeStartY.current = null;
+    isDragging.current  = false;
+    if (dragged && Math.abs(dx) > 40 && Math.abs(dx) > dy) {
+      goToSlide(Math.max(0, Math.min(1, pageSlideRef.current + (dx < 0 ? 1 : -1))));
+    } else {
+      // snap back
+      const el = trackRef.current;
+      if (el) {
+        el.style.transition = 'transform 0.32s cubic-bezier(0.4,0,0.2,1)';
+        el.style.transform  = `translateX(${-pageSlideRef.current * 50}%)`;
+      }
+    }
+  }
+
+  useEffect(() => { mainSlideRef.current?.scrollTo(0, 0); }, []);
 
   const result = useMemo(
     () =>
@@ -181,94 +256,112 @@ export function LookupPage() {
         />
       )}
 
-      {/* ── Sticky white header bar ───────────────────────────────────────── */}
-      <div className="app-header">
-        <div className="header-brand">
-          <div className="header-logo-wrap">
-            <img src="images/zb-logo-new.jpg" alt="" className="header-logo" />
+      <div
+        className="page-carousel"
+        onTouchStart={handleSwipeStart}
+        onTouchMove={handleSwipeMove}
+        onTouchEnd={handleSwipeEnd}
+      >
+        <div className="page-track" ref={trackRef}>
+          {/* ── Slide 0: Main view ────────────────────────────────────────── */}
+          <div className="page-slide page-slide-main" ref={mainSlideRef}>
+            <div className="app-header">
+              <div className="header-brand">
+                <div className="header-logo-wrap">
+                  <img src="images/zb-logo-new.jpg" alt="" className="header-logo" />
+                </div>
+              </div>
+              <div className="header-links">
+                <button
+                  className="unit-toggle"
+                  onClick={toggleUnit}
+                  aria-label={`Switch to ${unit === 'ft' ? 'metres' : 'feet'}`}
+                >
+                  {unit === 'ft' ? 'ft' : 'm'}
+                </button>
+                <Link to="/log" className="full-view-link">
+                  <IconClipboardList size={20} stroke={2} />
+                  <span className="full-view-link-label">Log</span>
+                </Link>
+                <Link to="/calibrate" className="full-view-link">
+                  <IconAdjustments size={20} stroke={2} />
+                  <span className="full-view-link-label">Calibrate</span>
+                </Link>
+                <button className="full-view-link" onClick={() => setShowOnboarding(true)} aria-label="Guide">
+                  <IconInfoCircle size={20} stroke={2} />
+                  <span className="full-view-link-label">Guide</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="lookup-body">
+              <div className="lookup-input-section">
+                <label className="lookup-label">Green Speed (Stimp)</label>
+                <StimpToggle value={stimp} onChange={setStimp} />
+              </div>
+              <div className="inputs-row">
+                <DistanceInput value={distance} onChange={setDistance} />
+                <SlopeInput value={slope} onChange={setSlope} />
+              </div>
+            </div>
+
+            <WalkOffTip />
+
+            <div className="clock-section">
+              <ClockFace
+                clockKey={clock}
+                onClockChange={setClock}
+                annotations={annotations}
+                slope={slope}
+              />
+            </div>
+
+            <div className="lookup-result-body">
+              <LookupResultPanel
+                result={result}
+                puttContext={distance !== '' ? { distance, slope, stimp, clock } : undefined}
+                onLogPutt={addPutt}
+                streak={currentStreak}
+              />
+            </div>
+
+            <BackswingTable
+              lagRows={data.lagPuttingTable.rows}
+              distanceFactor={calibration.distanceFactor}
+              distanceOffset={calibration.distanceOffset}
+              stanceWidth={calibration.stanceWidth}
+              stimp={stimp}
+            />
+
+            <CommonDistances
+              stimp={stimp}
+              distanceFactor={calibration.distanceFactor}
+              distanceOffset={calibration.distanceOffset}
+              lagRows={data.lagPuttingTable.rows}
+              onSelect={dist => {
+                setDistance(dist);
+                mainSlideRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            />
+          </div>
+
+          {/* ── Slide 1: Green map ────────────────────────────────────────── */}
+          <div className="page-slide page-slide-map">
+            <GreenSlopePanel
+              onSetDistance={setDistance}
+              onSetSlope={setSlope}
+              onSelectionChange={setMapLabel}
+            />
           </div>
         </div>
-        <div className="header-links">
-          <button
-            className="unit-toggle"
-            onClick={toggleUnit}
-            aria-label={`Switch to ${unit === 'ft' ? 'metres' : 'feet'}`}
-          >
-            {unit === 'ft' ? 'ft' : 'm'}
-          </button>
-          <Link to="/log" className="full-view-link">
-            <IconClipboardList size={20} stroke={2} />
-            <span className="full-view-link-label">Log</span>
-          </Link>
-          <Link to="/calibrate" className="full-view-link">
-            <IconAdjustments size={20} stroke={2} />
-            <span className="full-view-link-label">Calibrate</span>
-          </Link>
-          <button className="full-view-link" onClick={() => setShowOnboarding(true)} aria-label="Guide">
-            <IconInfoCircle size={20} stroke={2} />
-            <span className="full-view-link-label">Guide</span>
-          </button>
-        </div>
-      </div>
 
-      {/* ── Inputs ────────────────────────────────────────────────────────── */}
-      <div className="lookup-body">
-
-        {/* Green speed */}
-        <div className="lookup-input-section">
-          <label className="lookup-label">Green Speed (Stimp)</label>
-          <StimpToggle value={stimp} onChange={setStimp} />
-        </div>
-
-        {/* Distance + Slope side by side */}
-        <div className="inputs-row">
-          <DistanceInput value={distance} onChange={setDistance} />
-          <SlopeInput value={slope} onChange={setSlope} />
+        {/* ── Slide dots ────────────────────────────────────────────────────── */}
+        <div className="page-nav">
+          <button className={`page-dot${pageSlide === 0 ? ' page-dot-active' : ''}`} onClick={() => goToSlide(0)} aria-label="Lookup" />
+          <button className={`page-dot${pageSlide === 1 ? ' page-dot-active' : ''}`} onClick={() => goToSlide(1)} aria-label="Green map" />
         </div>
 
       </div>
-
-      <WalkOffTip />
-
-      {/* ── Clock face — full-width dark green band ────────────────────────── */}
-      <div className="clock-section">
-        <ClockFace
-          clockKey={clock}
-          onClockChange={setClock}
-          annotations={annotations}
-          slope={slope}
-        />
-      </div>
-
-      {/* ── Result ────────────────────────────────────────────────────────── */}
-      <div className="lookup-result-body">
-        <LookupResultPanel
-          result={result}
-          puttContext={distance !== '' ? { distance, slope, stimp, clock } : undefined}
-          onLogPutt={addPutt}
-          streak={currentStreak}
-        />
-      </div>
-
-      {/* ── Light sections ────────────────────────────────────────────────── */}
-      <BackswingTable
-        lagRows={data.lagPuttingTable.rows}
-        distanceFactor={calibration.distanceFactor}
-        distanceOffset={calibration.distanceOffset}
-        stanceWidth={calibration.stanceWidth}
-        stimp={stimp}
-      />
-
-      <CommonDistances
-        stimp={stimp}
-        distanceFactor={calibration.distanceFactor}
-        distanceOffset={calibration.distanceOffset}
-        lagRows={data.lagPuttingTable.rows}
-        onSelect={dist => {
-          setDistance(dist);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-      />
     </>
   );
 }

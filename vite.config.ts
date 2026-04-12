@@ -8,6 +8,26 @@ const base = isCapacitor ? './' : '/golf-website/';
 
 export default defineConfig({
   base,
+  server: {
+    proxy: {
+      // Proxy Golf Intelligence API calls to avoid CORS in dev/browser.
+      // In the native Capacitor iOS build, fetch goes through the native
+      // layer and doesn't need a proxy.
+      '/gi-api': {
+        target: 'https://api.golfintelligence.com',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/gi-api/, ''),
+      },
+      // Proxy GI's CloudFront image CDN so canvas.getImageData() can read
+      // pixel colors. The image loads from same-origin (/cf-img/…) so the
+      // canvas is never tainted — no crossOrigin attribute needed.
+      '/cf-img': {
+        target: 'https://d12k1qhoidj8cp.cloudfront.net',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/cf-img/, ''),
+      },
+    },
+  },
   plugins: [
     react(),
     viteStaticCopy({
