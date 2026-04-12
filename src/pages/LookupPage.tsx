@@ -25,6 +25,10 @@ import { backswingRaw, findBackswingData } from '../lib/backswing';
 import { getClockFactors } from '../lib/clockMath';
 import type { LookupResult, ClockAnnotations } from '../lib/types';
 
+// Set VITE_GREEN_MAP_ENABLED=true in .env.local to enable during development.
+// Defaults to false so production/iOS builds ship without the paid feature.
+const GREEN_MAP_ENABLED = import.meta.env.VITE_GREEN_MAP_ENABLED === 'true';
+
 // ── Result computation (pure function, used in useMemo) ───────────────────────
 
 function computeResult(
@@ -345,21 +349,25 @@ export function LookupPage() {
             />
           </div>
 
-          {/* ── Slide 1: Green map ────────────────────────────────────────── */}
-          <div className="page-slide page-slide-map">
-            <GreenSlopePanel
-              onSetDistance={setDistance}
-              onSetSlope={setSlope}
-              onSelectionChange={setMapLabel}
-            />
-          </div>
+          {/* ── Slide 1: Green map (paid feature — gated by VITE_GREEN_MAP_ENABLED) */}
+          {GREEN_MAP_ENABLED && (
+            <div className="page-slide page-slide-map">
+              <GreenSlopePanel
+                onSetDistance={setDistance}
+                onSetSlope={setSlope}
+                onSelectionChange={setMapLabel}
+              />
+            </div>
+          )}
         </div>
 
-        {/* ── Slide dots ────────────────────────────────────────────────────── */}
-        <div className="page-nav">
-          <button className={`page-dot${pageSlide === 0 ? ' page-dot-active' : ''}`} onClick={() => goToSlide(0)} aria-label="Lookup" />
-          <button className={`page-dot${pageSlide === 1 ? ' page-dot-active' : ''}`} onClick={() => goToSlide(1)} aria-label="Green map" />
-        </div>
+        {/* ── Slide dots (only shown when green map is enabled) ─────────────── */}
+        {GREEN_MAP_ENABLED && (
+          <div className="page-nav">
+            <button className={`page-dot${pageSlide === 0 ? ' page-dot-active' : ''}`} onClick={() => goToSlide(0)} aria-label="Lookup" />
+            <button className={`page-dot${pageSlide === 1 ? ' page-dot-active' : ''}`} onClick={() => goToSlide(1)} aria-label="Green map" />
+          </div>
+        )}
 
       </div>
     </>
