@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IconAdjustments, IconClipboardList, IconInfoCircle, IconMapPin } from '@tabler/icons-react';
+import { IconAdjustments, IconChartBar, IconFlag, IconInfoCircle, IconMapPin } from '@tabler/icons-react';
 
 
 import { getPuttingData } from '../hooks/usePuttingData';
 import { useCalibration } from '../hooks/useCalibration';
 import { useLookupState } from '../hooks/useLookupState';
-import { usePuttLog } from '../hooks/usePuttLog';
+import { useGameMode } from '../hooks/useGameMode';
 import { useUnits } from '../hooks/useUnits';
 
 import { StimpToggle } from '../components/StimpToggle';
@@ -147,7 +147,12 @@ export function LookupPage() {
   const { unit, toggleUnit } = useUnits();
   const { distance, setDistance, slope, setSlope, stimp, setStimp, clock, setClock } =
     useLookupState();
-  const { addPutt, currentStreak } = usePuttLog();
+  const {
+    activeGameRoundId,
+    currentHole,
+    advanceHole,
+    logGamePutt,
+  } = useGameMode();
 
   const [onboardingDone, setOnboardingDone] = useState(() => !!localStorage.getItem('zerobreak-onboarded'));
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -284,8 +289,8 @@ export function LookupPage() {
                   {unit === 'ft' ? 'ft' : 'm'}
                 </button>
                 <Link to="/log" className="full-view-link">
-                  <IconClipboardList size={20} stroke={2} />
-                  <span className="full-view-link-label">Log</span>
+                  <IconChartBar size={20} stroke={2} />
+                  <span className="full-view-link-label">Stats</span>
                 </Link>
                 <Link to="/calibrate" className="full-view-link">
                   <IconAdjustments size={20} stroke={2} />
@@ -295,6 +300,18 @@ export function LookupPage() {
                   <IconInfoCircle size={20} stroke={2} />
                   <span className="full-view-link-label">Guide</span>
                 </button>
+                {activeGameRoundId ? (
+                  <Link to="/game" className="full-view-link game-active-chip">
+                    <IconFlag size={18} stroke={2} />
+                    <span className="full-view-link-label">Hole {currentHole}</span>
+                    <span className="game-active-chip-label">⛳ {currentHole}</span>
+                  </Link>
+                ) : (
+                  <Link to="/game" className="full-view-link" aria-label="Play">
+                    <IconFlag size={18} stroke={2} />
+                    <span className="full-view-link-label">Play</span>
+                  </Link>
+                )}
               </div>
             </div>
 
@@ -330,8 +347,12 @@ export function LookupPage() {
               <LookupResultPanel
                 result={result}
                 puttContext={distance !== '' ? { distance, slope, stimp, clock } : undefined}
-                onLogPutt={addPutt}
-                streak={currentStreak}
+                gameContext={activeGameRoundId ? {
+                  roundId: activeGameRoundId,
+                  hole: currentHole,
+                  onLogGamePutt: logGamePutt,
+                  onNextHole: advanceHole,
+                } : undefined}
               />
             </div>
 

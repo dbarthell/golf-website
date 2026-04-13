@@ -7,6 +7,7 @@ import { WedgePage } from './pages/WedgePage';
 import { WedgeCalibratePage } from './pages/WedgeCalibratePage';
 import { BagPage } from './pages/BagPage';
 import { BagEditPage } from './pages/BagEditPage';
+import { GamePage } from './pages/GamePage';
 import { BottomNav } from './components/BottomNav';
 import { UnitsProvider } from './context/UnitsContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -33,6 +34,7 @@ export function App() {
           <Route path="/wedges/calibrate" element={<WedgeCalibratePage />} />
           <Route path="/bag" element={<BagPage />} />
           <Route path="/bag/edit" element={<BagEditPage />} />
+          <Route path="/game" element={<GamePage />} />
         </Routes>
         <BottomNav />
       </UnitsProvider>
