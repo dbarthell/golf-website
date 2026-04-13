@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { LookupResult } from '../lib/types';
 import { fmtInches } from '../lib/zbl';
-import type { PuttOutcome } from '../hooks/usePuttLog';
+import type { PuttEntry, PuttOutcome } from '../hooks/usePuttLog';
 import { useUnits } from '../hooks/useUnits';
 
 interface PuttContext {
@@ -12,12 +12,18 @@ interface PuttContext {
   clock: string | null;
 }
 
+interface GameContext {
+  roundId: string;
+  hole: number;
+  onLogGamePutt: (entry: Omit<PuttEntry, 'id' | 'timestamp' | 'hole'>) => void;
+  onNextHole: () => void;
+}
+
 interface Props {
   result: LookupResult | null;
   puttContext?: PuttContext;
-  onLogPutt?: (entry: Omit<import('../hooks/usePuttLog').PuttEntry, 'id' | 'timestamp'>) => void;
-  /** Current consecutive-makes streak (from usePuttLog) */
-  streak?: number;
+  /** When set, the "Log putt" button routes to the active game round */
+  gameContext?: GameContext;
 }
 
 const OUTCOMES: { key: PuttOutcome; label: string; emoji: string }[] = [
@@ -28,42 +34,65 @@ const OUTCOMES: { key: PuttOutcome; label: string; emoji: string }[] = [
   { key: 'right', label: 'Right', emoji: '→' },
 ];
 
-export function LookupResultPanel({ result, puttContext, onLogPutt, streak = 0 }: Props) {
+export function LookupResultPanel({ result, puttContext, gameContext }: Props) {
   const { unit, fmtDist, fmtAim, fmtAimVariance, fmtBackswing, fmtBackswingParts, fmtAimParts } = useUnits();
   const [picking, setPicking] = useState(false);
   const [savedLabel, setSavedLabel] = useState<string | null>(null);
-  const [savedStreak, setSavedStreak] = useState(0);
   const [madeFlash, setMadeFlash] = useState(false);
 
   function handleOutcome(outcome: PuttOutcome) {
-    if (!puttContext || !onLogPutt) return;
-    onLogPutt({ ...puttContext, outcome });
-    setPicking(false);
-    setSavedLabel(outcome.charAt(0).toUpperCase() + outcome.slice(1));
-    setSavedStreak(outcome === 'made' ? streak + 1 : 0);
+    if (!puttContext || !gameContext) return;
+    const ctx = gameContext;
+    ctx.onLogGamePutt({ ...puttContext, outcome });
     if (outcome === 'made') {
+      setPicking(false);
       setMadeFlash(true);
-      setTimeout(() => setMadeFlash(false), 600);
+      setTimeout(() => {
+        setMadeFlash(false);
+        ctx.onNextHole();
+      }, 600);
+    } else {
+      setPicking(false);
+      setSavedLabel(outcome.charAt(0).toUpperCase() + outcome.slice(1));
     }
-    setTimeout(() => setSavedLabel(null), 4000);
   }
 
-  const canLog = !!(puttContext && onLogPutt && result && result.kind !== 'empty');
+  function handleLogAnother() {
+    setSavedLabel(null);
+    setPicking(true);
+  }
+
+  function handleNextHole() {
+    // Auto-log the finishing made putt (distance=0 keeps it out of make% stats)
+    if (puttContext && gameContext) {
+      gameContext.onLogGamePutt({ distance: 0, slope: puttContext.slope, stimp: puttContext.stimp, clock: null, outcome: 'made' });
+    }
+    setSavedLabel(null);
+    gameContext?.onNextHole();
+  }
+
+  const canLog = !!(puttContext && gameContext && result && result.kind !== 'empty');
 
   const logSection = canLog ? (
     <div className="log-putt-section">
       {savedLabel ? (
-        <div className="outcome-saved">
+        <div className="outcome-saved outcome-saved--game">
           <div className="outcome-saved-main">
-            <span>Logged: {savedLabel}</span>
-            <Link to="/log" className="outcome-view-log">View Log →</Link>
+            <span>Logged: {savedLabel} · Hole {gameContext!.hole}</span>
+            <Link to="/game" className="outcome-view-log">Scorecard →</Link>
           </div>
-          {savedLabel === 'Made' && savedStreak >= 2 && (
-            <div className="streak-badge">🔥 {savedStreak} in a row!</div>
-          )}
+          <div className="game-post-log-btns">
+            <button className="game-post-log-btn game-post-log-btn--another" onClick={handleLogAnother}>
+              Log another
+            </button>
+            <button className="game-post-log-btn game-post-log-btn--next" onClick={handleNextHole}>
+              Next hole →
+            </button>
+          </div>
         </div>
       ) : picking ? (
         <div className="outcome-picker">
+          <div className="outcome-picker-hole-label">Hole {gameContext!.hole}</div>
           <div className="outcome-btns-row">
             {OUTCOMES.map(({ key, label }) => (
               <button
@@ -79,7 +108,7 @@ export function LookupResultPanel({ result, puttContext, onLogPutt, streak = 0 }
         </div>
       ) : (
         <button className="log-putt-btn" onClick={() => setPicking(true)}>
-          Log this putt
+          Log putt · Hole {gameContext!.hole}
         </button>
       )}
     </div>

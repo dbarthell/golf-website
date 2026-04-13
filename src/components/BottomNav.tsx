@@ -39,7 +39,8 @@ export function BottomNav() {
       return (
         location.pathname === '/' ||
         location.pathname.startsWith('/calibrate') ||
-        location.pathname.startsWith('/log')
+        location.pathname.startsWith('/log') ||
+        location.pathname.startsWith('/game')
       );
     }
     if (location.pathname === tab.path) return true;

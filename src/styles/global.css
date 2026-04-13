@@ -1254,6 +1254,11 @@ body {
   color: var(--gray-800);
 }
 .outcome-btn-miss:active { background: var(--gray-200); }
+.outcome-btn-miss-selected {
+  background: var(--gray-800);
+  border-color: var(--gray-800);
+  color: var(--white);
+}
 
 .outcome-cancel {
   background: none;
@@ -1372,17 +1377,19 @@ body {
   gap: 2px;
 }
 .log-summary-value {
-  font-size: 2rem;
+  font-size: clamp(1.4rem, 5.5vw, 2rem);
   font-weight: 800;
   color: var(--text-primary);
   line-height: 1;
 }
 .log-summary-label {
-  font-size: 0.7rem;
+  font-size: clamp(0.58rem, 1.8vw, 0.7rem);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
   color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.3;
 }
 .log-summary-divider {
   width: 1px;
@@ -3394,3 +3401,702 @@ body.page-bag {
 }
 .gs-reset-tap-btn:hover { color: rgba(255,255,255,0.6); }
 
+/* ========================================
+   Game Mode
+   ======================================== */
+
+/* ── Start section ── */
+.game-start-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-xl) var(--space-lg);
+  text-align: center;
+}
+
+.game-start-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+}
+
+.game-start-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--green-dark);
+  margin-bottom: var(--space-sm);
+  letter-spacing: -0.01em;
+}
+
+.game-start-sub {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 300px;
+  margin-bottom: var(--space-lg);
+}
+
+.game-start-btn {
+  background: var(--green-dark);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  padding: 0.85rem 2rem;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+.game-start-btn:active { filter: brightness(1.25); }
+
+/* ── Active game strip ── */
+.game-round-strip {
+  background: var(--green-dark);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  padding: 0.6rem var(--space-md);
+  gap: var(--space-sm);
+}
+
+.game-round-strip-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 48px;
+}
+
+.game-round-strip-val {
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.game-round-strip-label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.game-round-strip-divider {
+  width: 1px;
+  height: 2rem;
+  background: rgba(255,255,255,0.2);
+}
+
+.game-end-btn {
+  margin-left: auto;
+  background: rgba(255,255,255,0.15);
+  color: var(--white);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  border-radius: var(--radius-md);
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.game-end-btn:active { background: rgba(255,255,255,0.3); }
+
+.game-end-cancel-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  padding: 0.5rem;
+}
+.game-end-cancel-btn:active { opacity: 0.6; }
+
+/* ── Scorecard ── */
+.game-scorecard-header {
+  display: grid;
+  grid-template-columns: 3rem 3rem 3.5rem 1fr;
+  gap: 0;
+  padding: 0.35rem var(--space-md);
+  background: var(--gray-200);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.game-scorecard-row {
+  display: grid;
+  grid-template-columns: 3rem 3rem 3.5rem 1fr;
+  gap: 0;
+  padding: 0.6rem var(--space-md);
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.game-scorecard-row:active { background: var(--gray-100); }
+
+.game-scorecard-row--current {
+  background: var(--green-pale);
+}
+.game-scorecard-row--current:active { background: #d8eee4; }
+
+.game-scorecard-row--dimmed {
+  opacity: 0.4;
+}
+
+.game-scorecard-hole {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.game-scorecard-hole-num {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.game-scorecard-current-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green-light);
+  flex-shrink: 0;
+}
+
+.game-scorecard-putts,
+.game-scorecard-make {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+}
+
+.game-scorecard-miss {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+}
+
+.game-scorecard-dash {
+  color: var(--gray-400);
+}
+
+/* ── Active game chip in header ── */
+.game-active-chip {
+  background: rgba(201, 168, 106, 0.2) !important;
+  border-color: var(--green-accent) !important;
+}
+
+.game-active-chip-label {
+  font-size: 0.88rem;
+  font-weight: 800;
+  display: inline;
+}
+
+/* Hide the icon text label when chip label is shown */
+@media (max-width: 430px) {
+  .game-active-chip .full-view-link-label { display: none; }
+}
+@media (min-width: 431px) {
+  .game-active-chip .game-active-chip-label { display: none; }
+  .game-active-chip .full-view-link-label { display: inline !important; }
+}
+
+/* ── Post-log game buttons ── */
+.outcome-saved--game {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.game-post-log-btns {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: 0.25rem;
+}
+
+.game-post-log-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: filter 0.15s;
+  border: none;
+}
+
+.game-post-log-btn--another {
+  background: var(--gray-200);
+  color: var(--text-primary);
+}
+.game-post-log-btn--another:active { filter: brightness(0.92); }
+
+.game-post-log-btn--next {
+  background: var(--green-dark);
+  color: var(--white);
+}
+.game-post-log-btn--next:active { filter: brightness(1.2); }
+
+/* ── Outcome picker hole label ── */
+.outcome-picker-hole-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 0.35rem;
+}
+
+/* ── Hole stat detail card overlay ── */
+.game-hole-card-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+}
+
+.game-hole-card {
+  background: var(--white);
+  border-radius: 1.25rem 1.25rem 0 0;
+  padding: var(--space-md) var(--space-lg) var(--space-xl);
+  width: 100%;
+  max-height: 70vh;
+  overflow-y: auto;
+  animation: woSheetUp 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.game-hole-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+}
+
+.game-hole-card-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--green-dark);
+}
+
+.game-hole-card-close {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: var(--gray-600);
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.game-hole-empty {
+  color: var(--gray-400);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: var(--space-md) 0;
+}
+
+/* ── Quick count section ── */
+.game-quick-section {
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--gray-200);
+  margin-bottom: var(--space-sm);
+}
+
+.game-quick-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+.game-quick-btns {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.game-quick-btn {
+  flex: 1;
+  padding: 0.7rem 0;
+  background: var(--gray-100);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  font-size: 1.2rem;
+  font-weight: 800;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+.game-quick-btn:active { background: var(--gray-200); }
+
+.game-quick-btn--active {
+  background: var(--green-dark);
+  border-color: var(--green-dark);
+  color: var(--white);
+}
+
+.game-quick-btn--clear {
+  flex: 0 0 2.5rem;
+  font-size: 0.8rem;
+  color: var(--gray-400);
+  border-color: var(--gray-200);
+}
+.game-quick-btn--clear:disabled { opacity: 0.35; cursor: default; }
+.game-quick-btn--clear:not(:disabled):active { background: #fde8e8; color: #c0392b; }
+
+.game-quick-count-note {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-top: 0.3rem;
+}
+
+/* ── Scorecard row with tally button ── */
+.game-scorecard-row-wrap {
+  display: flex;
+  align-items: stretch;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.game-scorecard-row-wrap.game-scorecard-row--current {
+  background: var(--green-pale);
+}
+
+.game-scorecard-row-wrap.game-scorecard-row--dimmed {
+  opacity: 0.4;
+}
+
+.game-scorecard-row-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 3rem 3rem 1fr;
+  gap: 0;
+  padding: 0.6rem var(--space-md) 0.6rem var(--space-md);
+  background: none;
+  border: none;
+  text-align: left;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.game-scorecard-row-wrap.game-scorecard-row--current .game-scorecard-row-main:active { background: #d8eee4; }
+.game-scorecard-row-main:active { background: var(--gray-100); }
+
+.game-scorecard-tally-btn {
+  flex: 0 0 3rem;
+  background: none;
+  border: none;
+  border-left: 1px solid var(--gray-200);
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: var(--green-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.1s;
+}
+.game-scorecard-tally-btn:active { background: var(--green-pale); }
+
+/* Scorecard header with tally column */
+.game-scorecard-header--with-tally {
+  grid-template-columns: 3rem 3rem 1fr 3rem;
+  padding-right: 0;
+}
+.game-scorecard-header--with-tally span:last-child {
+  border-left: 1px solid var(--gray-200);
+}
+
+/* Inline edit panel inside LogPage scorecard */
+.game-hole-inline-edit {
+  padding: 0.5rem var(--space-md) 0.75rem;
+  background: var(--gray-100);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.game-add-putt-btn {
+  width: 100%;
+  margin-top: var(--space-md);
+  padding: 0.6rem;
+  background: var(--gray-100);
+  border: 1.5px dashed var(--gray-400);
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.game-add-putt-btn:active { background: var(--gray-200); }
+
+.game-add-putt-form {
+  margin-top: var(--space-md);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--gray-200);
+}
+
+.game-add-putt-row {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.game-add-putt-dist {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-family: var(--font-sans);
+  background: var(--white);
+  color: var(--text-primary);
+  -moz-appearance: textfield;
+}
+.game-add-putt-dist::-webkit-outer-spin-button,
+.game-add-putt-dist::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.game-add-putt-dist:focus { outline: none; border-color: var(--green-dark); }
+
+.outcome-btn-selected {
+  outline: 2.5px solid var(--green-dark);
+  outline-offset: 1px;
+}
+
+/* ── Completed card delete/actions ── */
+.game-completed-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.game-completed-delete-btn {
+  background: none;
+  border: none;
+  color: var(--gray-400);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+.game-completed-delete-btn:active { color: #c0392b; }
+
+.game-hole-misses-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: 0.35rem;
+}
+
+/* ── Completed round cards ── */
+.game-completed-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  margin: 0 0 var(--space-sm);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.game-completed-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  text-align: left;
+  transition: background 0.1s;
+}
+.game-completed-header:active { background: var(--gray-100); }
+
+.game-completed-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.game-completed-date {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.game-completed-summary {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.game-completed-chevron {
+  font-size: 0.7rem;
+  color: var(--gray-400);
+  flex-shrink: 0;
+}
+
+.game-completed-body {
+  padding: 0 var(--space-md) var(--space-md);
+}
+
+/* ── LogPage game rounds section ── */
+.log-game-rounds-section {
+  padding: var(--space-md) var(--space-md) 0;
+}
+
+.log-section-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+/* ── Active game banner in LogPage (if no completed rounds yet) ── */
+.game-active-banner {
+  background: var(--green-pale);
+  border: 1.5px solid var(--green-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.game-active-banner-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--green-dark);
+}
+
+.game-active-banner-link {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  text-decoration: none;
+  border: 1.5px solid var(--green-dark);
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.65rem;
+}
+
+
+
+/* ── Stats page ────────────────────────────────────────────────────────────── */
+
+.stats-play-link {
+  display: inline-block;
+  margin-top: var(--space-md);
+  padding: 0.55rem 1.1rem;
+  background: var(--green-dark);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.stats-dist-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  padding: var(--space-sm) var(--space-md) 0;
+}
+
+.stats-no-detailed-note {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: var(--space-sm) var(--space-md);
+  line-height: 1.5;
+}
+
+/* ── By-hole bar chart ── */
+.stats-hole-grid {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: var(--space-sm) var(--space-md) 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.stats-hole-grid::-webkit-scrollbar { display: none; }
+
+.stats-hole-item {
+  flex: 0 0 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.stats-hole-bar-wrap {
+  width: 100%;
+  height: 72px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.stats-hole-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 2px 2px 0 0;
+  min-height: 4px;
+  background: var(--green-accent);
+  transition: height 0.3s ease;
+}
+
+.stats-hole-avg {
+  font-size: 0.6rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stats-hole-num {
+  font-size: 0.58rem;
+  color: var(--text-secondary);
+  line-height: 1;
+}
+
+/* ── Hole legend ── */
+.stats-hole-legend {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.stats-hole-legend-item {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface-1);
+}
+
+.stats-hole-legend--good { color: var(--green-light); }
+.stats-hole-legend--ok   { color: var(--green-accent); }
+.stats-hole-legend--bad  { color: #c0392b; }
